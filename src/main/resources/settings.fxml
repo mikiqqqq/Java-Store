@@ -3,16 +3,16 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<DialogPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="360.0" stylesheets="@../stylesheet.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<DialogPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="360.0" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <graphic>
       <GridPane prefHeight="420.0" prefWidth="360.0">
          <columnConstraints>
@@ -50,45 +50,15 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label prefHeight="42.0" prefWidth="249.0" styleClass="header" text="Admin" GridPane.columnIndex="1" GridPane.valignment="TOP">
+            <Label prefHeight="42.0" prefWidth="249.0" styleClass="header" text="Settings" GridPane.columnIndex="1" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial Bold" size="36.0" />
                </font>
             </Label>
-            <TextField prefHeight="42.0" styleClass="input" text="fwefwewfweger" translateY="-4.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <font>
-                  <Font name="Arial" size="16.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets top="12.0" />
-               </GridPane.margin>
-            </TextField>
-            <PasswordField prefHeight="42.0" styleClass="input" text="fwefwefew" translateY="-4.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets top="12.0" />
-               </GridPane.margin>
-               <font>
-                  <Font name="Arial" size="16.0" />
-               </font>
-            </PasswordField>
-            <Label prefHeight="20.0" prefWidth="257.0" text="E-mail" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
-               <font>
-                  <Font name="Arial" size="16.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets top="4.0" />
-               </GridPane.margin>
-            </Label>
-            <Label prefHeight="20.0" prefWidth="268.0" text="Token" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
-               <font>
-                  <Font name="Arial" size="16.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets top="4.0" />
-               </GridPane.margin>
-            </Label>
             <Label prefHeight="17.0" prefWidth="264.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
             <Label prefHeight="17.0" prefWidth="460.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <ToggleButton mnemonicParsing="false" text="Light mode" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
          <padding>
             <Insets top="32.0" />

@@ -4,7 +4,7 @@
     -fx-color: #ffffff;
     -fx-error: #ED1C24;
     -fx-background-color: -fx-background;
-    -fx-accent:#A45EE5;
+    -fx-accent: #A45EE5;
     -fx-accent-dark: #8430FF;
     -fx-font-size: 16px;
     -fx-font-family: "Arial";
@@ -21,10 +21,15 @@
     -fx-border-color:  transparent transparent transparent -fx-background;
 }
 
+.button-accented-dark,
 .button-accented {
     -fx-background-color: -fx-accent;
     -fx-background-radius: 0;
     -fx-text-fill: -fx-color;
+}
+
+.button-accented-dark {
+    -fx-background-color: -fx-accent-dark;
 }
 
 .button-transparent {
@@ -69,4 +74,34 @@
 .table-view .column-header {
     -fx-background-color: -fx-background;
     -fx-border-color:  -fx-background-light;
+}
+
+.choice-box {
+    -fx-background-color: -fx-background;
+    -fx-mark-color: -fx-accent;
+}
+
+.choice-box > .label {
+    -fx-text-fill: -fx-color;
+}
+
+.choice-box .context-menu { -fx-background-color: -fx-background; }
+.choice-box .menu-item:focused { -fx-background-color: -fx-accent; }
+.choice-box .menu-item > .label { -fx-text-fill: -fx-color; }
+
+.radio-button .radio {
+    -fx-border-color: -fx-accent-dark;
+    -fx-border-width: 2px;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+    -fx-padding: 4px;
+}
+
+.radio-button:selected .dot {
+    -fx-background-color: -fx-accent-dark;
+}
+
+.radio-button .dot {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
 }
