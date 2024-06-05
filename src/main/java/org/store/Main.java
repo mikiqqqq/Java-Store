@@ -30,7 +30,7 @@ public class Main extends Application {
         loginStage.setTitle("Login");
         loginStage.setScene(loginScene);
 
-        // Set the application icon for the login stage
+        //Set the application icon for the login stage
         try {
             loginStage.getIcons().add(new Image("file:icons/javaIcon.png"));
         } catch (IllegalArgumentException ex) {
