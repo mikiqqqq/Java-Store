@@ -56,8 +56,12 @@
     -fx-text-fill: -fx-accent-dark;
 }
 
-.error {
+.error,
+.labeltext {
     -fx-font-size: 12px;
+}
+
+.error {
     -fx-text-fill: -fx-error;
 }
 
@@ -77,17 +81,21 @@
 }
 
 .choice-box {
+    -fx-background-radius: 0;
+}
+
+.choice-box--custom.choice-box {
     -fx-background-color: -fx-background;
     -fx-mark-color: -fx-accent;
 }
 
-.choice-box > .label {
+.choice-box--custom.choice-box > .label {
     -fx-text-fill: -fx-color;
 }
 
-.choice-box .context-menu { -fx-background-color: -fx-background; }
-.choice-box .menu-item:focused { -fx-background-color: -fx-accent; }
-.choice-box .menu-item > .label { -fx-text-fill: -fx-color; }
+.choice-box--custom.choice-box .context-menu { -fx-background-color: -fx-background; }
+.choice-box--custom.choice-box .menu-item:focused { -fx-background-color: -fx-accent; }
+.choice-box--custom.choice-box .menu-item > .label { -fx-text-fill: -fx-color; }
 
 .radio-button .radio {
     -fx-border-color: -fx-accent-dark;
