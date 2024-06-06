@@ -1,6 +1,6 @@
 package database;
 
-import org.store.controller.WindowsRegistryController;
+import org.store.WindowsRegistryController;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;

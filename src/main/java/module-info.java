@@ -9,9 +9,7 @@ module org.store {
 
     exports org.store.enumeration;
     opens org.store to javafx.fxml;
-    exports org.store.controller;
     exports org.store.model;
     opens org.store.model to javafx.fxml;
-    opens org.store.controller to javafx.fxml;
     exports org.store;
 }

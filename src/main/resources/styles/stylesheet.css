@@ -1,7 +1,4 @@
 .root {
-    -fx-background:  #504A4B;
-    -fx-background-light: #808080;
-    -fx-color: #ffffff;
     -fx-error: #ED1C24;
     -fx-background-color: -fx-background;
     -fx-accent: #A45EE5;
@@ -10,6 +7,18 @@
     -fx-font-family: "Arial";
     -fx-text-fill: -fx-color;
     -fx-text-inner-color: -fx-color;
+}
+
+.dark-theme {
+    -fx-background: #504A4B;
+    -fx-background-light: #808080;
+    -fx-color: #ffffff;
+}
+
+.light-theme {
+    -fx-background: #c7c7c7;
+    -fx-background-light: #ffffff;
+    -fx-color: #504A4B;
 }
 
 .background-light {

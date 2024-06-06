@@ -1,4 +1,4 @@
-package org.store.controller;
+package org.store;
 
 import database.repository.OrderItemRepo;
 import database.repository.OrderRepo;
@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import org.store.Main;
 import org.store.enumeration.OrderStatus;
 import org.store.model.Order;
 import org.store.model.Product;
@@ -338,6 +337,8 @@ public class MainController {
         }
 
     }
+
+    @FXML
     void openSettingsDialog() {
         try {
             mainApp.showSettingsDialog();

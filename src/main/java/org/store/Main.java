@@ -8,15 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.store.controller.LoginController;
-import org.store.controller.MainController;
-import org.store.controller.RegisterController;
-import org.store.controller.WindowsRegistryController;
 import org.store.model.Settings;
 
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 
 public class Main extends Application {
@@ -37,33 +31,9 @@ public class Main extends Application {
         }
 
         mainStage = stage;
-        applySettings();
 
         showLoginView();
     }
-
-    private void applySettings() {
-        String theme = Settings.getTheme();
-        String themeFile = "light-theme.css";
-        if ("Dark".equals(theme)) {
-            themeFile = "dark-theme.css";
-        }
-        mainStage.getScene().getStylesheets().add(getClass().getResource(themeFile).toExternalForm());
-
-        // Apply font size
-        String fontSize = Settings.getFontSize();
-        if (fontSize != null) {
-            mainStage.getScene().getRoot().setStyle("-fx-font-size: " + fontSize);
-        }
-
-        // Apply language
-        String language = Settings.getLanguage();
-        Locale locale = new Locale(language.equals("Croatian") ? "hr" : "en");
-        ResourceBundle bundle = ResourceBundle.getBundle("org.store.bundle.MyBundle", locale);
-
-        mainStage.getScene().setUserData(bundle);
-    }
-
 
     public void showLoginView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("login.fxml"));
@@ -75,6 +45,8 @@ public class Main extends Application {
         loginStage.setTitle("Login");
         loginStage.setScene(loginScene);
 
+        Settings.applySettings(loginScene);
+
         // Set the application icon for the login stage
         try {
             loginStage.getIcons().add(new Image("file:icons/javaIcon.png"));
@@ -85,6 +57,7 @@ public class Main extends Application {
         LoginController controller = fxmlLoader.getController();
         controller.setMainApp(this);
         controller.setLoginStage(loginStage);
+        System.out.println("Loaded");
 
         loginStage.showAndWait();
     }
@@ -97,6 +70,8 @@ public class Main extends Application {
 
         mainStage.setTitle("Java Application");
         mainStage.setScene(mainScene);
+
+        Settings.applySettings(mainScene);
 
         try {
             mainStage.getIcons().add(new Image("file:icons/javaIcon.png"));
@@ -120,6 +95,8 @@ public class Main extends Application {
         registerStage.setTitle("Register");
         registerStage.setScene(registerScene);
 
+        Settings.applySettings(registerScene);
+
         // Set the application icon for the register stage
         try {
             registerStage.getIcons().add(new Image("file:icons/javaIcon.png"));
@@ -141,6 +118,7 @@ public class Main extends Application {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
+        Settings.applySettings(scene);
         stage.setTitle("Admin View");
         stage.show();
     }
@@ -151,6 +129,7 @@ public class Main extends Application {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
+        Settings.applySettings(scene);
         stage.setTitle("Cart");
         stage.show();
     }
@@ -161,6 +140,7 @@ public class Main extends Application {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
+        Settings.applySettings(scene);
         stage.setTitle("Contact");
         stage.show();
     }
@@ -170,6 +150,7 @@ public class Main extends Application {
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setScene(scene);
+        Settings.applySettings(scene);
         stage.setTitle("Order History");
         stage.show();
     }
@@ -180,6 +161,7 @@ public class Main extends Application {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
+        Settings.applySettings(scene);
         stage.setTitle("Settings");
         stage.show();
     }
@@ -189,6 +171,7 @@ public class Main extends Application {
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setScene(scene);
+        Settings.applySettings(scene);
         stage.setTitle("User Information");
         stage.show();
     }
