@@ -40,6 +40,7 @@ public class Database {
             databaseURL = config.getProperty("databaseURL");
             databaseUsername = config.getProperty("databaseUsername");
             databasePassword = config.getProperty("databasePassword");
+            System.out.println(databaseURL + databaseUsername + databasePassword);
         }
 
         connect = DriverManager.getConnection(databaseURL, databaseUsername, databasePassword);
@@ -57,11 +58,13 @@ public class Database {
     public static void addUser(User user) throws SQLException, IOException {
         Connection connection = getConnect();
 
-        String query = "INSERT INTO USER (EMAIL, PASSWORD_HASH, AUTHORIZATION_LEVEL_ID) VALUES (?, ?, ?)";
+        String query = "INSERT INTO \"USER\" (EMAIL, PASSWORD_HASH, SALT, NAME, AUTHORIZATION_LEVEL_ID) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setString(1, user.getEmail());
         statement.setString(2, user.getPasswordHash());
-        statement.setInt(3, getAuthorizationLevelId(user.getAuthorizationLevel()));
+        statement.setString(3, user.getSalt());
+        statement.setString(4, user.getFullName());
+        statement.setInt(5, getAuthorizationLevelId(user.getAuthorizationLevel()));
 
         statement.executeUpdate();
         connection.close();
@@ -88,10 +91,10 @@ public class Database {
         Connection connection = getConnect();
         User user = null;
 
-        String query = "SELECT U.EMAIL, U.PASSWORD_HASH, AL.TITLE AS AUTHORIZATION_LEVEL " +
-                "FROM USER U " +
-                "JOIN AUTHORIZATION_LEVEL AL ON U.AUTHORIZATION_LEVEL_ID = AL.ID " +
-                "WHERE U.EMAIL = ?";
+        String query = "SELECT U.\"EMAIL\", U.\"PASSWORD_HASH\", AL.\"TITLE\" AS AUTHORIZATION_LEVEL " +
+                "FROM \"USER\" U " +
+                "JOIN \"AUTHORIZATION_LEVEL\" AL ON U.\"AUTHORIZATION_LEVEL_ID\" = AL.\"ID\" " +
+                "WHERE U.\"EMAIL\" = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setString(1, email);
 

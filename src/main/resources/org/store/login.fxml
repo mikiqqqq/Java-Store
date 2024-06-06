@@ -31,7 +31,7 @@
             <RowConstraints maxHeight="68.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="267.0" styleClass="button-accented" text="Log in" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Button mnemonicParsing="false" onAction="#handleLogin" prefHeight="42.0" prefWidth="267.0" styleClass="button-accented" text="Log in" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -42,7 +42,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="70.0" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Sign up" textFill="WHITE" translateX="-6.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="TOP">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleRegister" prefHeight="35.0" prefWidth="70.0" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Sign up" textFill="WHITE" translateX="-6.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -106,8 +106,8 @@
                   <Insets top="4.0" />
                </GridPane.margin>
             </Label>
-            <Label maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="17.0" prefWidth="264.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <Label prefHeight="17.0" prefWidth="460.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+            <Label fx:id="emailErrorLabel" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="17.0" prefWidth="264.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Label fx:id="passwordErrorLabel" prefHeight="17.0" prefWidth="460.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
          </children>
          <padding>
             <Insets top="32.0" />

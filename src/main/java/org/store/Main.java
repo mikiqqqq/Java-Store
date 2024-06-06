@@ -43,6 +43,7 @@ public class Main extends Application {
         loginStage.setTitle("Login");
         loginStage.setScene(loginScene);
 
+        // Set the application icon for the login stage
         try {
             loginStage.getIcons().add(new Image("file:icons/javaIcon.png"));
         } catch (IllegalArgumentException ex) {
@@ -50,7 +51,8 @@ public class Main extends Application {
         }
 
         LoginController controller = fxmlLoader.getController();
-        controller.setMainApp(this); // Injecting the main application reference
+        controller.setMainApp(this);
+        controller.setLoginStage(loginStage);
 
         loginStage.showAndWait();
     }
@@ -74,16 +76,17 @@ public class Main extends Application {
         mainStage.show();
     }
 
-    public void showRegisterView() throws IOException {
+    public void showRegisterView(Stage loginStage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("register.fxml"));
         Scene registerScene = new Scene(fxmlLoader.load());
 
         Stage registerStage = new Stage();
         registerStage.initModality(Modality.APPLICATION_MODAL);
-        registerStage.initOwner(mainStage);
+        registerStage.initOwner(loginStage);
         registerStage.setTitle("Register");
         registerStage.setScene(registerScene);
 
+        // Set the application icon for the register stage
         try {
             registerStage.getIcons().add(new Image("file:icons/javaIcon.png"));
         } catch (IllegalArgumentException ex) {
@@ -91,7 +94,9 @@ public class Main extends Application {
         }
 
         RegisterController controller = fxmlLoader.getController();
-        controller.setMainApp(this); // Injecting the main application reference
+        controller.setMainApp(this);
+        controller.setRegisterStage(registerStage);
+        controller.setLoginStage(loginStage);
 
         registerStage.showAndWait();
     }

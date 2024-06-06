@@ -5,8 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -28,9 +30,14 @@ public class LoginController {
     private Label passwordErrorLabel;
 
     private Main mainApp;
+    private Stage loginStage;
 
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
+    }
+
+    public void setLoginStage(Stage loginStage) {
+        this.loginStage = loginStage;
     }
 
     @FXML
@@ -44,6 +51,7 @@ public class LoginController {
                 if (verifyUser(email, hashedPassword)) {
                     mainApp.setUserAuthorizationLevel(getAuthorizationLevel(email));
                     mainApp.showMainView();
+                    loginStage.close();
                 } else {
                     passwordErrorLabel.setText("Invalid email or password.");
                 }
@@ -56,8 +64,12 @@ public class LoginController {
 
     @FXML
     private void handleRegister() {
-        // Handle register logic
-        // Open register dialog
+        try {
+            mainApp.showRegisterView(loginStage); // Call method to show the register dialog
+        } catch (IOException e) {
+            emailErrorLabel.setText("Error opening the register view.");
+            e.printStackTrace();
+        }
     }
 
     private boolean validateInput(String email, String password) {
@@ -79,9 +91,14 @@ public class LoginController {
         return valid;
     }
 
+    // Concatenate the ASCII values of each character in the email and divide it with the total number of characters in the email
     private String generateSalt(String email) {
-        long sum = email.chars().mapToLong(c -> c).sum();
-        return String.valueOf(sum / email.length());
+        StringBuilder asciiValues = new StringBuilder();
+        for (char c : email.toCharArray()) {
+            asciiValues.append((int) c);
+        }
+        BigInteger sumOfAsciiValues = new BigInteger(asciiValues.toString());
+        return sumOfAsciiValues.divide(BigInteger.valueOf(email.length())).toString();
     }
 
     private String hashPasswordWithSalt(String password, String salt) {
