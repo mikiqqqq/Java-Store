@@ -147,7 +147,7 @@
    <left>
       <VBox prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="adminButton" mnemonicParsing="false" styleClass="button-menu" text="Admin">
+            <Button fx:id="adminButton" mnemonicParsing="false" styleClass="button-menu" text="%admin_btn">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>

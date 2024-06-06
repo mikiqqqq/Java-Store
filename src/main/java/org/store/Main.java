@@ -11,6 +11,9 @@ import javafx.stage.Stage;
 import org.store.model.Settings;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 public class Main extends Application {
@@ -38,7 +41,6 @@ public class Main extends Application {
     public void showLoginView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("login.fxml"));
         Scene loginScene = new Scene(fxmlLoader.load());
-
         Stage loginStage = new Stage();
         loginStage.initModality(Modality.APPLICATION_MODAL);
         loginStage.initOwner(mainStage);
@@ -47,40 +49,34 @@ public class Main extends Application {
 
         Settings.applySettings(loginScene);
 
-        // Set the application icon for the login stage
-        try {
-            loginStage.getIcons().add(new Image("file:icons/javaIcon.png"));
-        } catch (IllegalArgumentException ex) {
-            System.out.println("Icon path invalid!");
-        }
-
         LoginController controller = fxmlLoader.getController();
+        loginScene.setUserData(controller);
         controller.setMainApp(this);
         controller.setLoginStage(loginStage);
-        System.out.println("Loaded");
 
         loginStage.showAndWait();
     }
 
     public void showMainView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
+        Locale locale = new Locale(Settings.getLanguage());
+        ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
+        URL fxmlUrl = Main.class.getResource("main.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, bundle);
         Scene mainScene = new Scene(fxmlLoader.load());
 
-        System.out.println(fxmlLoader);
 
         mainStage.setTitle("Java Application");
         mainStage.setScene(mainScene);
 
-        Settings.applySettings(mainScene);
-
-        try {
-            mainStage.getIcons().add(new Image("file:icons/javaIcon.png"));
-        } catch (IllegalArgumentException ex) {
-            System.out.println("Icon path invalid!");
-        }
-
         MainController controller = fxmlLoader.getController();
+        mainScene.setUserData(controller); // Store the controller in user data
         controller.setMainApp(this); // Injecting the main application reference
+
+
+        mainScene.setUserData(controller); // Store the controller in user data
+
+        // Apply settings before storing the controller
+        Settings.applySettings(mainScene);
 
         mainStage.show();
     }
@@ -96,13 +92,6 @@ public class Main extends Application {
         registerStage.setScene(registerScene);
 
         Settings.applySettings(registerScene);
-
-        // Set the application icon for the register stage
-        try {
-            registerStage.getIcons().add(new Image("file:icons/javaIcon.png"));
-        } catch (IllegalArgumentException ex) {
-            System.out.println("Icon path invalid!");
-        }
 
         RegisterController controller = fxmlLoader.getController();
         controller.setMainApp(this);
@@ -156,11 +145,16 @@ public class Main extends Application {
     }
 
     public void showSettingsDialog() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("settings.fxml"));
+        Locale locale = new Locale(Settings.getLanguage());
+        ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("settings.fxml"), bundle);
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
+
+        scene.setUserData(Main.class.getResource("settings.fxml"));
+
         Settings.applySettings(scene);
         stage.setTitle("Settings");
         stage.show();

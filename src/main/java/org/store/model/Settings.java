@@ -2,13 +2,14 @@ package org.store.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.ini4j.Ini;
-import org.store.Main;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class Settings {
     private static final String DEFAULT_FONT_SIZE = "16px";
 
     private static Ini ini;
+    private static int ct = 0;
 
     static {
         checkAndCreateIniFile();
@@ -78,6 +80,8 @@ public class Settings {
                 .map(window -> (Stage) window)
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
+        System.out.println("called");
+        System.out.println(stages);
         for (Stage stage : stages) {
             Scene scene = stage.getScene();
             if (scene != null) {
@@ -92,6 +96,16 @@ public class Settings {
             String language = getLanguage();
             String fontSize = getFontSize();
 
+            // Apply language
+            Locale locale = new Locale(language);
+            ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
+            // Apply language
+            if (scene.getUserData() instanceof URL fxmlUrl) {
+
+                FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, bundle);
+                scene.setRoot(fxmlLoader.load());
+            }
+
             // Apply font size
             scene.getRoot().setStyle("-fx-font-size: " + fontSize + ";");
 
@@ -103,10 +117,6 @@ public class Settings {
                 scene.getRoot().getStyleClass().remove("dark-theme");
                 scene.getRoot().getStyleClass().add("light-theme");
             }
-
-            // Apply language
-            Locale locale = new Locale(language);
-            ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
 
 
         } catch (Exception e) {

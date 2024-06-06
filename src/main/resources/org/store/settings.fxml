@@ -28,7 +28,7 @@
             <RowConstraints maxHeight="134.0" minHeight="10.0" prefHeight="122.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button fx:id="closeButton" mnemonicParsing="false" onAction="#closeSettingsDialog" prefHeight="42.0" prefWidth="267.0" styleClass="button-accented" text="Close" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Button fx:id="closeButton" mnemonicParsing="false" onAction="#closeSettingsDialog" prefHeight="42.0" prefWidth="267.0" styleClass="button-accented" text="%close_btn" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -44,7 +44,7 @@
                   <Font name="Arial Bold" size="36.0" />
                </font>
             </Label>
-            <ToggleButton fx:id="themeToggleButton" mnemonicParsing="false" prefHeight="35.0" styleClass="button-accented" text="Toggle light mode" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <ToggleButton fx:id="themeToggleButton" mnemonicParsing="false" prefHeight="35.0" styleClass="button-accented" text="%toggle_btn" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <ChoiceBox fx:id="languageChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets top="12.0" />

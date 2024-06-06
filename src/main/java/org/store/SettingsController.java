@@ -54,9 +54,4 @@ public class SettingsController {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
     }
-
-    public void localizeComponents(ResourceBundle bundle) {
-        themeToggleButton.setText(bundle.getString("themeToggleButton"));
-        closeButton.setText(bundle.getString("themeToggleButton"));
-    }
 }
