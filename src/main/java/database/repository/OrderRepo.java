@@ -1,8 +1,8 @@
 package database.repository;
 
-import com.example.store.model.Order;
 import database.Database;
 import org.store.model.OrderItem;
+import org.store.model.Order;
 
 import java.io.IOException;
 import java.sql.*;
