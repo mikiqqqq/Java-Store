@@ -1,20 +1,16 @@
-import org.store.WindowsRegistryReader;
+package database;
+
+import org.store.User;
+import org.store.WindowsRegistryController;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
-
+import static org.store.Main.isWindows;
 
 public class Database {
     public static Connection connect;
     public static boolean activeConnectionWithDatabase = false;
-
-    private static boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase().contains("win");
-    }
 
     public synchronized Connection connectToDatabase() throws SQLException, IOException {
         while(Database.activeConnectionWithDatabase) {
@@ -35,9 +31,9 @@ public class Database {
 
         if (isWindows()) {
             String keyPath = "Software\\MyApp";
-            databaseURL = WindowsRegistryReader.readStringValue(keyPath, "databaseURL");
-            databaseUsername = WindowsRegistryReader.readStringValue(keyPath, "databaseUsername");
-            databasePassword = WindowsRegistryReader.readStringValue(keyPath, "databasePassword");
+            databaseURL = WindowsRegistryController.readStringValue(keyPath, "databaseURL");
+            databaseUsername = WindowsRegistryController.readStringValue(keyPath, "databaseUsername");
+            databasePassword = WindowsRegistryController.readStringValue(keyPath, "databasePassword");
         } else {
             Properties config = new Properties();
             config.load(new FileReader("dat/database.properties"));
@@ -58,18 +54,57 @@ public class Database {
         return database.connectToDatabase();
     }
 
-    public static void addItemToFactory(Item item, Factory factory) throws SQLException, IOException, InterruptedException {
+    public static void addUser(User user) throws SQLException, IOException {
         Connection connection = getConnect();
 
-        PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO FACTORY_ITEM (FACTORY_ID, ITEM_ID) VALUES(?, ?)");
-
-        statement.setLong(1, factory.getId());
-        statement.setLong(2, item.getId());
+        String query = "INSERT INTO USER (EMAIL, PASSWORD_HASH, AUTHORIZATION_LEVEL_ID) VALUES (?, ?, ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getEmail());
+        statement.setString(2, user.getPasswordHash());
+        statement.setInt(3, getAuthorizationLevelId(user.getAuthorizationLevel()));
 
         statement.executeUpdate();
+        connection.close();
+    }
+
+    private static int getAuthorizationLevelId(String authorizationLevel) throws SQLException, IOException {
+        Connection connection = getConnect();
+        int id = -1;
+
+        String query = "SELECT ID FROM AUTHORIZATION_LEVEL WHERE TITLE = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, authorizationLevel);
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            id = resultSet.getInt("ID");
+        }
 
         connection.close();
+        return id;
+    }
+
+    public static User getUserByEmail(String email) throws SQLException, IOException {
+        Connection connection = getConnect();
+        User user = null;
+
+        String query = "SELECT U.EMAIL, U.PASSWORD_HASH, AL.TITLE AS AUTHORIZATION_LEVEL " +
+                "FROM USER U " +
+                "JOIN AUTHORIZATION_LEVEL AL ON U.AUTHORIZATION_LEVEL_ID = AL.ID " +
+                "WHERE U.EMAIL = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, email);
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            user = new User();
+            user.setEmail(resultSet.getString("EMAIL"));
+            user.setPasswordHash(resultSet.getString("PASSWORD_HASH"));
+            user.setAuthorizationLevel(resultSet.getString("AUTHORIZATION_LEVEL"));
+        }
+
+        connection.close();
+        return user;
     }
 
     public static void disconnectFromDatabase() throws SQLException {

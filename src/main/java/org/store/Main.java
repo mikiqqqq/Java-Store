@@ -1,5 +1,7 @@
 package org.store;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,9 +15,20 @@ import java.io.IOException;
 public class Main extends Application {
 
     private static Stage mainStage;
+    private String userAuthorizationLevel;
+
+    public static final Logger logger = LoggerFactory.getLogger(Main.class);
+
+    public static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("win");
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
+        if (isWindows()) {
+            WindowsRegistryController.writeRegistryValuesFromProperties();
+        }
+
         mainStage = stage;
         showLoginView();
     }
@@ -30,7 +43,6 @@ public class Main extends Application {
         loginStage.setTitle("Login");
         loginStage.setScene(loginScene);
 
-        //Set the application icon for the login stage
         try {
             loginStage.getIcons().add(new Image("file:icons/javaIcon.png"));
         } catch (IllegalArgumentException ex) {
@@ -38,30 +50,58 @@ public class Main extends Application {
         }
 
         LoginController controller = fxmlLoader.getController();
-        controller.setMainApp(this);
+        controller.setMainApp(this); // Injecting the main application reference
 
         loginStage.showAndWait();
     }
 
-    public void showMainView() {
+    public void showMainView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
+        Scene mainScene = new Scene(fxmlLoader.load(), 500, 500);
+
+        mainStage.setTitle("Java Application");
+        mainStage.setScene(mainScene);
+
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
-            Scene mainScene = new Scene(fxmlLoader.load(), 500, 500);
-
-            mainStage.setTitle("Java Application");
-            mainStage.setScene(mainScene);
-
-            // Set the application icon for the main stage
-            try {
-                mainStage.getIcons().add(new Image("file:icons/javaIcon.png"));
-            } catch (IllegalArgumentException ex) {
-                System.out.println("Icon path invalid!");
-            }
-
-            mainStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+            mainStage.getIcons().add(new Image("file:icons/javaIcon.png"));
+        } catch (IllegalArgumentException ex) {
+            System.out.println("Icon path invalid!");
         }
+
+        MainController controller = fxmlLoader.getController();
+        controller.setMainApp(this); // Injecting the main application reference
+
+        mainStage.show();
+    }
+
+    public void showRegisterView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("register.fxml"));
+        Scene registerScene = new Scene(fxmlLoader.load());
+
+        Stage registerStage = new Stage();
+        registerStage.initModality(Modality.APPLICATION_MODAL);
+        registerStage.initOwner(mainStage);
+        registerStage.setTitle("Register");
+        registerStage.setScene(registerScene);
+
+        try {
+            registerStage.getIcons().add(new Image("file:icons/javaIcon.png"));
+        } catch (IllegalArgumentException ex) {
+            System.out.println("Icon path invalid!");
+        }
+
+        RegisterController controller = fxmlLoader.getController();
+        controller.setMainApp(this); // Injecting the main application reference
+
+        registerStage.showAndWait();
+    }
+
+    public void setUserAuthorizationLevel(String level) {
+        this.userAuthorizationLevel = level;
+    }
+
+    public String getUserAuthorizationLevel() {
+        return userAuthorizationLevel;
     }
 
     public static void main(String[] args) {

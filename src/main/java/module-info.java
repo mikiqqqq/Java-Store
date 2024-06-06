@@ -4,6 +4,7 @@ module org.store {
     requires java.sql;
     requires com.sun.jna;
     requires com.sun.jna.platform;
+    requires org.slf4j;
 
 
     opens org.store to javafx.fxml;
