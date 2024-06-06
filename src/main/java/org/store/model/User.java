@@ -1,4 +1,4 @@
-package org.store;
+package org.store.model;
 
 public class User {
     private String email;

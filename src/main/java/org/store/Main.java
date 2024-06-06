@@ -101,6 +101,64 @@ public class Main extends Application {
         registerStage.showAndWait();
     }
 
+    public void showAdminView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("admin.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(scene);
+        stage.setTitle("Admin View");
+        stage.show();
+    }
+
+    public void showCartView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("cart.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(scene);
+        stage.setTitle("Cart");
+        stage.show();
+    }
+
+    public void showContactDialog() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("contact.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(scene);
+        stage.setTitle("Contact");
+        stage.show();
+    }
+
+    public void showOrderHistoryView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("orders.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Order History");
+        stage.show();
+    }
+
+    public void showSettingsDialog() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("settings.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(scene);
+        stage.setTitle("Settings");
+        stage.show();
+    }
+
+    public void showUserInfoView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("user_information.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("User Information");
+        stage.show();
+    }
+
     public void setUserAuthorizationLevel(String level) {
         this.userAuthorizationLevel = level;
     }
