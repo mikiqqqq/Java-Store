@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.store.MainController">
    <center>
       <Pane styleClass="background-light" BorderPane.alignment="CENTER">
          <children>
@@ -38,9 +38,9 @@
                   <RowConstraints minHeight="10.0" prefHeight="42.0" vgrow="NEVER" />
               </rowConstraints>
                <children>
-                  <RadioButton mnemonicParsing="false" text="Price" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <RadioButton mnemonicParsing="false" text="Alphabetically" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField prefHeight="42.0" promptText="Search" styleClass="input" GridPane.columnSpan="2" GridPane.valignment="TOP">
+                  <RadioButton fx:id="sortByPrice" mnemonicParsing="false" text="Price" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <RadioButton fx:id="sortByAlphabetically" mnemonicParsing="false" text="Alphabetically" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="searchTextField" prefHeight="42.0" promptText="Search" styleClass="input" GridPane.columnSpan="2" GridPane.valignment="TOP">
                      <padding>
                         <Insets left="40.0" />
                      </padding>
@@ -49,21 +49,25 @@
                   <Label text="Sort by:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" translateY="3.0" GridPane.valignment="TOP">
                      <image>
-                        <Image url="@../../../../../icons/search.png" />
+                        <Image url="@../../icons/search.png" />
                      </image>
                   </ImageView>
-                  <ChoiceBox prefWidth="180.0" styleClass="choice-box--custom" GridPane.rowIndex="2" />
-                  <ChoiceBox layoutX="34.0" layoutY="166.0" prefWidth="180.0" styleClass="choice-box--custom" GridPane.rowIndex="3" />
-                  <ChoiceBox layoutX="34.0" layoutY="215.0" prefWidth="180.0" styleClass="choice-box--custom" GridPane.rowIndex="4" />
+                  <ChoiceBox fx:id="yearChoiceBox" prefWidth="180.0" styleClass="choice-box--custom" GridPane.rowIndex="2" />
+                  <ChoiceBox fx:id="brandChoiceBox" layoutX="34.0" layoutY="166.0" prefWidth="180.0" styleClass="choice-box--custom" GridPane.rowIndex="3" />
+                  <ChoiceBox fx:id="categoryChoiceBox" layoutX="34.0" layoutY="215.0" prefWidth="180.0" styleClass="choice-box--custom" GridPane.rowIndex="4" />
                </children>
                <padding>
                   <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
                </padding>
             </GridPane>
-            <TableView layoutY="370.0" prefHeight="300.0" prefWidth="600.0">
+            <TableView fx:id="mainTableView" layoutY="370.0" prefHeight="300.0" prefWidth="600.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="columnId" prefWidth="40.88478088378906" text="ID" />
+                <TableColumn fx:id="columnTitle" prefWidth="158.95835876464844" text="TItle" />
+                  <TableColumn fx:id="columnBrand" prefWidth="99.54159545898438" text="Brand" />
+                  <TableColumn fx:id="columnCategory" prefWidth="118.67691040039062" text="Category" />
+                  <TableColumn fx:id="columnYear" prefWidth="76.50839233398438" text="Year" />
+                  <TableColumn fx:id="columnPrice" prefWidth="106.64373779296875" text="Price" />
               </columns>
             </TableView>
             <GridPane prefHeight="80.0" prefWidth="600.0">
@@ -74,11 +78,11 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label styleClass="text-on-light" text="%logo" GridPane.halignment="CENTER">
+                  <Label styleClass="text-on-light" text="Tech Giant" GridPane.halignment="CENTER">
                      <graphic>
                         <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../../../icons/logo.png" />
+                              <Image url="@../../icons/logo.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -94,7 +98,7 @@
    <bottom>
       <Pane prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #504A4B;" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="1109.0" layoutY="7.0" styleClass="labeltext" text="Date &amp; Time">
+            <Label fx:id="dateTimeLabel" layoutX="1109.0" layoutY="7.0" styleClass="labeltext" text="Date &amp; Time">
                <padding>
                   <Insets right="24.0" />
                </padding>
@@ -113,21 +117,22 @@
          <children>
             <VBox layoutX="-3.0" prefHeight="622.0" prefWidth="348.0" translateX="29.0" translateY="24.0">
                <children>
-                  <ImageView fitHeight="180.0" fitWidth="348.0" pickOnBounds="true">
+                  <ImageView fx:id="mainImageView" fitHeight="180.0" fitWidth="348.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../../icons/placeholder.jpg" />
+                        <Image url="@../../icons/placeholder.jpg" />
                      </image></ImageView>
-                  <Label text="Title" />
-                  <Label text="Description" />
-                  <Label text="Price" />
+                  <Label fx:id="titleLabel" text="Title" />
+                  <Label fx:id="descriptionLabel" text="Description" />
+                  <Label fx:id="brandLabel" text="Brand" />
+                  <Label fx:id="priceLabel" text="Price" />
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" text="-" />
-                        <Label text="0" />
-                        <Button mnemonicParsing="false" text="+" />
+                        <Button fx:id="decrementButton" mnemonicParsing="false" text="-" />
+                        <Label fx:id="quantityLabel" text="0" />
+                        <Button fx:id="incrementButton" mnemonicParsing="false" text="+" />
                      </children>
                   </HBox>
-                  <Button mnemonicParsing="false" text="Add to cart" />
+                  <Button fx:id="addToCartButton" mnemonicParsing="false" text="Add to cart" />
                </children>
             </VBox>
          </children>
@@ -136,83 +141,71 @@
    <left>
       <VBox prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="%back_btn">
+            <Button fx:id="adminButton" mnemonicParsing="false" styleClass="button-menu" text="Admin">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/back.png" />
+                        <Image url="@../../icons/admin.png" />
                      </image>
                   </ImageView>
                </graphic>
                <VBox.margin>
-                  <Insets top="16.0" />
+                  <Insets />
                </VBox.margin>
             </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="%admin_btn">
+            <Button fx:id="settingsButton" mnemonicParsing="false" styleClass="button-menu" text="Settings">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/admin.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <VBox.margin>
-                  <Insets top="36.0" />
-               </VBox.margin>
-            </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="%settings_btn">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../../icons/settings.png" />
+                        <Image url="@../../icons/settings.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="%user_info_btn">
+            <Button fx:id="userInfoButton" mnemonicParsing="false" styleClass="button-menu" text="User information">
                <font>
                   <Font size="16.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/account.png" />
+                        <Image url="@../../icons/account.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="%cart_btn">
+            <Button fx:id="cartButton" mnemonicParsing="false" styleClass="button-menu" text="Cart">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/cart.png" />
+                        <Image url="@../../icons/cart.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="%order_btn">
+            <Button fx:id="orderHistoryButton" mnemonicParsing="false" styleClass="button-menu" text="Order history">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/order.png" />
+                        <Image url="@../../icons/order.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="%contact_btn">
+            <Button fx:id="contactButton" mnemonicParsing="false" styleClass="button-menu" text="Contact us">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/contact.png" />
+                        <Image url="@../../icons/contact.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="%log_out_btn" translateY="210.0">
+            <Button fx:id="logOutButton" mnemonicParsing="false" styleClass="button-menu" text="Log out" translateY="210.0">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/log-out.png" />
+                        <Image url="@../../icons/log-out.png" />
                      </image>
                   </ImageView>
                </graphic>

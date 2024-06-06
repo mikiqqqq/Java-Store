@@ -135,4 +135,103 @@ public class ProductRepo {
         connection.close();
         return id;
     }
+
+    public static String getBrandById(int brandId) throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+        String brand = "";
+
+        String query = "SELECT TITLE FROM BRAND WHERE ID = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, brandId);
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            brand = resultSet.getString("TITLE");
+        }
+
+        connection.close();
+        return brand;
+    }
+
+    public static String getCategoryById(int categoryId) throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+        String category = "";
+
+        String query = "SELECT TITLE FROM CATEGORY WHERE ID = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, categoryId);
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            category = resultSet.getString("TITLE");
+        }
+
+        connection.close();
+        return category;
+    }
+
+    public static int getYearById(int yearId) throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+        int year = 0;
+
+        String query = "SELECT PRODUCT_YEAR FROM PRODUCT_YEAR WHERE ID = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, yearId);
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            year = resultSet.getInt("PRODUCT_YEAR");
+        }
+
+        connection.close();
+        return year;
+    }
+
+    public static List<String> getAllBrands() throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+        List<String> brands = new ArrayList<>();
+
+        String query = "SELECT TITLE FROM BRAND";
+        PreparedStatement statement = connection.prepareStatement(query);
+        ResultSet resultSet = statement.executeQuery();
+
+        while (resultSet.next()) {
+            brands.add(resultSet.getString("TITLE"));
+        }
+
+        connection.close();
+        return brands;
+    }
+
+    public static List<String> getAllCategories() throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+        List<String> categories = new ArrayList<>();
+
+        String query = "SELECT TITLE FROM CATEGORY";
+        PreparedStatement statement = connection.prepareStatement(query);
+        ResultSet resultSet = statement.executeQuery();
+
+        while (resultSet.next()) {
+            categories.add(resultSet.getString("TITLE"));
+        }
+
+        connection.close();
+        return categories;
+    }
+
+    public static List<String> getAllYears() throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+        List<String> years = new ArrayList<>();
+
+        String query = "SELECT PRODUCT_YEAR FROM PRODUCT_YEAR";
+        PreparedStatement statement = connection.prepareStatement(query);
+        ResultSet resultSet = statement.executeQuery();
+
+        while (resultSet.next()) {
+            years.add(resultSet.getString("PRODUCT_YEAR"));
+        }
+
+        connection.close();
+        return years;
+    }
 }

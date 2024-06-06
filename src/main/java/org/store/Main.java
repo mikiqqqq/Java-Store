@@ -59,7 +59,9 @@ public class Main extends Application {
 
     public void showMainView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
-        Scene mainScene = new Scene(fxmlLoader.load(), 500, 500);
+        Scene mainScene = new Scene(fxmlLoader.load());
+
+        System.out.println(fxmlLoader);
 
         mainStage.setTitle("Java Application");
         mainStage.setScene(mainScene);

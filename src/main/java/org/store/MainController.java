@@ -10,12 +10,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import org.store.model.Order;
 import org.store.model.Product;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainController {
@@ -51,13 +51,13 @@ public class MainController {
     private Button decrementButton;
 
     @FXML
-    private ChoiceBox<String> filterChoiceBox;
+    private ChoiceBox<String> yearChoiceBox;
 
     @FXML
-    private ChoiceBox<String> sortChoiceBox;
+    private ChoiceBox<String> brandChoiceBox;
 
     @FXML
-    private ChoiceBox<String> anotherChoiceBox;
+    private ChoiceBox<String> categoryChoiceBox;
 
     @FXML
     private Label descriptionLabel;
@@ -66,13 +66,13 @@ public class MainController {
     private Label priceLabel;
 
     @FXML
+    private Label brandLabel;
+
+    @FXML
     private Label titleLabel;
 
     @FXML
     private Label quantityLabel;
-
-    @FXML
-    private Label logoLabel;
 
     @FXML
     private Label dateTimeLabel;
@@ -84,22 +84,28 @@ public class MainController {
     private RadioButton sortByPrice;
 
     @FXML
-    private TableColumn<Product, String> column1;
-
-    @FXML
-    private TableColumn<Product, String> column2;
-
-    @FXML
-    private TableColumn<Product, String> column3;
-
-    @FXML
     private TableView<Product> mainTableView;
 
     @FXML
-    private TextField searchTextField;
+    private TableColumn<Product, String> columnId;
 
     @FXML
-    private VBox rightVBox;
+    private TableColumn<Product, String> columnTitle;
+
+    @FXML
+    private TableColumn<Product, String> columnBrand;
+
+    @FXML
+    private TableColumn<Product, String> columnCategory;
+
+    @FXML
+    private TableColumn<Product, String> columnYear;
+
+    @FXML
+    private TableColumn<Product, String> columnPrice;
+
+    @FXML
+    private TextField searchTextField;
 
     @FXML
     private ImageView mainImageView;
@@ -116,9 +122,12 @@ public class MainController {
 
     public void initialize() {
         // Initialize the table columns
-        column1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
-        column2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDescription()));
-        column3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPrice().toString()));
+        columnId.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getId())));
+        columnTitle.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
+        columnBrand.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBrand()));
+        columnCategory.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCategory()));
+        columnYear.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getProductYear())));
+        columnPrice.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPrice().toString()));
 
         // Fetch products from the database
         fetchProductsFromDatabase();
@@ -136,10 +145,79 @@ public class MainController {
         // Add listener to search field
         searchTextField.textProperty().addListener((obs, oldText, newText) -> filterProducts());
 
-        // Initialize the choice boxes and radio buttons for filtering and sorting
-        filterChoiceBox.setItems(FXCollections.observableArrayList("Filter1", "Filter2", "Filter3"));
-        sortChoiceBox.setItems(FXCollections.observableArrayList("Sort1", "Sort2", "Sort3"));
-        anotherChoiceBox.setItems(FXCollections.observableArrayList("Choice1", "Choice2", "Choice3"));
+        // Fetch and set items for choice boxes
+        try {
+            brandChoiceBox.setItems(FXCollections.observableArrayList(getBrandItems()));
+            categoryChoiceBox.setItems(FXCollections.observableArrayList(getCategoryItems()));
+            yearChoiceBox.setItems(FXCollections.observableArrayList(getYearItems()));
+
+            brandChoiceBox.getSelectionModel().selectFirst();
+            categoryChoiceBox.getSelectionModel().selectFirst();
+            yearChoiceBox.getSelectionModel().selectFirst();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+
+        // Add listeners to choice boxes
+        brandChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterProducts());
+        categoryChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterProducts());
+        yearChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterProducts());
+    }
+
+    // Method to fetch all brands from the database
+    private List<String> fetchBrandsFromDatabase() throws SQLException, IOException {
+        return ProductRepo.getAllBrands();
+    }
+
+    // Method to fetch all categories from the database
+    private List<String> fetchCategoriesFromDatabase() throws SQLException, IOException {
+        return ProductRepo.getAllCategories();
+    }
+
+    // Method to fetch all years from the database
+    private List<String> fetchYearsFromDatabase() throws SQLException, IOException {
+        return ProductRepo.getAllYears();
+    }
+
+    private List<String> getBrandItems() throws SQLException, IOException {
+        List<String> brands = new ArrayList<>();
+        brands.add("Brand");
+        brands.addAll(fetchBrandsFromDatabase());
+        return brands;
+    }
+
+    private List<String> getCategoryItems() throws SQLException, IOException {
+        List<String> categories = new ArrayList<>();
+        categories.add("Category");
+        categories.addAll(fetchCategoriesFromDatabase());
+        return categories;
+    }
+
+    private List<String> getYearItems() throws SQLException, IOException {
+        List<String> years = new ArrayList<>();
+        years.add("Years");
+        years.addAll(fetchYearsFromDatabase());
+        return years;
+    }
+
+    private void filterProducts() {
+        String selectedBrand = brandChoiceBox.getSelectionModel().getSelectedItem();
+        String selectedCategory = categoryChoiceBox.getSelectionModel().getSelectedItem();
+        String selectedYear = yearChoiceBox.getSelectionModel().getSelectedItem();
+
+        if ("Brand".equals(selectedBrand)) {
+            selectedBrand = null;
+        }
+        if ("Category".equals(selectedCategory)) {
+            selectedCategory = null;
+        }
+        if ("Year".equals(selectedCategory)) {
+            selectedYear = null;
+        }
+
+        // Implement your filtering logic here based on selectedBrand, selectedCategory, and selectedYear
+        System.out.println("Filtering products with Brand: " + selectedBrand + ", Category: " + selectedCategory + ", Year: " + selectedYear);
+        // Update your table view with filtered products
     }
 
     private void fetchProductsFromDatabase() {
@@ -149,10 +227,6 @@ public class MainController {
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void filterProducts() {
-        // Implement product filtering logic
     }
 
     private void showProductDetails(Product product) {

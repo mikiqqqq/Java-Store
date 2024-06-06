@@ -42,7 +42,7 @@
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../../../icons/pdf.png" />
+                              <Image url="@../../icons/pdf.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -136,7 +136,7 @@
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/back.png" />
+                        <Image url="@../../icons/back.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -148,7 +148,7 @@
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/admin.png" />
+                        <Image url="@../../icons/admin.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -160,7 +160,7 @@
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/settings.png" />
+                        <Image url="@../../icons/settings.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -172,7 +172,7 @@
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/account.png" />
+                        <Image url="@../../icons/account.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -181,7 +181,7 @@
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/cart.png" />
+                        <Image url="@../../icons/cart.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -190,7 +190,7 @@
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/order.png" />
+                        <Image url="@../../icons/order.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -199,7 +199,7 @@
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/contact.png" />
+                        <Image url="@../../icons/contact.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -208,7 +208,7 @@
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../icons/log-out.png" />
+                        <Image url="@../../icons/log-out.png" />
                      </image>
                   </ImageView>
                </graphic>

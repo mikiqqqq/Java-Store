@@ -83,6 +83,30 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public int getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(int brandId) {
+        this.brandId = brandId;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public int getProductYearId() {
+        return productYearId;
+    }
+
+    public void setProductYearId(int productYearId) {
+        this.productYearId = productYearId;
+    }
+
     public String getBrand() {
         return brand;
     }
