@@ -1,6 +1,6 @@
 package org.store;
 
-import database.Database;
+import database.repository.UserRepo;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -76,7 +76,7 @@ public class RegisterController {
                 newUser.setFullName(fullName); // Set full name
                 newUser.setAuthorizationLevel("CUSTOMER"); // Default authorization level
 
-                Database.addUser(newUser);
+                UserRepo.addUser(newUser);
                 registerStage.close(); // Close register stage
                 loginStage.show(); // Show login stage again
                 mainApp.showLoginView(); // Return to login view
@@ -102,7 +102,7 @@ public class RegisterController {
             valid = false;
         } else {
             try {
-                if (Database.getUserByEmail(email) != null) {
+                if (UserRepo.getUserByEmail(email) != null) {
                     emailErrorLabel.setText("Email already exists.");
                     valid = false;
                 } else {

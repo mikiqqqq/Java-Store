@@ -1,6 +1,8 @@
 package org.store;
 
 import database.Database;
+import database.repository.OrderItemRepo;
+import database.repository.ProductRepo;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import org.store.model.Order;
 import org.store.model.Product;
 
 import java.io.IOException;
@@ -141,7 +144,7 @@ public class MainController {
 
     private void fetchProductsFromDatabase() {
         try {
-            List<Product> productList = Database.getAllProducts();
+            List<Product> productList = ProductRepo.getAllProducts();
             products.setAll(productList);
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -167,7 +170,7 @@ public class MainController {
         // Update the order with order items
         try {
             Order order = new Order(); // Assuming you have a method to get the current order
-            Database.addOrderItem(order, mainTableView.getSelectionModel().getSelectedItem(), quantity);
+            OrderItemRepo.addOrderItem(order, mainTableView.getSelectionModel().getSelectedItem(), quantity);
             System.out.println("Product added to cart.");
         } catch (SQLException | IOException e) {
             e.printStackTrace();

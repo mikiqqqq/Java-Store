@@ -1,15 +1,17 @@
 package org.store.model;
 
-public class OrderProduct {
+public class OrderItem {
     private int id;
+    private int quantity;
     private int orderId;
     private int productId;
 
     // Constructors
-    public OrderProduct() {}
+    public OrderItem() {}
 
-    public OrderProduct(int id, int orderId, int productId) {
+    public OrderItem(int id, int quantity, int orderId, int productId) {
         this.id = id;
+        this.quantity = quantity;
         this.orderId = orderId;
         this.productId = productId;
     }
@@ -21,6 +23,14 @@ public class OrderProduct {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getOrderId() {

@@ -1,6 +1,7 @@
 package org.store;
 
 import database.Database;
+import database.repository.UserRepo;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -114,12 +115,12 @@ public class LoginController {
     }
 
     private boolean verifyUser(String email, String hashedPassword) throws SQLException, IOException {
-        User user = Database.getUserByEmail(email);
+        User user = UserRepo.getUserByEmail(email);
         return user != null && user.getPasswordHash().equals(hashedPassword);
     }
 
     private String getAuthorizationLevel(String email) throws SQLException, IOException {
-        User user = Database.getUserByEmail(email);
+        User user = UserRepo.getUserByEmail(email);
         return user != null ? user.getAuthorizationLevel() : null;
     }
 }

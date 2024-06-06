@@ -4,6 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class Order {
+    public enum Status {
+        IN_PROGRESS,
+        COMPLETED
+    }
+
     private int id;
     private LocalDateTime date;
     private int paymentTypeId;
@@ -12,12 +17,15 @@ public class Order {
     private String phoneNumber;
     private String address;
     private String message;
-    private List<OrderProduct> orderProducts; // Association with OrderProduct class
+    private Status status;
+    private List<OrderItem> orderItems; // Association with OrderProduct class
 
     // Constructors
-    public Order() {}
+    public Order() {
+        this.status = Status.IN_PROGRESS; // Default status
+    }
 
-    public Order(int id, LocalDateTime date, int paymentTypeId, String cardNumber, String email, String phoneNumber, String address, String message, List<OrderProduct> orderProducts) {
+    public Order(int id, LocalDateTime date, int paymentTypeId, String cardNumber, String email, String phoneNumber, String address, String message, Status status, List<OrderItem> orderItems) {
         this.id = id;
         this.date = date;
         this.paymentTypeId = paymentTypeId;
@@ -26,7 +34,8 @@ public class Order {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.message = message;
-        this.orderProducts = orderProducts;
+        this.status = status;
+        this.orderItems = orderItems;
     }
 
     // Getters and Setters
@@ -94,11 +103,19 @@ public class Order {
         this.message = message;
     }
 
-    public List<OrderProduct> getOrderProducts() {
-        return orderProducts;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setOrderProducts(List<OrderProduct> orderProducts) {
-        this.orderProducts = orderProducts;
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public List<OrderItem> getOrderProducts() {
+        return orderItems;
+    }
+
+    public void setOrderProducts(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 }

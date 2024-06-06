@@ -1,11 +1,10 @@
 package org.store.model;
 
 import java.math.BigDecimal;
-import java.sql.Blob;
 
 public class Product {
     private int id;
-    private Blob image;
+    private byte[] image;
     private String title;
     private String description;
     private BigDecimal price;
@@ -13,11 +12,14 @@ public class Product {
     private int brandId;
     private int categoryId;
     private int productYearId;
+    private String brand;
+    private String category;
+    private int productYear;
 
     // Constructors
     public Product() {}
 
-    public Product(int id, Blob image, String title, String description, BigDecimal price, int quantity, int brandId, int categoryId, int productYearId) {
+    public Product(int id, byte[] image, String title, String description, BigDecimal price, int quantity, int brandId, int categoryId, int productYearId, String brand, String category, int productYear) {
         this.id = id;
         this.image = image;
         this.title = title;
@@ -27,6 +29,9 @@ public class Product {
         this.brandId = brandId;
         this.categoryId = categoryId;
         this.productYearId = productYearId;
+        this.brand = brand;
+        this.category = category;
+        this.productYear = productYear;
     }
 
     // Getters and Setters
@@ -38,11 +43,11 @@ public class Product {
         this.id = id;
     }
 
-    public Blob getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(Blob image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 
@@ -78,27 +83,27 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public int getBrandId() {
-        return brandId;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setBrandId(int brandId) {
-        this.brandId = brandId;
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public int getProductYearId() {
-        return productYearId;
+    public int getProductYear() {
+        return productYear;
     }
 
-    public void setProductYearId(int productYearId) {
-        this.productYearId = productYearId;
+    public void setProductYear(int productYear) {
+        this.productYear = productYear;
     }
 }
