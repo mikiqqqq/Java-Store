@@ -26,7 +26,6 @@ public class Settings {
     private static final String DEFAULT_FONT_SIZE = "16px";
 
     private static Ini ini;
-    private static int ct = 0;
 
     static {
         checkAndCreateIniFile();
@@ -80,14 +79,12 @@ public class Settings {
                 .map(window -> (Stage) window)
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
-        System.out.println("called");
-        System.out.println(stages);
-        for (Stage stage : stages) {
+        stages.forEach(stage -> {
             Scene scene = stage.getScene();
             if (scene != null) {
                 applySettings(scene);
             }
-        }
+        });
     }
 
     public static void applySettings(Scene scene) {

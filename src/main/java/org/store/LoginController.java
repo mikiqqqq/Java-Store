@@ -30,15 +30,11 @@ public class LoginController {
     @FXML
     private Label passwordErrorLabel;
 
-    private Main mainApp;
-    private Stage loginStage;
+    private static Main mainApp;
+    private final Stage loginStage = (Stage) emailField.getScene().getWindow();
 
-    public void setMainApp(Main mainApp) {
-        this.mainApp = mainApp;
-    }
-
-    public void setLoginStage(Stage loginStage) {
-        this.loginStage = loginStage;
+    public static void setMainApp(Main mainApp) {
+        LoginController.mainApp = mainApp;
     }
 
     @FXML

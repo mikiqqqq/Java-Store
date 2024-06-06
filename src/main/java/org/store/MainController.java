@@ -121,10 +121,10 @@ public class MainController {
     private int quantity = 0;
     private Order currentOrder;
 
-    private Main mainApp;
+    private static Main mainApp;
 
-    public void setMainApp(Main mainApp) {
-        this.mainApp = mainApp;
+    public static void setMainApp(Main mainApp) {
+        MainController.mainApp = mainApp;
     }
 
     public void initialize() {

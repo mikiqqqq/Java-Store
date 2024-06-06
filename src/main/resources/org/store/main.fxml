@@ -159,7 +159,7 @@
                   <Insets />
                </VBox.margin>
             </Button>
-            <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#openSettingsDialog" styleClass="button-menu" text="Settings">
+            <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#openSettingsDialog" styleClass="button-menu" text="%settings_btn">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
