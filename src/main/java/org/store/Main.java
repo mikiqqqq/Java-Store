@@ -8,8 +8,15 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.store.controller.LoginController;
+import org.store.controller.MainController;
+import org.store.controller.RegisterController;
+import org.store.controller.WindowsRegistryController;
+import org.store.model.Settings;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 public class Main extends Application {
@@ -30,8 +37,33 @@ public class Main extends Application {
         }
 
         mainStage = stage;
+        applySettings();
+
         showLoginView();
     }
+
+    private void applySettings() {
+        String theme = Settings.getTheme();
+        String themeFile = "light-theme.css";
+        if ("Dark".equals(theme)) {
+            themeFile = "dark-theme.css";
+        }
+        mainStage.getScene().getStylesheets().add(getClass().getResource(themeFile).toExternalForm());
+
+        // Apply font size
+        String fontSize = Settings.getFontSize();
+        if (fontSize != null) {
+            mainStage.getScene().getRoot().setStyle("-fx-font-size: " + fontSize);
+        }
+
+        // Apply language
+        String language = Settings.getLanguage();
+        Locale locale = new Locale(language.equals("Croatian") ? "hr" : "en");
+        ResourceBundle bundle = ResourceBundle.getBundle("org.store.bundle.MyBundle", locale);
+
+        mainStage.getScene().setUserData(bundle);
+    }
+
 
     public void showLoginView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("login.fxml"));

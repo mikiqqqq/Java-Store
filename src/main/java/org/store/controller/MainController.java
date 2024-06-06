@@ -1,7 +1,7 @@
-package org.store;
+package org.store.controller;
 
-import database.Database;
 import database.repository.OrderItemRepo;
+import database.repository.OrderRepo;
 import database.repository.ProductRepo;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -10,10 +10,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.store.Main;
+import org.store.enumeration.OrderStatus;
 import org.store.model.Order;
 import org.store.model.Product;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +82,9 @@ public class MainController {
     private Label dateTimeLabel;
 
     @FXML
+    private ToggleGroup sortToggleGroup;
+
+    @FXML
     private RadioButton sortByAlphabetically;
 
     @FXML
@@ -113,6 +120,7 @@ public class MainController {
     private final ObservableList<Product> products = FXCollections.observableArrayList();
 
     private int quantity = 0;
+    private Order currentOrder;
 
     private Main mainApp;
 
@@ -129,6 +137,8 @@ public class MainController {
         columnYear.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getProductYear())));
         columnPrice.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPrice().toString()));
 
+        displayProductDetails(1);
+
         // Fetch products from the database
         fetchProductsFromDatabase();
 
@@ -138,12 +148,15 @@ public class MainController {
         // Add listener to table selection
         mainTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                showProductDetails(newSelection);
+                displayProductDetails(newSelection.getId());
             }
         });
 
         // Add listener to search field
-        searchTextField.textProperty().addListener((obs, oldText, newText) -> filterProducts());
+        searchTextField.textProperty().addListener((obs, oldText, newText) -> filterAndSortProducts());
+
+        // Add listener to sort toggle group for sorting
+        sortToggleGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> filterAndSortProducts());
 
         // Fetch and set items for choice boxes
         try {
@@ -159,9 +172,24 @@ public class MainController {
         }
 
         // Add listeners to choice boxes
-        brandChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterProducts());
-        categoryChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterProducts());
-        yearChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterProducts());
+        brandChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterAndSortProducts());
+        categoryChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterAndSortProducts());
+        yearChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterAndSortProducts());
+    }
+
+    private void filterAndSortProducts() {
+        String brand = brandChoiceBox.getSelectionModel().getSelectedItem().equals("Brand") ? null : brandChoiceBox.getSelectionModel().getSelectedItem();
+        String category = categoryChoiceBox.getSelectionModel().getSelectedItem().equals("Category") ? null : categoryChoiceBox.getSelectionModel().getSelectedItem();
+        String year = yearChoiceBox.getSelectionModel().getSelectedItem().equals("Year") ? null : yearChoiceBox.getSelectionModel().getSelectedItem();
+        String searchText = searchTextField.getText();
+        boolean sortByPriceBool = sortByPrice.isSelected();
+
+        try {
+            List<Product> products = ProductRepo.fetchFilteredAndSortedProducts(brand, category, year, searchText, sortByPriceBool);
+            mainTableView.setItems(FXCollections.observableArrayList(products));
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Method to fetch all brands from the database
@@ -195,29 +223,9 @@ public class MainController {
 
     private List<String> getYearItems() throws SQLException, IOException {
         List<String> years = new ArrayList<>();
-        years.add("Years");
+        years.add("Year");
         years.addAll(fetchYearsFromDatabase());
         return years;
-    }
-
-    private void filterProducts() {
-        String selectedBrand = brandChoiceBox.getSelectionModel().getSelectedItem();
-        String selectedCategory = categoryChoiceBox.getSelectionModel().getSelectedItem();
-        String selectedYear = yearChoiceBox.getSelectionModel().getSelectedItem();
-
-        if ("Brand".equals(selectedBrand)) {
-            selectedBrand = null;
-        }
-        if ("Category".equals(selectedCategory)) {
-            selectedCategory = null;
-        }
-        if ("Year".equals(selectedCategory)) {
-            selectedYear = null;
-        }
-
-        // Implement your filtering logic here based on selectedBrand, selectedCategory, and selectedYear
-        System.out.println("Filtering products with Brand: " + selectedBrand + ", Category: " + selectedCategory + ", Year: " + selectedYear);
-        // Update your table view with filtered products
     }
 
     private void fetchProductsFromDatabase() {
@@ -229,22 +237,46 @@ public class MainController {
         }
     }
 
-    private void showProductDetails(Product product) {
-        mainImageView.setImage(new Image("path/to/image"));
-        titleLabel.setText(product.getTitle());
-        descriptionLabel.setText(product.getDescription());
-        priceLabel.setText(String.valueOf(product.getPrice()));
-        quantity = 0; // Reset quantity
-        quantityLabel.setText(String.valueOf(quantity));
+    private void displayProductDetails(int productId) {
+        try {
+            Product product = ProductRepo.getProductById(productId);
+            if (product != null) {
+                titleLabel.setText(product.getTitle());
+                descriptionLabel.setText(product.getDescription());
+                brandLabel.setText(product.getBrand());
+                priceLabel.setText(product.getPrice().toString());
+
+                if (product.getImage() != null) {
+                    InputStream is = new ByteArrayInputStream(product.getImage());
+                    Image image = new Image(is);
+                    mainImageView.setImage(image);
+                } else {
+                    mainImageView.setImage(null);
+                }
+            }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    void handleAddToCart() {
-        // Handle add to cart logic here
-        // Update the order with order items
+    void addToCart() {
         try {
-            Order order = new Order(); // Assuming you have a method to get the current order
-            OrderItemRepo.addOrderItem(order, mainTableView.getSelectionModel().getSelectedItem(), quantity);
+            Product selectedProduct = mainTableView.getSelectionModel().getSelectedItem();
+            if (selectedProduct == null) {
+                System.out.println("No product selected.");
+                return;
+            }
+
+            if (currentOrder == null) {
+                // Create a new order with status IN_PROGRESS
+                currentOrder = new Order();
+                currentOrder.setStatus(OrderStatus.IN_PROGRESS);
+                OrderRepo.createOrder(currentOrder);
+            }
+
+            // Add order item to the current order
+            OrderItemRepo.addOrderItem(currentOrder, selectedProduct, quantity);
             System.out.println("Product added to cart.");
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -280,7 +312,7 @@ public class MainController {
 
     @FXML
     void handleDecrement() {
-        if (quantity > 0) {
+        if (quantity > 1) {
             quantity--;
             quantityLabel.setText(String.valueOf(quantity));
         }
@@ -304,15 +336,9 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
-    @FXML
-    void handleSearch() {
-        filterProducts();
     }
-
-    @FXML
-    void handleSettings() {
+    void openSettingsDialog() {
         try {
             mainApp.showSettingsDialog();
         } catch (IOException e) {
@@ -320,15 +346,6 @@ public class MainController {
         }
     }
 
-    @FXML
-    void handleSortByAlphabetically() {
-        // Handle sort by alphabetically logic here
-    }
-
-    @FXML
-    void handleSortByPrice() {
-        // Handle sort by price logic here
-    }
 
     @FXML
     void handleUserInfo() {

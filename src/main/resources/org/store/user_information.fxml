@@ -175,6 +175,6 @@
       </VBox>
    </left>
    <stylesheets>
-      <URL value="@../../stylesheet.css" />
+      <URL value="@../../styles/stylesheet.css" />
    </stylesheets>
 </BorderPane>

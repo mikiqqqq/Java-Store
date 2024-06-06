@@ -24,24 +24,7 @@ public class ProductRepo {
                 "JOIN PRODUCT_YEAR PY ON P.PRODUCT_YEAR_ID = PY.ID";
 
         PreparedStatement statement = connection.prepareStatement(query);
-        ResultSet resultSet = statement.executeQuery();
-
-        while (resultSet.next()) {
-            Product product = new Product();
-            product.setId(resultSet.getInt("ID"));
-            product.setTitle(resultSet.getString("TITLE"));
-            product.setDescription(resultSet.getString("DESCRIPTION"));
-            product.setPrice(resultSet.getBigDecimal("PRICE"));
-            product.setQuantity(resultSet.getInt("QUANTITY"));
-            product.setImage(resultSet.getBytes("IMAGE"));
-            product.setBrand(resultSet.getString("BRAND_TITLE"));
-            product.setCategory(resultSet.getString("CATEGORY_TITLE"));
-            product.setProductYear(resultSet.getInt("PRODUCT_YEAR"));
-            products.add(product);
-        }
-
-        connection.close();
-        return products;
+        return mapResultSetToProduct(connection, products, statement);
     }
 
     public static Product getProductById(int productId) throws SQLException, IOException {
@@ -69,7 +52,7 @@ public class ProductRepo {
             product.setImage(resultSet.getBytes("IMAGE"));
             product.setBrand(resultSet.getString("BRAND_TITLE"));
             product.setCategory(resultSet.getString("CATEGORY_TITLE"));
-            product.setProductYear(resultSet.getInt("PRODUCT_YEAR"));
+            product.setProductYear(resultSet.getString("PRODUCT_YEAR"));
         }
 
         connection.close();
@@ -94,6 +77,95 @@ public class ProductRepo {
         connection.close();
     }
 
+    public static List<Product> searchProductsByTitle(String target) throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+        List<Product> products = new ArrayList<>();
+
+        String query = "SELECT P.ID, P.IMAGE, P.TITLE, P.DESCRIPTION, P.PRICE, P.QUANTITY, B.TITLE AS BRAND_TITLE, C.TITLE AS CATEGORY_TITLE, PY.PRODUCT_YEAR " +
+                "FROM PRODUCT P " +
+                "JOIN BRAND B ON P.BRAND_ID = B.ID " +
+                "JOIN CATEGORY C ON P.CATEGORY_ID = C.ID " +
+                "JOIN PRODUCT_YEAR PY ON P.PRODUCT_YEAR_ID = PY.ID " +
+                "WHERE LOWER(P.TITLE) LIKE LOWER(?)";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, "%" + target + "%");
+
+        return mapResultSetToProduct(connection, products, statement);
+    }
+
+    public static List<Product> fetchFilteredAndSortedProducts(String brand, String category, String year, String searchText, boolean sortByPrice) throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+        List<Product> products = new ArrayList<>();
+
+        StringBuilder queryBuilder = getStringBuilder(brand, category, year, searchText, sortByPrice);
+
+        PreparedStatement statement = connection.prepareStatement(queryBuilder.toString());
+
+        int paramIndex = 1;
+        if (brand != null) {
+            statement.setString(paramIndex++, brand);
+        }
+        if (category != null) {
+            statement.setString(paramIndex++, category);
+        }
+        if (year != null) {
+            statement.setString(paramIndex++, year);
+        }
+        if (searchText != null && !searchText.isEmpty()) {
+            statement.setString(paramIndex++, "%" + searchText + "%");
+        }
+
+        return mapResultSetToProduct(connection, products, statement);
+    }
+
+    private static StringBuilder getStringBuilder(String brand, String category, String year, String searchText, boolean sortByPrice) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT P.ID, P.IMAGE, P.TITLE, P.DESCRIPTION, P.PRICE, P.QUANTITY, B.TITLE AS BRAND_TITLE, C.TITLE AS CATEGORY_TITLE, PY.PRODUCT_YEAR " +
+                "FROM PRODUCT P " +
+                "JOIN BRAND B ON P.BRAND_ID = B.ID " +
+                "JOIN CATEGORY C ON P.CATEGORY_ID = C.ID " +
+                "JOIN PRODUCT_YEAR PY ON P.PRODUCT_YEAR_ID = PY.ID WHERE 1=1");
+
+        if (brand != null) {
+            queryBuilder.append(" AND B.TITLE = ?");
+        }
+        if (category != null) {
+            queryBuilder.append(" AND C.TITLE = ?");
+        }
+        if (year != null) {
+            queryBuilder.append(" AND PY.PRODUCT_YEAR = ?");
+        }
+        if (searchText != null && !searchText.isEmpty()) {
+            queryBuilder.append(" AND LOWER(P.TITLE) LIKE LOWER(?)");
+        }
+        if (sortByPrice) {
+            queryBuilder.append(" ORDER BY P.PRICE ASC");
+        } else {
+            queryBuilder.append(" ORDER BY UPPER(P.TITLE) ASC");
+        }
+        return queryBuilder;
+    }
+
+    private static List<Product> mapResultSetToProduct(Connection connection, List<Product> products, PreparedStatement statement) throws SQLException {
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            Product product = new Product();
+            product.setId(resultSet.getInt("ID"));
+            product.setTitle(resultSet.getString("TITLE"));
+            product.setDescription(resultSet.getString("DESCRIPTION"));
+            product.setPrice(resultSet.getBigDecimal("PRICE"));
+            product.setQuantity(resultSet.getInt("QUANTITY"));
+            product.setImage(resultSet.getBytes("IMAGE"));
+            product.setBrand(resultSet.getString("BRAND_TITLE"));
+            product.setCategory(resultSet.getString("CATEGORY_TITLE"));
+            product.setProductYear(resultSet.getString("PRODUCT_YEAR"));
+            products.add(product);
+        }
+
+        connection.close();
+        return products;
+    }
+
     private static int getBrandId(String brandTitle) throws SQLException, IOException {
         return getIdFromTable("BRAND", brandTitle);
     }
@@ -102,13 +174,13 @@ public class ProductRepo {
         return getIdFromTable("CATEGORY", categoryTitle);
     }
 
-    private static int getProductYearId(int productYear) throws SQLException, IOException {
+    private static int getProductYearId(String productYear) throws SQLException, IOException {
         Connection connection = Database.getConnect();
         int id = -1;
 
         String query = "SELECT ID FROM PRODUCT_YEAR WHERE PRODUCT_YEAR = ?";
         PreparedStatement statement = connection.prepareStatement(query);
-        statement.setInt(1, productYear);
+        statement.setString(1, productYear);
 
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {

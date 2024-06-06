@@ -1,12 +1,12 @@
-package org.store;
+package org.store.controller;
 
-import database.Database;
 import database.repository.UserRepo;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.store.Main;
 import org.store.model.User;
 
 import java.io.IOException;

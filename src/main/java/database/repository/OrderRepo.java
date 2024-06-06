@@ -12,30 +12,22 @@ import java.util.List;
 
 public class OrderRepo {
 
-    public static Order createOrder(Order order) throws SQLException, IOException {
+    public static void createOrder(Order order) throws SQLException, IOException {
         Connection connection = Database.getConnect();
-        String query = "INSERT INTO \"ORDER\" (DATE, STATUS) VALUES (?, ?)";
-        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-        statement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-        statement.setString(2, order.getStatus().name());
+        String query = "INSERT INTO \"ORDER\" (STATUS) VALUES (?)";
+        PreparedStatement statement = connection.prepareStatement(query, new String[]{"ID"});
+        statement.setString(1, order.getStatus().name());
 
         int affectedRows = statement.executeUpdate();
-
-        if (affectedRows == 0) {
-            throw new SQLException("Creating order failed, no rows affected.");
-        }
-
-        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+        if (affectedRows > 0) {
+            var generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 order.setId(generatedKeys.getInt(1));
-            } else {
-                throw new SQLException("Creating order failed, no ID obtained.");
             }
         }
 
         connection.close();
-        return order;
     }
 
     public static void updateOrder(Order order) throws SQLException, IOException {
@@ -54,44 +46,5 @@ public class OrderRepo {
 
         statement.executeUpdate();
         connection.close();
-    }
-
-    public static void addOrderProduct(OrderItem orderItem) throws SQLException, IOException {
-        Connection connection = Database.getConnect();
-        String query = "INSERT INTO ORDER_PRODUCTS (ORDER_ID, PRODUCT_ID) VALUES (?, ?)";
-        PreparedStatement statement = connection.prepareStatement(query);
-
-        statement.setInt(1, orderItem.getOrderId());
-        statement.setInt(2, orderItem.getProductId());
-
-        statement.executeUpdate();
-        connection.close();
-    }
-
-    public static List<Order> getOrdersByStatus(Order.Status status) throws SQLException, IOException {
-        Connection connection = Database.getConnect();
-        String query = "SELECT * FROM \"ORDER\" WHERE STATUS = ?";
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, status.name());
-
-        ResultSet resultSet = statement.executeQuery();
-        List<Order> orders = new ArrayList<>();
-
-        while (resultSet.next()) {
-            Order order = new Order();
-            order.setId(resultSet.getInt("ID"));
-            order.setDate(resultSet.getTimestamp("DATE").toLocalDateTime());
-            order.setPaymentTypeId(resultSet.getInt("PAYMENT_TYPE_ID"));
-            order.setCardNumber(resultSet.getString("CARD_NUMBER"));
-            order.setEmail(resultSet.getString("EMAIL"));
-            order.setPhoneNumber(resultSet.getString("PHONE_NUMBER"));
-            order.setAddress(resultSet.getString("ADDRESS"));
-            order.setMessage(resultSet.getString("MESSAGE"));
-            order.setStatus(Order.Status.valueOf(resultSet.getString("STATUS")));
-            orders.add(order);
-        }
-
-        connection.close();
-        return orders;
     }
 }

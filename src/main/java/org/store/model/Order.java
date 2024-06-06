@@ -2,13 +2,9 @@ package org.store.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.store.enumeration.OrderStatus;
 
 public class Order {
-    public enum Status {
-        IN_PROGRESS,
-        COMPLETED
-    }
-
     private int id;
     private LocalDateTime date;
     private int paymentTypeId;
@@ -17,15 +13,15 @@ public class Order {
     private String phoneNumber;
     private String address;
     private String message;
-    private Status status;
-    private List<OrderItem> orderItems; // Association with OrderProduct class
+    private OrderStatus status;
+    private List<OrderItem> orderItems;
 
     // Constructors
     public Order() {
-        this.status = Status.IN_PROGRESS; // Default status
+        this.status = OrderStatus.IN_PROGRESS;
     }
 
-    public Order(int id, LocalDateTime date, int paymentTypeId, String cardNumber, String email, String phoneNumber, String address, String message, Status status, List<OrderItem> orderItems) {
+    public Order(int id, LocalDateTime date, int paymentTypeId, String cardNumber, String email, String phoneNumber, String address, String message, OrderStatus status, List<OrderItem> orderItems) {
         this.id = id;
         this.date = date;
         this.paymentTypeId = paymentTypeId;
@@ -103,19 +99,19 @@ public class Order {
         this.message = message;
     }
 
-    public Status getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
-    public List<OrderItem> getOrderProducts() {
+    public List<OrderItem> getOrderItems() {
         return orderItems;
     }
 
-    public void setOrderProducts(List<OrderItem> orderItems) {
+    public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
 }

@@ -14,12 +14,12 @@ public class Product {
     private int productYearId;
     private String brand;
     private String category;
-    private int productYear;
+    private String productYear;
 
     // Constructors
     public Product() {}
 
-    public Product(int id, byte[] image, String title, String description, BigDecimal price, int quantity, int brandId, int categoryId, int productYearId, String brand, String category, int productYear) {
+    public Product(int id, byte[] image, String title, String description, BigDecimal price, int quantity, int brandId, int categoryId, int productYearId, String brand, String category, String productYear) {
         this.id = id;
         this.image = image;
         this.title = title;
@@ -123,11 +123,11 @@ public class Product {
         this.category = category;
     }
 
-    public int getProductYear() {
+    public String getProductYear() {
         return productYear;
     }
 
-    public void setProductYear(int productYear) {
+    public void setProductYear(String productYear) {
         this.productYear = productYear;
     }
 }
