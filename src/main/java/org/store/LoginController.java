@@ -30,13 +30,6 @@ public class LoginController {
     @FXML
     private Label passwordErrorLabel;
 
-    private static Main mainApp;
-    private final Stage loginStage = (Stage) emailField.getScene().getWindow();
-
-    public static void setMainApp(Main mainApp) {
-        LoginController.mainApp = mainApp;
-    }
-
     @FXML
     private void handleLogin() {
         String email = emailField.getText().trim();
@@ -46,14 +39,16 @@ public class LoginController {
             try {
                 String hashedPassword = hashPasswordWithSalt(password, generateSalt(email));
                 if (verifyUser(email, hashedPassword)) {
-                    mainApp.setUserAuthorizationLevel(getAuthorizationLevel(email));
-                    mainApp.showMainView();
+                    Main.getMainApp().setUserAuthorizationLevel(getAuthorizationLevel(email));
+                    Main.getMainApp().showMainView();
+                    Stage loginStage = (Stage) emailField.getScene().getWindow();
                     loginStage.close();
                 } else {
                     passwordErrorLabel.setText("Invalid email or password.");
                 }
             } catch (SQLException | IOException e) {
                 passwordErrorLabel.setText("Error connecting to the database.");
+                System.err.println("Error connecting to the database: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -62,7 +57,7 @@ public class LoginController {
     @FXML
     private void handleRegister() {
         try {
-            mainApp.showRegisterView(loginStage); // Call method to show the register dialog
+            Main.getMainApp().showRegisterDialog();
         } catch (IOException e) {
             emailErrorLabel.setText("Error opening the register view.");
             e.printStackTrace();

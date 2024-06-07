@@ -24,27 +24,6 @@ import java.util.List;
 public class MainController {
 
     @FXML
-    private Button adminButton;
-
-    @FXML
-    private Button cartButton;
-
-    @FXML
-    private Button contactButton;
-
-    @FXML
-    private Button logOutButton;
-
-    @FXML
-    private Button orderHistoryButton;
-
-    @FXML
-    private Button settingsButton;
-
-    @FXML
-    private Button userInfoButton;
-
-    @FXML
     private Button addToCartButton;
 
     @FXML
@@ -120,12 +99,6 @@ public class MainController {
 
     private int quantity = 0;
     private Order currentOrder;
-
-    private static Main mainApp;
-
-    public static void setMainApp(Main mainApp) {
-        MainController.mainApp = mainApp;
-    }
 
     public void initialize() {
         // Initialize the table columns
@@ -283,33 +256,6 @@ public class MainController {
     }
 
     @FXML
-    void handleAdmin() {
-        try {
-            mainApp.showAdminView();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    void handleCart() {
-        try {
-            mainApp.showCartView();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    void handleContact() {
-        try {
-            mainApp.showContactDialog();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
     void handleDecrement() {
         if (quantity > 1) {
             quantity--;
@@ -321,39 +267,5 @@ public class MainController {
     void handleIncrement() {
         quantity++;
         quantityLabel.setText(String.valueOf(quantity));
-    }
-
-    @FXML
-    void handleLogOut() throws IOException {
-        mainApp.showLoginView();
-    }
-
-    @FXML
-    void handleOrderHistory() {
-        try {
-            mainApp.showOrderHistoryView();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @FXML
-    void openSettingsDialog() {
-        try {
-            mainApp.showSettingsDialog();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    @FXML
-    void handleUserInfo() {
-        try {
-            mainApp.showUserInfoView();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

@@ -23,12 +23,6 @@
    <center>
       <Pane styleClass="background-light" BorderPane.alignment="CENTER">
          <children>
-            <TableView layoutY="230.0" prefHeight="440.0" prefWidth="600.0">
-               <columns>
-                  <TableColumn prefWidth="75.0" text="C1" />
-                  <TableColumn prefWidth="75.0" text="C2" />
-               </columns>
-            </TableView>
             <GridPane prefHeight="80.0" prefWidth="600.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -47,6 +41,16 @@
                   </Label>
                </children>
             </GridPane>
+            <TableView fx:id="mainTableView" layoutY="142.0" prefHeight="528.0" prefWidth="600.0">
+               <columns>
+                  <TableColumn fx:id="columnId" prefWidth="40.88478088378906" text="ID" />
+                  <TableColumn fx:id="columnTitle" prefWidth="158.95835876464844" text="TItle" />
+                  <TableColumn fx:id="columnBrand" prefWidth="99.54159545898438" text="Brand" />
+                  <TableColumn fx:id="columnCategory" prefWidth="118.67691040039062" text="Category" />
+                  <TableColumn fx:id="columnYear" prefWidth="76.50839233398438" text="Year" />
+                  <TableColumn fx:id="columnPrice" prefWidth="106.64373779296875" text="Price" />
+               </columns>
+            </TableView>
          </children>
       </Pane>
    </center>
@@ -104,91 +108,7 @@
       </Pane>
    </right>
    <left>
-      <VBox prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="Back">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../icons/back.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <VBox.margin>
-                  <Insets top="16.0" />
-               </VBox.margin>
-            </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="Admin">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../icons/admin.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <VBox.margin>
-                  <Insets top="36.0" />
-               </VBox.margin>
-            </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="Settings">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../icons/settings.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="User information">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../icons/account.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="Cart">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../icons/cart.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="Order history">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../icons/order.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="Contact us">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../icons/contact.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button mnemonicParsing="false" styleClass="button-menu" text="Log out" translateY="210.0">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../icons/log-out.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-         </children>
-      </VBox>
+      <fx:include source="menu.fxml" />
    </left>
    <stylesheets>
       <URL value="@../../styles/stylesheet.css" />

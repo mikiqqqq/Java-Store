@@ -42,22 +42,6 @@ public class RegisterController {
     @FXML
     private Label confirmPasswordErrorLabel;
 
-    private Main mainApp;
-    private Stage registerStage;
-    private Stage loginStage;
-
-    public void setMainApp(Main mainApp) {
-        this.mainApp = mainApp;
-    }
-
-    public void setRegisterStage(Stage registerStage) {
-        this.registerStage = registerStage;
-    }
-
-    public void setLoginStage(Stage loginStage) {
-        this.loginStage = loginStage;
-    }
-
     @FXML
     private void handleRegister() {
         String fullName = fullNameField.getText().trim();
@@ -69,6 +53,7 @@ public class RegisterController {
             try {
                 String salt = generateSalt(email);
                 String hashedPassword = hashPasswordWithSalt(password, salt);
+
                 User newUser = new User();
                 newUser.setEmail(email);
                 newUser.setPasswordHash(hashedPassword);
@@ -77,9 +62,9 @@ public class RegisterController {
                 newUser.setAuthorizationLevel("CUSTOMER"); // Default authorization level
 
                 UserRepo.addUser(newUser);
-                registerStage.close(); // Close register stage
-                loginStage.show(); // Show login stage again
-                mainApp.showLoginView(); // Return to login view
+
+                Stage registerStage = (Stage) passwordField.getScene().getWindow();
+                registerStage.close();
             } catch (SQLException | IOException e) {
                 confirmPasswordErrorLabel.setText("Error connecting to the database.");
                 e.printStackTrace();
@@ -109,7 +94,8 @@ public class RegisterController {
                     emailErrorLabel.setText("");
                 }
             } catch (SQLException | IOException e) {
-                emailErrorLabel.setText("Error checking email.");
+                emailErrorLabel.setText("Error connecting to the database.");
+                System.err.println("Error connecting to the database: " + e.getMessage());
                 valid = false;
             }
         }
@@ -132,8 +118,8 @@ public class RegisterController {
 
     @FXML
     private void handleLogin() {
+        Stage registerStage = (Stage) passwordField.getScene().getWindow();
         registerStage.close();
-        loginStage.show();
     }
 
     // Concatenate the ASCII values of each character in the email and divide it with the total number of characters in the email

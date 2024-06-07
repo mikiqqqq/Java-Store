@@ -82,12 +82,12 @@ public class Settings {
         stages.forEach(stage -> {
             Scene scene = stage.getScene();
             if (scene != null) {
-                applySettings(scene);
+                applySettings(null, scene);
             }
         });
     }
 
-    public static void applySettings(Scene scene) {
+    public static Scene applySettings(URL fxmlUrl, Scene scene) {
         try {
             String theme = getTheme();
             String language = getLanguage();
@@ -97,10 +97,15 @@ public class Settings {
             Locale locale = new Locale(language);
             ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
             // Apply language
-            if (scene.getUserData() instanceof URL fxmlUrl) {
+            if (fxmlUrl == null && scene != null) {
+                if (scene.getUserData() instanceof URL storedFxmlUrl) {
 
+                    FXMLLoader fxmlLoader = new FXMLLoader(storedFxmlUrl, bundle);
+                    scene.setRoot(fxmlLoader.load());
+                }
+            } else {
                 FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, bundle);
-                scene.setRoot(fxmlLoader.load());
+                scene = new Scene(fxmlLoader.load());
             }
 
             // Apply font size
@@ -115,9 +120,9 @@ public class Settings {
                 scene.getRoot().getStyleClass().add("light-theme");
             }
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return scene;
     }
 }

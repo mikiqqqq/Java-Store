@@ -5,8 +5,10 @@ import com.sun.jna.platform.win32.WinReg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class WindowsRegistryController {
@@ -39,8 +41,8 @@ public class WindowsRegistryController {
         String keyPath = "SOFTWARE\\MyApp";
         Properties properties = new Properties();
 
-        try (FileReader reader = new FileReader("dat/database.properties")) {
-            properties.load(reader);
+        try (InputStream inputStream = WindowsRegistryController.class.getResourceAsStream("/dat/database.properties")) {
+            properties.load(inputStream);
 
             String databaseURL = properties.getProperty("databaseURL");
             String databaseUsername = properties.getProperty("databaseUsername");
@@ -49,7 +51,11 @@ public class WindowsRegistryController {
             writeStringValue(keyPath, "databaseURL", databaseURL);
             writeStringValue(keyPath, "databaseUsername", databaseUsername);
             writeStringValue(keyPath, "databasePassword", databasePassword);
+        } catch (FileNotFoundException e) {
+            System.err.println("Properties file not found: " + e.getMessage());
+            logger.error("Properties file not found: ", e);
         } catch (IOException e) {
+            System.err.println("Error reading from properties file: " + e.getMessage());
             logger.error("Error reading from properties file: ", e);
         }
     }

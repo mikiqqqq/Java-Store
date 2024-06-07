@@ -122,3 +122,7 @@
     -fx-background-color: transparent;
     -fx-background-radius: 0;
 }
+
+.main-view .back-button {
+    -fx-opacity: 0;
+}

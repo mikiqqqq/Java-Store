@@ -11,9 +11,9 @@ import java.io.IOException;
 public class Main extends Application {
 
     private static Stage mainStage;
-    private StageManager stageManager;
+    private static Main mainApp;
+    private static StageManager stageManager;
     private String userAuthorizationLevel;
-    public static Main mainApp;
 
     public static final Logger logger = LoggerFactory.getLogger(Main.class);
 
@@ -30,45 +30,20 @@ public class Main extends Application {
         mainStage = stage;
         mainApp = this;
         stageManager = new StageManager(stage);
-        showLoginView();
+        showLoginDialog();
     }
 
-    public void showLoginView() throws IOException {
-        LoginController.setMainApp(mainApp);
-        stageManager.showDialog("/org/store/login.fxml", "Login", mainStage);
+    public void showLoginDialog() throws IOException {
+        closeCurrentStage();
+        stageManager.showDialog("/org/store/login.fxml", "Login");
     }
 
     public void showMainView() throws IOException {
-        MainController.setMainApp(mainApp);
         stageManager.switchScene("/org/store/main.fxml", "Java Application");
     }
 
-    public void showRegisterView(Stage loginStage) throws IOException {
-        stageManager.showDialog("/org/store/register.fxml", "Register", loginStage);
-    }
-
-    public void showAdminView() throws IOException {
-        stageManager.showDialog("/org/store/admin.fxml", "Admin View", mainStage);
-    }
-
-    public void showCartView() throws IOException {
-        stageManager.showDialog("/org/store/cart.fxml", "Cart", mainStage);
-    }
-
-    public void showContactDialog() throws IOException {
-        stageManager.showDialog("/org/store/contact.fxml", "Contact", mainStage);
-    }
-
-    public void showOrderHistoryView() throws IOException {
-        stageManager.showDialog("/org/store/orders.fxml", "Order History", mainStage);
-    }
-
-    public void showSettingsDialog() throws IOException {
-        stageManager.showDialog("/org/store/settings.fxml", "Settings", mainStage);
-    }
-
-    public void showUserInfoView() throws IOException {
-        stageManager.showDialog("/org/store/user_information.fxml", "User Information", mainStage);
+    public void showRegisterDialog() throws IOException {
+        stageManager.showDialog("/org/store/register.fxml", "Register");
     }
 
     public void setUserAuthorizationLevel(String level) {
@@ -85,5 +60,15 @@ public class Main extends Application {
 
     public static Stage getStage() {
         return mainStage;
+    }
+
+    public static Main getMainApp() { return mainApp; }
+
+    public static StageManager getStageManager() { return stageManager; }
+
+    private void closeCurrentStage() {
+        if (mainStage != null) {
+            mainStage.close();
+        }
     }
 }

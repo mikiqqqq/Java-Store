@@ -33,14 +33,17 @@ public class Database {
             databaseURL = WindowsRegistryController.readStringValue(keyPath, "databaseURL");
             databaseUsername = WindowsRegistryController.readStringValue(keyPath, "databaseUsername");
             databasePassword = WindowsRegistryController.readStringValue(keyPath, "databasePassword");
+            System.out.println("Reading from windows");
         } else {
             Properties config = new Properties();
             config.load(new FileReader("dat/database.properties"));
             databaseURL = config.getProperty("databaseURL");
             databaseUsername = config.getProperty("databaseUsername");
             databasePassword = config.getProperty("databasePassword");
-            System.out.println(databaseURL + databaseUsername + databasePassword);
+            System.out.println("Reading from general");
         }
+
+        System.out.println(databaseURL);
 
         connect = DriverManager.getConnection(databaseURL, databaseUsername, databasePassword);
 
