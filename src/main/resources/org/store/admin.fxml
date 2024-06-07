@@ -14,12 +14,13 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.store.AdminController">
    <center>
       <Pane styleClass="background-light" BorderPane.alignment="CENTER">
          <children>
@@ -41,7 +42,7 @@
                   </Label>
                </children>
             </GridPane>
-            <TableView fx:id="mainTableView" layoutY="142.0" prefHeight="528.0" prefWidth="600.0">
+            <TableView fx:id="mainTableView" layoutY="180.0" prefHeight="490.0" prefWidth="600.0">
                <columns>
                   <TableColumn fx:id="columnId" prefWidth="40.88478088378906" text="ID" />
                   <TableColumn fx:id="columnTitle" prefWidth="158.95835876464844" text="TItle" />
@@ -51,6 +52,18 @@
                   <TableColumn fx:id="columnPrice" prefWidth="106.64373779296875" text="Price" />
                </columns>
             </TableView>
+            <HBox layoutY="125.0" prefHeight="0.0" prefWidth="311.0">
+               <children>
+                  <Button fx:id="addNewProductButton" mnemonicParsing="false" styleClass="button-accented-dark" text="Add new" />
+                  <Button fx:id="editProductButton" mnemonicParsing="false" styleClass="button-accented-dark" text="Edit product">
+                     <HBox.margin>
+                        <Insets left="24.0" />
+                     </HBox.margin></Button>
+               </children>
+               <padding>
+                  <Insets left="24.0" />
+               </padding>
+            </HBox>
          </children>
       </Pane>
    </center>
@@ -90,18 +103,25 @@
             <VBox layoutX="26.0" layoutY="24.0" prefHeight="622.0" prefWidth="348.0">
                <children>
                   <Label text="Add new item" />
-                  <ImageView fitHeight="180.0" fitWidth="348.0" pickOnBounds="true">
+                  <ImageView fx:id="productImageView" fitHeight="180.0" fitWidth="348.0" pickOnBounds="true">
                      <image>
                         <Image url="@../../icons/placeholder.jpg" />
                      </image>
                   </ImageView>
-                  <Button mnemonicParsing="false" text="Add image" />
+                  <Button fx:id="selectImageButton" mnemonicParsing="false" text="Select image" />
                   <Label text="Title" />
-                  <TextField />
+                  <TextField fx:id="titleTextField" />
                   <Label text="Description" />
-                  <TextArea prefHeight="200.0" prefWidth="200.0" />
+                  <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0" />
                   <Label text="Price" />
-                  <TextField />
+                  <TextField fx:id="priceTextField" />
+                  <Button fx:id="addProductButton" mnemonicParsing="false" text="Add" />
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="saveProductButton" mnemonicParsing="false" text="Save" />
+                        <Button fx:id="removeProductButton" mnemonicParsing="false" text="Remove" />
+                     </children>
+                  </HBox>
                </children>
             </VBox>
          </children>
