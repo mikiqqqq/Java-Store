@@ -11,6 +11,9 @@ module org.store {
     requires org.apache.httpcomponents.core5.httpcore5;
     requires com.fasterxml.jackson.databind;
     requires java.desktop;
+    requires javafx.swing;
+    requires com.mailjet.api;
+    requires org.json;
 
     exports org.store.enumeration;
     opens org.store to javafx.fxml;

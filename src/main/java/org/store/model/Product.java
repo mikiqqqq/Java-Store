@@ -34,15 +34,29 @@ public class Product {
         this.productYear = productYear;
     }
 
-    public Product(String title, String description, int brandId, int yearId, int categoryId, double price, byte[] image) {
+    public Product(int id, String title, String description, int brandId, int yearId, int categoryId, double price, int quantity, byte[] image) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.brandId = brandId;
         this.productYearId = yearId;
         this.categoryId = categoryId;
         this.price = BigDecimal.valueOf(price);
+        this.quantity = quantity;
         this.image = image;
     }
+
+    public Product(String title, String description, int brandId, int yearId, int categoryId, double price, int quantity, byte[] image) {
+        this.title = title;
+        this.description = description;
+        this.brandId = brandId;
+        this.productYearId = yearId;
+        this.categoryId = categoryId;
+        this.price = BigDecimal.valueOf(price);
+        this.quantity = quantity;
+        this.image = image;
+    }
+
 
     // Getters and Setters
     public int getId() {

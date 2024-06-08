@@ -119,8 +119,10 @@
                   <ChoiceBox fx:id="yearChoiceBox" layoutX="10.0" layoutY="444.0" prefWidth="150.0" />
                   <Label text="Price" />
                   <TextField fx:id="priceTextField" />
+                  <Label text="Quantity" />
+                  <TextField fx:id="quantityTextField" />
                   <Button fx:id="addProductButton" mnemonicParsing="false" onAction="#addProduct" text="Add" />
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <HBox prefHeight="20.0" prefWidth="348.0">
                      <children>
                         <Button fx:id="saveProductButton" mnemonicParsing="false" onAction="#editProduct" text="Save" />
                         <Button fx:id="removeProductButton" mnemonicParsing="false" text="Remove" />

@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import org.store.enumeration.OrderStatus;
 import org.store.model.Order;
 import org.store.model.Product;
+import org.store.utils.ImageConverter;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -219,9 +220,7 @@ public class MainController {
                 priceLabel.setText(product.getPrice().toString());
 
                 if (product.getImage() != null) {
-                    InputStream is = new ByteArrayInputStream(product.getImage());
-                    Image image = new Image(is);
-                    mainImageView.setImage(image);
+                    mainImageView.setImage(ImageConverter.byteArrayToImage(product.getImage()));
                 } else {
                     mainImageView.setImage(null);
                 }

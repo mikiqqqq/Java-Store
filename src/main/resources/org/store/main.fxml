@@ -134,7 +134,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="decrementButton" mnemonicParsing="false" onAction="#handleDecrement" text="-" />
-                        <Label fx:id="quantityLabel" text="0" />
+                        <Label fx:id="quantityLabel" text="1" />
                         <Button fx:id="incrementButton" mnemonicParsing="false" onAction="#handleIncrement" text="+" />
                      </children>
                   </HBox>

@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpPut;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -18,12 +19,14 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.store.model.Product;
 import org.store.model.Settings;
-import org.store.utils.ImageBlobConverter;
+import org.store.utils.ImageConverter;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -73,6 +76,9 @@ public class AdminController {
     private TextField priceTextField;
 
     @FXML
+    private TextField quantityTextField;
+
+    @FXML
     private Button addNewProductButton;
 
     @FXML
@@ -91,8 +97,7 @@ public class AdminController {
     private Button selectImageButton;
 
     private final ObservableList<Product> products = FXCollections.observableArrayList();
-    private byte[] imageBytes;
-
+    private int selectedProductId;
     private ResourceBundle bundle;
 
     @FXML
@@ -115,10 +120,16 @@ public class AdminController {
         // Add listener to table row selection
         mainTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                selectedProductId = newSelection.getId();
                 setFormState("edit");
-                populateProductForm(newSelection);
+                try {
+                    populateProductForm(newSelection);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
+
     }
 
     private void populateChoiceBoxes() throws SQLException, IOException {
@@ -178,11 +189,13 @@ public class AdminController {
     }
 
     @FXML
-    private void handleEdit(ActionEvent event) {
+    private void handleEdit(ActionEvent event) throws IOException {
         Product selectedProduct = mainTableView.getSelectionModel().getSelectedItem();
         if (selectedProduct != null) {
             setFormState("edit");
             populateProductForm(selectedProduct);
+        } else {
+            showAlert("Error", "You must select a product to edit.");
         }
     }
 
@@ -194,19 +207,22 @@ public class AdminController {
         yearChoiceBox.setValue(null);
         categoryChoiceBox.setValue(null);
         priceTextField.clear();
+        quantityTextField.clear();
     }
 
-    private void populateProductForm(Product product) {
+    private void populateProductForm(Product product) throws IOException {
         Locale locale = new Locale(Settings.getLanguage());
         ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
-
         titleTextField.setText(product.getTitle());
         descriptionTextArea.setText(product.getDescription());
         brandChoiceBox.setValue(product.getBrand());
         yearChoiceBox.setValue(product.getProductYear());
         categoryChoiceBox.setValue(bundle.getString("menu." + product.getCategory().toLowerCase()));
         priceTextField.setText(String.valueOf(product.getPrice()));
-        productImageView.setImage(ImageBlobConverter.byteArrayToImage(product.getImage()));
+        if(product.getImage() != null) {
+            productImageView.setImage(ImageConverter.byteArrayToImage(product.getImage()));
+        }
+        quantityTextField.setText(String.valueOf(product.getQuantity()));
     }
 
     @FXML
@@ -214,46 +230,38 @@ public class AdminController {
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
-            try {
-                // Read the file into a byte array
-                imageBytes = ImageBlobConverter.imageToByteArray(file);
-
-                // Display the image in the ImageView
-                Image image = new Image(file.toURI().toString());
-                productImageView.setImage(image);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Image image = new Image(file.toURI().toString());
+            productImageView.setImage(image);
         }
     }
 
     @FXML
     private void addProduct() throws SQLException, IOException {
         // Collect data and send it to the API
-        Product product = collectProductData();
+        Product product = collectProductData("new");
         addProductToDatabase(product);
     }
 
     @FXML
     private void editProduct() throws SQLException, IOException {
         // Update the product object with new data
-        Product updatedProduct = collectProductData();
+        Product updatedProduct = collectProductData("edit");
         updateProductInDatabase(updatedProduct);
     }
 
     private void addProductToDatabase(Product product) {
         String url = "http://localhost:8080/api/product/add";
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpPut httpPut = new HttpPut(url);
+            HttpPost httpPost = new HttpPost(url);
 
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(product);
 
             StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
-            httpPut.setEntity(entity);
-            httpPut.setHeader("Content-type", "application/json");
+            httpPost.setEntity(entity);
+            httpPost.setHeader("Content-type", "application/json");
 
-            try (CloseableHttpResponse response = httpClient.execute(httpPut)) {
+            try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
                 if (response.getCode() != 200) {
                     // Handle non-OK response
                     System.err.println("Failed to add product: " + response.getReasonPhrase());
@@ -291,14 +299,87 @@ public class AdminController {
         }
     }
 
-    private Product collectProductData() throws SQLException, IOException {
-        String title = titleTextField.getText();
-        String description = descriptionTextArea.getText();
-        Integer brand = ProductRepo.getBrandId(brandChoiceBox.getValue());
-        Integer year = ProductRepo.getProductYearId(yearChoiceBox.getValue());
-        Integer category = ProductRepo.getCategoryId(categoryChoiceBox.getValue());
-        double price = Double.parseDouble(priceTextField.getText());
+    private Product collectProductData(String decider) throws SQLException, IOException {
 
-        return new Product(title, description, brand, year, category, price, imageBytes);
+        // Validate and collect title
+        String title = titleTextField.getText();
+        if (title == null || title.isEmpty()) {
+            showAlert("Validation Error", "Title cannot be empty.");
+            return null;
+        }
+        String description = descriptionTextArea.getText();
+        // Validate brand selection
+        String brandChoice = brandChoiceBox.getValue();
+        if (brandChoice == null) {
+            showAlert("Validation Error", "A brand must be selected.");
+            return null;
+        }
+        int brand = ProductRepo.getBrandId(brandChoice);
+
+        // Validate category selection
+        String categoryChoice = categoryChoiceBox.getValue();
+        if (categoryChoice == null) {
+            showAlert("Validation Error", "A category must be selected.");
+            return null;
+        }
+        int category = ProductRepo.getCategoryId(categoryChoice);
+
+        // Validate year selection
+        String yearChoice = yearChoiceBox.getValue();
+        if (yearChoice == null) {
+            showAlert("Validation Error", "A year must be selected.");
+            return null;
+        }
+        int year = ProductRepo.getProductYearId(yearChoice);
+
+        // Validate and collect price
+        String priceText = priceTextField.getText();
+        if (priceText == null || priceText.isEmpty()) {
+            showAlert("Validation Error", "Price cannot be empty.");
+            return null;
+        }
+        double price;
+        try {
+            price = Double.parseDouble(priceText);
+        } catch (NumberFormatException e) {
+            showAlert("Validation Error", "Invalid price format.");
+            return null;
+        }
+
+        // Validate and collect quantity
+        String quantityText = quantityTextField.getText();
+        if (quantityText == null || quantityText.isEmpty()) {
+            showAlert("Validation Error", "Quantity cannot be empty.");
+            return null;
+        }
+        int quantity;
+        try {
+            quantity = Integer.parseInt(quantityText);
+        } catch (NumberFormatException e) {
+            showAlert("Validation Error", "Invalid quantity format.");
+            return null;
+        }
+
+        // Get image bytes, null if no image is set
+        Image image = productImageView.getImage();
+        byte[] imageBytes = null;
+        if (image != null) {
+            imageBytes = ImageConverter.imageToByteArray(image, "png");
+        }
+
+        if (decider.equals("new")) {
+            return new Product(title, description, brand, year, category, price, quantity, imageBytes);
+        } else {
+            int id = selectedProductId;
+            return new Product(id, title, description, brand, year, category, price, quantity, imageBytes);
+        }
     }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 }

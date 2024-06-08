@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<DialogPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="360.0" stylesheets="@../../styles/stylesheet.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<DialogPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="360.0" stylesheets="@../../styles/stylesheet.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.store.ContactController">
    <graphic>
       <GridPane prefHeight="600.0" prefWidth="360.0">
          <columnConstraints>
@@ -29,7 +29,7 @@
             <RowConstraints maxHeight="80.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="267.0" styleClass="button-accented" text="Send" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+            <Button fx:id="sendButton" mnemonicParsing="false" onAction="#handleSend" prefHeight="42.0" prefWidth="267.0" styleClass="button-accented" text="Send" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -40,7 +40,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="398.0" styleClass="button-transparent" text="Close" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="TOP">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleClose" prefHeight="35.0" prefWidth="398.0" styleClass="button-transparent" text="Close" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -59,7 +59,7 @@
                   <Font name="Arial Bold" size="36.0" />
                </font>
             </Label>
-            <TextField prefHeight="42.0" styleClass="input" translateY="-4.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="emailField" prefHeight="42.0" styleClass="input" translateY="-4.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -83,9 +83,9 @@
                   <Insets top="4.0" />
                </GridPane.margin>
             </Label>
-            <Label prefHeight="17.0" prefWidth="264.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
-            <Label prefHeight="17.0" prefWidth="460.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <TextField layoutX="60.0" layoutY="152.0" prefHeight="42.0" styleClass="input" translateY="-4.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Label fx:id="emailErrorLabel" prefHeight="17.0" prefWidth="264.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            <Label fx:id="emailSubjectErrorLabel" prefHeight="17.0" prefWidth="460.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <TextField fx:id="emailSubjectField" layoutX="60.0" layoutY="152.0" prefHeight="42.0" styleClass="input" translateY="-4.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -93,7 +93,7 @@
                   <Insets top="12.0" />
                </GridPane.margin>
             </TextField>
-            <TextArea maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="146.0" prefWidth="260.0" styleClass="input" translateY="-4.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TextArea fx:id="messageField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="146.0" prefWidth="260.0" styleClass="input" translateY="-4.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets top="12.0" />
                </GridPane.margin>
@@ -109,7 +109,7 @@
                   <Insets top="4.0" />
                </padding>
             </Label>
-            <Label layoutX="60.0" layoutY="273.0" prefHeight="17.0" prefWidth="460.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+            <Label fx:id="messageErrorLabel" layoutX="60.0" layoutY="273.0" prefHeight="17.0" prefWidth="460.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
          </children>
          <padding>
             <Insets top="32.0" />
