@@ -6,7 +6,6 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.store.model.User;
 import org.store.utils.UserSession;
@@ -26,21 +25,9 @@ public class ApiService {
         this.baseUrl = baseUrl;
     }
 
-    public <T> T sendRequest(String endpoint, Object requestBody, String requestType, Class<T> responseType) throws IOException, ParseException {
+    public CloseableHttpResponse sendRequest(String endpoint, Object requestBody, String requestType) throws IOException {
         HttpUriRequestBase request = createRequest(baseUrl + endpoint, requestBody, requestType);
-
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            System.out.println(response);
-            System.out.println(response.getCode());
-            if (response.getCode() == 200) {
-                String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-                return mapper.readValue(responseBody, responseType);
-            } else {
-                // Handle non-OK response
-                System.err.println("Failed to " + requestType + " request: " + response.getReasonPhrase());
-                return responseType.cast(Boolean.FALSE);  // Return false on failure for Boolean type
-            }
-        }
+        return httpClient.execute(request);
     }
 
     private HttpUriRequestBase createRequest(String url, Object requestBody, String requestType) throws IOException {

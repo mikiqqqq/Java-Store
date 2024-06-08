@@ -17,6 +17,7 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.store.model.Product;
 import org.store.model.Settings;
@@ -31,7 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import org.store.services.ApiService;
+import org.store.utils.ApiService;
 
 public class AdminController {
 
@@ -248,16 +249,11 @@ public class AdminController {
         // Collect data and send it to the API
         Product product = collectProductData("new");
 
-        try {
-            boolean success = productApiService.sendRequest("add", product, "POST", Boolean.class);
-            if (success) {
-                updateTableData();
-            } else {
-                // Handle error
-                System.err.println("Failed to add product.");
-            }
-        } catch (IOException | ParseException e) {
+        try (CloseableHttpResponse response = productApiService.sendRequest("add", product, "POST")) {
+            handleResponse(response, "Product added successfully.");
+        } catch (IOException e) {
             e.printStackTrace();
+            showAlert("Error", "Failed to add product: " + e.getMessage());
         }
     }
 
@@ -265,33 +261,34 @@ public class AdminController {
     private void editProduct() throws SQLException, IOException {
         // Update the product object with new data
         Product updatedProduct = collectProductData("edit");
-        try {
-            boolean success = productApiService.sendRequest("update", updatedProduct, "PUT", Boolean.class);
-            if (success) {
-                updateTableData();
-            } else {
-                // Handle error
-                System.err.println("Failed to update product.");
-            }
-        } catch (IOException | ParseException e) {
+
+        try (CloseableHttpResponse response = productApiService.sendRequest("update", updatedProduct, "PUT")) {
+            handleResponse(response, "Product updated successfully.");
+        } catch (IOException e) {
             e.printStackTrace();
+            showAlert("Error", "Failed to update product: " + e.getMessage());
         }
     }
 
     @FXML
     private void removeProduct() throws SQLException, IOException {
-        try {
-            boolean success = productApiService.sendRequest(String.valueOf(selectedProductId), null, "DELETE", Boolean.class);
-            if (success) {
-                updateTableData();
-            } else {
-                // Handle error
-                System.err.println("Failed to remove product.");
-            }
+        try (CloseableHttpResponse response = productApiService.sendRequest(String.valueOf(selectedProductId), null, "DELETE")) {
+            handleResponse(response, "Product removed successfully.");
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+            showAlert("Error", "Failed to remove product: " + e.getMessage());
+        }
+    }
+
+    private void handleResponse(CloseableHttpResponse response, String successMessage) throws IOException {
+        int statusCode = response.getCode();
+        if (statusCode == 200) {
+            updateTableData();
+            showAlert("Success", successMessage);
+        } else if (statusCode == 403) {
+            showAlert("Permission Denied", "You do not have permission to perform this action.");
+        } else {
+            System.err.println(response.getCode() + " Request failed.");
         }
     }
 
