@@ -125,7 +125,7 @@
                   <HBox prefHeight="20.0" prefWidth="348.0">
                      <children>
                         <Button fx:id="saveProductButton" mnemonicParsing="false" onAction="#editProduct" text="Save" />
-                        <Button fx:id="removeProductButton" mnemonicParsing="false" text="Remove" />
+                        <Button fx:id="removeProductButton" mnemonicParsing="false" onAction="#removeProduct" text="Remove" />
                      </children>
                   </HBox>
                </children>

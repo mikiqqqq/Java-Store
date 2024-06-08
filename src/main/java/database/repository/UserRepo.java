@@ -11,7 +11,7 @@ public class UserRepo {
     public static void addUser(User user) throws SQLException, IOException {
         Connection connection = Database.getConnect();
 
-        String query = "INSERT INTO \"USER\" (EMAIL, PASSWORD_HASH, SALT, NAME, AUTHORIZATION_LEVEL_ID) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO \"USERS\" (EMAIL, PASSWORD_HASH, SALT, NAME, AUTHORIZATION_LEVEL_ID) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setString(1, user.getEmail());
         statement.setString(2, user.getPasswordHash());
@@ -45,7 +45,7 @@ public class UserRepo {
         User user = null;
 
         String query = "SELECT U.\"EMAIL\", U.\"PASSWORD_HASH\", AL.\"TITLE\" AS AUTHORIZATION_LEVEL " +
-                "FROM \"USER\" U " +
+                "FROM \"USERS\" U " +
                 "JOIN \"AUTHORIZATION_LEVEL\" AL ON U.\"AUTHORIZATION_LEVEL_ID\" = AL.\"ID\" " +
                 "WHERE U.\"EMAIL\" = ?";
         PreparedStatement statement = connection.prepareStatement(query);

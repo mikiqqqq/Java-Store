@@ -7,6 +7,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.store.model.User;
+import org.store.utils.UserSession;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -39,7 +40,8 @@ public class LoginController {
             try {
                 String hashedPassword = hashPasswordWithSalt(password, generateSalt(email));
                 if (verifyUser(email, hashedPassword)) {
-                    Main.getMainApp().setUserAuthorizationLevel(getAuthorizationLevel(email));
+                    User user = UserRepo.getUserByEmail(email);
+                    UserSession.getInstance().setUser(user);
                     Main.getMainApp().showMainView();
                     Stage loginStage = (Stage) emailField.getScene().getWindow();
                     loginStage.close();
@@ -107,10 +109,5 @@ public class LoginController {
     private boolean verifyUser(String email, String hashedPassword) throws SQLException, IOException {
         User user = UserRepo.getUserByEmail(email);
         return user != null && user.getPasswordHash().equals(hashedPassword);
-    }
-
-    private String getAuthorizationLevel(String email) throws SQLException, IOException {
-        User user = UserRepo.getUserByEmail(email);
-        return user != null ? user.getAuthorizationLevel() : null;
     }
 }

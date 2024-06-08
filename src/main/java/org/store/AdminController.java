@@ -16,6 +16,7 @@ import org.apache.hc.client5.http.classic.methods.HttpPut;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.store.model.Product;
 import org.store.model.Settings;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import org.store.services.ApiService;
 
 public class AdminController {
 
@@ -99,6 +101,12 @@ public class AdminController {
     private final ObservableList<Product> products = FXCollections.observableArrayList();
     private int selectedProductId;
     private ResourceBundle bundle;
+
+    private ApiService productApiService;
+
+    public AdminController() {
+        this.productApiService = new ApiService("http://localhost:8080/api/product/");
+    }
 
     @FXML
     public void initialize() throws SQLException, IOException {
@@ -239,63 +247,51 @@ public class AdminController {
     private void addProduct() throws SQLException, IOException {
         // Collect data and send it to the API
         Product product = collectProductData("new");
-        addProductToDatabase(product);
+
+        try {
+            boolean success = productApiService.sendRequest("add", product, "POST", Boolean.class);
+            if (success) {
+                updateTableData();
+            } else {
+                // Handle error
+                System.err.println("Failed to add product.");
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void editProduct() throws SQLException, IOException {
         // Update the product object with new data
         Product updatedProduct = collectProductData("edit");
-        updateProductInDatabase(updatedProduct);
-    }
-
-    private void addProductToDatabase(Product product) {
-        String url = "http://localhost:8080/api/product/add";
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpPost httpPost = new HttpPost(url);
-
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(product);
-
-            StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
-            httpPost.setEntity(entity);
-            httpPost.setHeader("Content-type", "application/json");
-
-            try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
-                if (response.getCode() != 200) {
-                    // Handle non-OK response
-                    System.err.println("Failed to add product: " + response.getReasonPhrase());
-                } else {
-                    updateTableData();
-                }
+        try {
+            boolean success = productApiService.sendRequest("update", updatedProduct, "PUT", Boolean.class);
+            if (success) {
+                updateTableData();
+            } else {
+                // Handle error
+                System.err.println("Failed to update product.");
             }
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
     }
 
-    private void updateProductInDatabase(Product product) {
-        String url = "http://localhost:8080/api/product/update";
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpPut httpPut = new HttpPut(url);
-
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(product);
-
-            StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
-            httpPut.setEntity(entity);
-            httpPut.setHeader("Content-type", "application/json");
-
-            try (CloseableHttpResponse response = httpClient.execute(httpPut)) {
-                if (response.getCode() != 200) {
-                    // Handle non-OK response
-                    System.err.println("Failed to update product: " + response.getReasonPhrase());
-                } else {
-                    updateTableData();
-                }
+    @FXML
+    private void removeProduct() throws SQLException, IOException {
+        try {
+            boolean success = productApiService.sendRequest(String.valueOf(selectedProductId), null, "DELETE", Boolean.class);
+            if (success) {
+                updateTableData();
+            } else {
+                // Handle error
+                System.err.println("Failed to remove product.");
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 

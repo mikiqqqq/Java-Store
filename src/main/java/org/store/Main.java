@@ -13,7 +13,6 @@ public class Main extends Application {
     private static Stage mainStage;
     private static Main mainApp;
     private static StageManager stageManager;
-    private String userAuthorizationLevel;
 
     public static final Logger logger = LoggerFactory.getLogger(Main.class);
 
@@ -46,20 +45,8 @@ public class Main extends Application {
         stageManager.showDialog("/org/store/register.fxml", "Register");
     }
 
-    public void setUserAuthorizationLevel(String level) {
-        this.userAuthorizationLevel = level;
-    }
-
-    public String getUserAuthorizationLevel() {
-        return userAuthorizationLevel;
-    }
-
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public static Stage getStage() {
-        return mainStage;
     }
 
     public static Main getMainApp() { return mainApp; }
