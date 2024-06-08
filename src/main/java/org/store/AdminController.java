@@ -1,7 +1,7 @@
 package org.store;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import database.repository.ProductRepo;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,27 +11,18 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.classic.methods.HttpPut;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
-import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.store.model.Product;
 import org.store.model.Settings;
 import org.store.utils.ImageConverter;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 import org.store.utils.ApiService;
 
 public class AdminController {
@@ -102,8 +93,9 @@ public class AdminController {
     private final ObservableList<Product> products = FXCollections.observableArrayList();
     private int selectedProductId;
     private ResourceBundle bundle;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10); // Adjust the pool size as needed
 
-    private ApiService productApiService;
+    private final ApiService productApiService;
 
     public AdminController() {
         this.productApiService = new ApiService("http://localhost:8080/api/product/");
@@ -248,48 +240,92 @@ public class AdminController {
     private void addProduct() throws SQLException, IOException {
         // Collect data and send it to the API
         Product product = collectProductData("new");
-
-        try (CloseableHttpResponse response = productApiService.sendRequest("add", product, "POST")) {
-            handleResponse(response, "Product added successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to add product: " + e.getMessage());
-        }
+        executorService.submit(() -> {
+            try (CloseableHttpResponse response = productApiService.sendRequest("add", product, "POST")) {
+                handleResponse(response, "Product added successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Error: Failed to add product: " + e.getMessage());
+            }
+        });
     }
 
     @FXML
     private void editProduct() throws SQLException, IOException {
         // Update the product object with new data
         Product updatedProduct = collectProductData("edit");
-
+        executorService.submit(() -> {
         try (CloseableHttpResponse response = productApiService.sendRequest("update", updatedProduct, "PUT")) {
             handleResponse(response, "Product updated successfully.");
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert("Error", "Failed to update product: " + e.getMessage());
+            System.out.println("Error: Failed to add product: " + e.getMessage());
+        }
+        });
+    }
+
+    private List<Integer> getAllProductIds() {
+        return mainTableView.getItems().stream()
+                .map(Product::getId)
+                .collect(Collectors.toList());
+    }
+
+    private void findNextProductId() {
+        if (mainTableView.getSelectionModel().isEmpty()) {
+            return; // Exit the method if no row is selected
+        }
+
+        List<Integer> allProductIds = getAllProductIds();
+
+        // Find the next product ID
+        Integer nextProductId = allProductIds.stream()
+                .filter(id -> id < selectedProductId) // Only consider IDs smaller than the selected ID
+                .max(Comparator.naturalOrder()) // Find the maximum of these IDs
+                .orElse(null); // Return null if no such ID exists
+
+        if (nextProductId != null) {
+            selectedProductId = nextProductId;
+            Product nextProduct = mainTableView.getItems().stream()
+                    .filter(p -> p.getId() == selectedProductId)
+                    .findFirst()
+                    .orElse(null);
+            if (nextProduct != null) {
+                mainTableView.getSelectionModel().select(nextProduct);
+                mainTableView.scrollTo(nextProduct); // Optional: Scroll to the selected product
+            }
+        } else {
+            // Handle case where there is no smaller ID (e.g., clear selection)
+            mainTableView.getSelectionModel().clearSelection();
         }
     }
+
 
     @FXML
     private void removeProduct() throws SQLException, IOException {
-        try (CloseableHttpResponse response = productApiService.sendRequest(String.valueOf(selectedProductId), null, "DELETE")) {
+        executorService.submit(() -> {
+            try (CloseableHttpResponse response = productApiService.sendRequest(String.valueOf(selectedProductId), null, "DELETE")) {
             handleResponse(response, "Product removed successfully.");
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert("Error", "Failed to remove product: " + e.getMessage());
+            System.out.println("Error: Failed to add product: " + e.getMessage());
         }
+    });
+        findNextProductId();
     }
 
     private void handleResponse(CloseableHttpResponse response, String successMessage) throws IOException {
-        int statusCode = response.getCode();
-        if (statusCode == 200) {
-            updateTableData();
-            showAlert("Success", successMessage);
-        } else if (statusCode == 403) {
-            showAlert("Permission Denied", "You do not have permission to perform this action.");
-        } else {
-            System.err.println(response.getCode() + " Request failed.");
-        }
+        Platform.runLater(() -> {
+            int statusCode = response.getCode();
+            if (statusCode == 200) {
+                updateTableData();
+                System.out.println("Success " + successMessage);
+            } else if (statusCode == 403) {
+                showAlert("Permission Denied", "You do not have permission to perform this action.");
+            } else {
+                System.err.println(response.getCode() + " Request failed.");
+            }
+        });
+
     }
 
     private Product collectProductData(String decider) throws SQLException, IOException {
