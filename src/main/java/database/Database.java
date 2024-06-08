@@ -3,6 +3,7 @@ package database;
 import org.store.WindowsRegistryController;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
 import static org.store.Main.isWindows;
@@ -36,7 +37,9 @@ public class Database {
             System.out.println("Reading from windows");
         } else {
             Properties config = new Properties();
-            config.load(new FileReader("dat/database.properties"));
+            InputStream inputStream = WindowsRegistryController.class.getResourceAsStream("/dat/database.properties");
+            config.load(inputStream);
+
             databaseURL = config.getProperty("databaseURL");
             databaseUsername = config.getProperty("databaseUsername");
             databasePassword = config.getProperty("databasePassword");

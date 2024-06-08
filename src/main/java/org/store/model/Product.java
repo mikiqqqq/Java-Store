@@ -34,6 +34,16 @@ public class Product {
         this.productYear = productYear;
     }
 
+    public Product(String title, String description, int brandId, int yearId, int categoryId, double price, byte[] image) {
+        this.title = title;
+        this.description = description;
+        this.brandId = brandId;
+        this.productYearId = yearId;
+        this.categoryId = categoryId;
+        this.price = BigDecimal.valueOf(price);
+        this.image = image;
+    }
+
     // Getters and Setters
     public int getId() {
         return id;

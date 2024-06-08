@@ -166,15 +166,15 @@ public class ProductRepo {
         return products;
     }
 
-    private static int getBrandId(String brandTitle) throws SQLException, IOException {
+    public static int getBrandId(String brandTitle) throws SQLException, IOException {
         return getIdFromTable("BRAND", brandTitle);
     }
 
-    private static int getCategoryId(String categoryTitle) throws SQLException, IOException {
+    public static int getCategoryId(String categoryTitle) throws SQLException, IOException {
         return getIdFromTable("CATEGORY", categoryTitle);
     }
 
-    private static int getProductYearId(String productYear) throws SQLException, IOException {
+    public static int getProductYearId(String productYear) throws SQLException, IOException {
         Connection connection = Database.getConnect();
         int id = -1;
 

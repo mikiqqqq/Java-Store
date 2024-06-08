@@ -6,6 +6,11 @@ module org.store {
     requires com.sun.jna.platform;
     requires org.slf4j;
     requires ini4j;
+    requires java.sql.rowset;
+    requires org.apache.httpcomponents.client5.httpclient5;
+    requires org.apache.httpcomponents.core5.httpcore5;
+    requires com.fasterxml.jackson.databind;
+    requires java.desktop;
 
     exports org.store.enumeration;
     opens org.store to javafx.fxml;
