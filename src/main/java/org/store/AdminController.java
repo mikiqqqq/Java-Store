@@ -235,10 +235,9 @@ public class AdminController {
     }
 
     @FXML
-    private void editProduct(Product product) throws SQLException, IOException {
+    private void editProduct() throws SQLException, IOException {
         // Update the product object with new data
         Product updatedProduct = collectProductData();
-        updatedProduct.setId(product.getId());
         updateProductInDatabase(updatedProduct);
     }
 
