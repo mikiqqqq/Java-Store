@@ -61,8 +61,8 @@ public class KeyManager {
     // Deserialize Keys from a File in the resources/dat directory
     public List<CryptoKey> loadKeysFromFile() throws IOException, ClassNotFoundException {
         File file = new File(FILE_NAME);
-        if (!file.exists()) {
-            return new ArrayList<>(); // Return an empty list if file doesn't exist
+        if (!file.exists() || file.length() == 0) {
+            return new ArrayList<>(); // Return an empty list if file doesn't exist or is empty
         }
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {

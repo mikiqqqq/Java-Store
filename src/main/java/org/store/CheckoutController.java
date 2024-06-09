@@ -170,7 +170,6 @@ public class CheckoutController {
 
         KeyManager keyManager = new KeyManager();
         if (isValid) {
-            int userId = UserSession.getInstance().getUser().getId();
             CryptoKey cryptoKey = keyManager.generateAndSaveKeys(currentOrder.getId());
 
             // AES Encryption
@@ -212,13 +211,17 @@ public class CheckoutController {
             try {
                 Thread.sleep(5); // 3000 milliseconds = 3 seconds
                 if (alert.isShowing()) {
-                    Platform.runLater(alert::close);
-                    Main.getMainApp().showMainView();
+                    Platform.runLater(() -> {
+                        alert.close();
+                        try {
+                            Main.getMainApp().showMainView();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
         }).start();
 

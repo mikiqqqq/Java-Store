@@ -76,24 +76,27 @@ public class OrdersController {
 
     private OrderDisplay selectedOrderDisplay;
     private final ObservableList<OrderDisplay> orderDisplays = FXCollections.observableArrayList();
+    private final ObservableList<Product> products = FXCollections.observableArrayList();
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private final KeyManager keyManager = new KeyManager();
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException, IOException {
         // Initialize columns
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         productsColumn.setCellValueFactory(new PropertyValueFactory<>("products"));
 
-        itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         itemAmountColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         itemPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
         // Populate download speed choices
         downloadSpeedChoiceBox.getItems().addAll("Slow", "Medium", "Fast");
         downloadSpeedChoiceBox.setValue("Fast");
+
+        loadOrders();
 
         // Add listener for order selection
         ordersTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -148,6 +151,9 @@ public class OrdersController {
         cardNumberLabel.setText(cardInformation);
         dateLabel.setText(order.getDate().toLocalDateTime().format(formatter));
         totalPriceLabel.setText(String.valueOf(OrderRepo.getTotalPrice(order.getId())));
+
+        List<Product> productList = OrderRepo.getProductsByOrderId(order.getId());
+        products.setAll(productList);
     }
 
     private void downloadOrderAsPdf() {

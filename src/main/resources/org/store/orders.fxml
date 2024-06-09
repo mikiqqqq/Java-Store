@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.store.OrdersController">
    <center>
       <Pane styleClass="background-light" BorderPane.alignment="CENTER">
          <children>
@@ -32,7 +32,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" styleClass="button-accented-dark" text="Download as PDF" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                  <Button fx:id="downloadPdfButton" mnemonicParsing="false" styleClass="button-accented-dark" text="Download as PDF" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -44,7 +44,7 @@
                         <Insets bottom="12.0" left="24.0" />
                      </GridPane.margin>
                   </Button>
-                  <ChoiceBox prefHeight="30.0" prefWidth="195.0" styleClass="choice-box--custom">
+                  <ChoiceBox fx:id="downloadSpeedChoiceBox" prefHeight="30.0" prefWidth="195.0" styleClass="choice-box--custom">
                      <GridPane.margin>
                         <Insets left="24.0" top="8.0" />
                      </GridPane.margin>
@@ -74,12 +74,12 @@
                   </Label>
                </children>
             </GridPane>
-            <TableView layoutY="249.0" prefHeight="421.0" prefWidth="600.0">
+            <TableView fx:id="ordersTableView" layoutX="-7.0" layoutY="249.0" prefHeight="421.0" prefWidth="600.0">
                <columns>
-                  <TableColumn prefWidth="99.0" text="Date" />
-                  <TableColumn prefWidth="109.0" text="Status" />
-                  <TableColumn prefWidth="130.0" text="Price" />
-                  <TableColumn prefWidth="261.0" text="Products" />
+                  <TableColumn fx:id="dateColumn" prefWidth="99.0" text="Date" />
+                  <TableColumn fx:id="statusColumn" prefWidth="109.0" text="Status" />
+                  <TableColumn fx:id="priceColumn" prefWidth="130.0" text="Price" />
+                  <TableColumn fx:id="productsColumn" prefWidth="261.0" text="Products" />
                </columns>
             </TableView>
          </children>
@@ -123,11 +123,8 @@
             <String fx:value="higlight-pane" />
             <String fx:value="background-light" />
          </styleClass>
-         <padding>
-            <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
-         </padding>
          <children>
-            <VBox layoutX="-3.0" prefHeight="622.0" prefWidth="348.0" translateX="29.0" translateY="24.0">
+            <VBox layoutX="-29.0" layoutY="-4.0" prefHeight="650.0" prefWidth="400.0" translateX="29.0" translateY="24.0">
                <children>
                   <GridPane prefHeight="282.0" prefWidth="348.0">
                     <columnConstraints>
@@ -142,32 +139,37 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="26.0" minHeight="10.0" prefHeight="19.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="42.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="41.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label text="Customer:" />
-                        <Label prefHeight="20.0" prefWidth="235.0" text="Label" GridPane.columnIndex="1" />
+                        <Label fx:id="customerLabel" prefHeight="20.0" prefWidth="235.0" text="Label" GridPane.columnIndex="1" />
                         <Label text="E-mail:" GridPane.rowIndex="1" />
-                        <Label prefHeight="20.0" prefWidth="254.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="emailLabel" prefHeight="20.0" prefWidth="254.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label layoutX="10.0" layoutY="15.0" text="Address:" GridPane.rowIndex="2" />
                         <Label text="Card number:" GridPane.rowIndex="3" />
                         <Label text="Date:" GridPane.rowIndex="4" />
                         <Label text="Total price:" GridPane.rowIndex="6" />
-                        <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Label fx:id="addressLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label fx:id="cardNumberLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label fx:id="dateLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label fx:id="totalPriceLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                      </children>
+                     <padding>
+                        <Insets bottom="24.0" left="24.0" right="24.0" />
+                     </padding>
                   </GridPane>
-                  <TableView layoutX="10.0" layoutY="236.0" prefHeight="451.0" prefWidth="348.0">
+                  <TableView fx:id="orderItemsTableView" layoutX="10.0" layoutY="236.0" minHeight="421.0" prefHeight="421.0" prefWidth="348.0">
                      <columns>
-                        <TableColumn prefWidth="119.0" text="Name" />
-                        <TableColumn prefWidth="112.0" text="Amount" />
-                        <TableColumn prefWidth="116.0" text="Price" />
+                        <TableColumn fx:id="itemNameColumn" prefWidth="119.0" text="Name" />
+                        <TableColumn fx:id="itemAmountColumn" prefWidth="112.0" text="Amount" />
+                        <TableColumn fx:id="itemPriceColumn" prefWidth="116.0" text="Price" />
                      </columns>
                   </TableView>
                </children></VBox>
          </children>
+         <padding>
+            <Insets top="24.0" />
+         </padding>
       </Pane>
    </right>
    <left>
