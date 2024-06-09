@@ -57,8 +57,6 @@ public class Product {
         this.image = image;
     }
 
-
-    // Getters and Setters
     public int getId() {
         return id;
     }

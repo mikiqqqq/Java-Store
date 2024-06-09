@@ -3,22 +3,34 @@ package org.store;
 import database.repository.OrderItemRepo;
 import database.repository.OrderRepo;
 import database.repository.ProductRepo;
+import database.repository.UserRepo;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import org.oorsprong.websamples.TCountryCodeAndName;
+import org.store.enumeration.OrderStatus;
+import org.store.model.CryptoKey;
 import org.store.model.Order;
 import org.store.model.OrderItem;
 import org.store.model.OrderItemDisplay;
+import org.store.utils.KeyManager;
+import org.store.utils.OrderJsonUtils;
 import org.store.utils.UserSession;
 import org.oorsprong.websamples.CountryInfoService;
 import org.oorsprong.websamples.CountryInfoServiceSoapType;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -99,7 +111,6 @@ public class CheckoutController {
 
     private final ObservableList<OrderItemDisplay> orderItems = FXCollections.observableArrayList();
     private Order currentOrder;
-    private int currentOrderId; // Set this to the current order ID
 
     @FXML
     public void initialize() throws SQLException, IOException {
@@ -147,12 +158,72 @@ public class CheckoutController {
     }
 
     @FXML
-    private void handleUpdateOrder() {
+    private void handleUpdateOrder() throws Exception {
+        String userEmail = UserSession.getInstance().getUser().getEmail();
+        currentOrder = OrderRepo.getOrderInProgressByEmail(userEmail);
+        if (currentOrder == null) {
+            Main.getMainApp().showMainView();
+            return;
+        }
+
         boolean isValid = validateFields();
 
+        KeyManager keyManager = new KeyManager();
         if (isValid) {
+            int userId = UserSession.getInstance().getUser().getId();
+            CryptoKey cryptoKey = keyManager.generateAndSaveKeys(userId);
 
+            // AES Encryption
+            String cardInformation = cardholderNameField.getText() + "-" + cardNumberField.getText() + "-" +
+                                     expDayField.getText() + "-" + expMonthField.getText() + "-" + cvcField.getText();
+            String encryptedCardInformation = keyManager.encryptWithRSA(cryptoKey.getRsaPublicKey(), cardInformation);
+
+            // RSA Encryption
+            String userAddress = addressField.getText() + ", " + postalCodeField.getText() + ", " + countryChoiceBox.getValue();
+            String encryptedUserAddress = keyManager.encryptWithAES(cryptoKey.getAesKey(), userAddress);
+            String encryptedPhoneNumber = keyManager.encryptWithAES(cryptoKey.getAesKey(), phoneNumberField.getText());
+            String encryptedEmail = keyManager.encryptWithAES(cryptoKey.getAesKey(), currentOrder.getEmail());
+
+            currentOrder.setAddress(encryptedUserAddress);
+            currentOrder.setPhoneNumber(encryptedPhoneNumber);
+            currentOrder.setDate(Timestamp.valueOf(LocalDateTime.now()));
+            currentOrder.setEmail(encryptedEmail);
+            currentOrder.setCardNumber(encryptedCardInformation);
+            currentOrder.setStatus(OrderStatus.COMPLETED);
+
+            OrderRepo.updateOrder(currentOrder);
+            OrderJsonUtils.addOrderToFile(currentOrder);
+            showAutoCloseDialog("Thank You!", "Your order will be arriving soon.", ((Stage) updateOrderButton.getScene().getWindow()));
         }
+    }
+
+    private void showAutoCloseDialog(String title, String message, Stage owner) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        // Load the custom CSS file
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/styles/alert.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("custom-alert");
+
+        // Set the dialog to close after 3 seconds
+        new Thread(() -> {
+            try {
+                Thread.sleep(5); // 3000 milliseconds = 3 seconds
+                if (alert.isShowing()) {
+                    Platform.runLater(alert::close);
+                    Main.getMainApp().showMainView();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+
+        alert.initOwner(owner);
+        alert.show();
     }
 
     private boolean validateFields() {

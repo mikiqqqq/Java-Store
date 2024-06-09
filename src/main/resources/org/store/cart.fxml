@@ -97,7 +97,7 @@
             <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
          </padding>
          <children>
-            <VBox fx:id="vBox" layoutX="26.0" layoutY="24.0" prefHeight="622.0" prefWidth="348.0">
+            <VBox fx:id="VBox" layoutX="26.0" layoutY="24.0" prefHeight="622.0" prefWidth="348.0">
                <children>
                   <ImageView fx:id="productImageView" fitHeight="180.0" fitWidth="348.0" pickOnBounds="true">
                      <image>

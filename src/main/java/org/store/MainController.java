@@ -16,6 +16,7 @@ import org.store.enumeration.OrderStatus;
 import org.store.model.Order;
 import org.store.model.OrderItem;
 import org.store.model.Product;
+import org.store.model.User;
 import org.store.utils.ApiService;
 import org.store.utils.ImageConverter;
 import org.store.utils.UserSession;
@@ -260,12 +261,13 @@ public class MainController {
         executorService.submit(() -> {
             try {
                 if (currentOrder == null) {
-                    String userEmail = UserSession.getInstance().getUser().getEmail();
-                    currentOrder = OrderRepo.getOrderInProgressByEmail(userEmail);
+                    User user = UserSession.getInstance().getUser();
+                    currentOrder = OrderRepo.getOrderInProgressByEmail(user.getEmail());
                     if(currentOrder == null) {
                         currentOrder = new Order();
                         currentOrder.setStatus(OrderStatus.IN_PROGRESS);
-                        currentOrder.setEmail(userEmail);
+                        currentOrder.setEmail(user.getEmail());
+                        currentOrder.setUserId(user.getId());
                         OrderRepo.createOrder(currentOrder);
                     }
                 }

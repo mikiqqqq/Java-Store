@@ -1,13 +1,17 @@
 package org.store.model;
 
 public class User {
+    private int id;
     private String email;
     private String passwordHash;
     private String salt;
     private String fullName;
     private String authorizationLevel;
 
-    // Getters and setters
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
+
     public String getEmail() {
         return email;
     }

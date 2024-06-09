@@ -38,7 +38,7 @@ CREATE TABLE AUTHORIZATION_LEVEL
     TITLE       VARCHAR(255)
 );
 
-CREATE TABLE "USER"
+CREATE TABLE USERS
 (
     ID                  NUMBER(11) PRIMARY KEY AUTO_INCREMENT,
     NAME                VARCHAR(255),
@@ -52,12 +52,14 @@ CREATE TABLE "USER"
 CREATE TABLE "ORDER"
 (
     ID                  NUMBER(11) PRIMARY KEY AUTO_INCREMENT,
-    DATE                DATETIME,
+    TIMESTAMP           DATETIME,
     CARD_NUMBER         VARCHAR(255),
     EMAIL               VARCHAR(255),
     PHONE_NUMBER        VARCHAR(255),
     ADDRESS             VARCHAR(255),
-    STATUS              VARCHAR(255)
+    STATUS              VARCHAR(255),
+    USER_ID             NUMBER(11),
+    FOREIGN KEY (USER_ID) REFERENCES USERS(ID)
 );
 
 CREATE TABLE ORDER_ITEM
@@ -96,13 +98,5 @@ VALUES ('Speedlink Miš S50', 'Specifikacije za Speedlink Miš S50', 7, 250.00, 
         ('Galaxy Z Fold3 5G', 'Specifkacije za Galaxy Z Fold3 5G', 3, 8129.59, 4, 4),
         ('LG 75" (189 cm) 4K HDR Smart Nano Cell TV', 'Čiste boje (Pure Colors) u razlučivosti Real 4K, Tehnologija NanoCell, 4K procesor LG α5 Gen5 AI', 6, 5579.29, 4, 4),
         ('16" ProArt Studiobook Pro 16 OLED', 'Windows 11 Pro, Intel® Core™ i9-12900H processor, NVIDIA RTX™ A3000 12GB graphics', 1, 8888.88, 4, 4);
-
-
-
-
-
-
-
-INSERT INTO PAYMENT_TYPE (TITLE) VALUES ('CARD'), ('CASH');
 
 INSERT INTO AUTHORIZATION_LEVEL (TITLE) VALUES ('ADMIN'), ('CUSTOMER');

@@ -44,7 +44,7 @@ public class UserRepo {
         Connection connection = Database.getConnect();
         User user = null;
 
-        String query = "SELECT U.\"NAME\", U.\"EMAIL\", U.\"PASSWORD_HASH\", AL.\"TITLE\" AS AUTHORIZATION_LEVEL " +
+        String query = "SELECT U.\"ID\", U.\"NAME\", U.\"EMAIL\", U.\"PASSWORD_HASH\", AL.\"TITLE\" AS AUTHORIZATION_LEVEL " +
                 "FROM \"USERS\" U " +
                 "JOIN \"AUTHORIZATION_LEVEL\" AL ON U.\"AUTHORIZATION_LEVEL_ID\" = AL.\"ID\" " +
                 "WHERE U.\"EMAIL\" = ?";
@@ -54,6 +54,7 @@ public class UserRepo {
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {
             user = new User();
+            user.setId(resultSet.getInt("ID"));
             user.setFullName(resultSet.getString("NAME"));
             user.setEmail(resultSet.getString("EMAIL"));
             user.setPasswordHash(resultSet.getString("PASSWORD_HASH"));

@@ -1,31 +1,33 @@
 package org.store.model;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.util.Date;
+
 import org.store.enumeration.OrderStatus;
 
 public class Order {
     private int id;
-    private LocalDateTime date;
+    private Timestamp date;
     private String cardNumber;
     private String email;
     private String phoneNumber;
     private String address;
     private String message;
     private OrderStatus status;
+    private int userId;
 
     // Constructors
     public Order() {
         this.status = OrderStatus.IN_PROGRESS;
     }
 
-    public Order(int id, LocalDateTime date, String cardNumber, String email, String phoneNumber, String address, String message, OrderStatus status) {
+    public Order(int id, Timestamp date, String cardNumber, String email, String phoneNumber, String address, OrderStatus status) {
         this.id = id;
         this.date = date;
         this.cardNumber = cardNumber;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.message = message;
         this.status = status;
     }
 
@@ -38,11 +40,19 @@ public class Order {
         this.id = id;
     }
 
-    public LocalDateTime getDate() {
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public Timestamp  getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 

@@ -16,6 +16,7 @@ module org.store {
     requires org.json;
     requires jakarta.xml.bind;
     requires jakarta.xml.ws;
+    requires com.fasterxml.jackson.datatype.jsr310;
 
     opens org.oorsprong.websamples to com.sun.xml.ws, com.sun.xml.bind;
     exports org.store.enumeration;
