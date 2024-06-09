@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class OrderJsonUtils {
@@ -62,5 +63,13 @@ public class OrderJsonUtils {
         return orders.stream()
                 .filter(order -> userId == order.getUserId())
                 .collect(Collectors.toList());
+    }
+
+    public static Order getOrderById(int id) throws IOException {
+        List<Order> orders = readOrdersFromFile();
+        Optional<Order> orderOptional = orders.stream()
+                .filter(order -> id == order.getId())
+                .findFirst();
+        return orderOptional.orElse(null);
     }
 }

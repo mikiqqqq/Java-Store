@@ -7,12 +7,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
-import org.store.model.Order;
-import org.store.model.OrderDisplay;
-import org.store.model.OrderItem;
-import org.store.model.OrderItemDisplay;
+import org.store.model.*;
+import org.store.utils.KeyManager;
 import org.store.utils.OrderJsonUtils;
-import org.store.utils.PdfUtils;
+
 import org.store.utils.UserSession;
 
 import java.io.File;
@@ -79,13 +77,14 @@ public class OrdersController {
     private OrderDisplay selectedOrderDisplay;
     private final ObservableList<OrderDisplay> orderDisplays = FXCollections.observableArrayList();
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    private final KeyManager keyManager = new KeyManager();
 
     @FXML
     public void initialize() {
         // Initialize columns
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         productsColumn.setCellValueFactory(new PropertyValueFactory<>("products"));
 
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
@@ -100,7 +99,11 @@ public class OrdersController {
         ordersTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 selectedOrderDisplay = newSelection;
-                displayOrderDetails(selectedOrderDisplay);
+                try {
+                    displayOrderDetails(selectedOrderDisplay);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -113,11 +116,11 @@ public class OrdersController {
         List<Order> orders = OrderJsonUtils.getOrdersByUserId(userId);
         for (Order order : orders) {
             BigDecimal totalPrice = OrderRepo.getTotalPrice(order.getId());
-            String products = order.getOrderItems().stream()
-                    .map(item -> item.getProduct().getTitle() + " x" + item.getQuantity())
+            String products = OrderRepo.getProductsByOrderId(order.getId()).stream()
+                    .map(product -> product.getTitle() + " x" + product.getQuantity())
                     .collect(Collectors.joining(", "));
 
-            String formattedDate = order.getDate().format(formatter);
+            String formattedDate = order.getDate().toLocalDateTime().format(formatter);
 
             OrderDisplay orderDisplay = new OrderDisplay(
                     formattedDate,
@@ -131,15 +134,20 @@ public class OrdersController {
         }
     }
 
-    private void displayOrderDetails(OrderDisplay OrderDisplay) {
-        customerLabel.setText(order.getCustomerName());
-        emailLabel.setText(order.getEmail());
-        addressLabel.setText(order.getAddress());
-        cardNumberLabel.setText(order.getCardNumber());
-        dateLabel.setText(order.getDate().toString());
-        totalPriceLabel.setText(String.valueOf(order.getTotalPrice()));
+    private void displayOrderDetails(OrderDisplay orderDisplay) throws Exception {
+        Order order = OrderJsonUtils.getOrderById(orderDisplay.getOrderId());
+        customerLabel.setText(UserSession.getInstance().getUser().getFullName());
 
-        orderItemsTableView.setItems(order.getOrderItems());
+        CryptoKey cryptoKey = keyManager.getKeyForOrder(order.getId());
+        String email = keyManager.decryptWithRSA(cryptoKey.getRsaPrivateKey(), order.getEmail());
+        String address = keyManager.decryptWithRSA(cryptoKey.getRsaPrivateKey(), order.getAddress());
+        String cardInformation = keyManager.decryptWithAES(cryptoKey.getAesKey(), order.getCardNumber());
+
+        emailLabel.setText(email);
+        addressLabel.setText(address);
+        cardNumberLabel.setText(cardInformation);
+        dateLabel.setText(order.getDate().toLocalDateTime().format(formatter));
+        totalPriceLabel.setText(String.valueOf(OrderRepo.getTotalPrice(order.getId())));
     }
 
     private void downloadOrderAsPdf() {

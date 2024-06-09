@@ -171,7 +171,7 @@ public class CheckoutController {
         KeyManager keyManager = new KeyManager();
         if (isValid) {
             int userId = UserSession.getInstance().getUser().getId();
-            CryptoKey cryptoKey = keyManager.generateAndSaveKeys(userId);
+            CryptoKey cryptoKey = keyManager.generateAndSaveKeys(currentOrder.getId());
 
             // AES Encryption
             String cardInformation = cardholderNameField.getText() + "-" + cardNumberField.getText() + "-" +

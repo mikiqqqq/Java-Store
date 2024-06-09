@@ -30,7 +30,7 @@ public class KeyManager {
     }
 
     // Generate and Save Combined Keys
-    public CryptoKey generateAndSaveKeys(int userId) throws Exception {
+    public CryptoKey generateAndSaveKeys(int orderId) throws Exception {
         // Generate AES key
         SecretKey aesKey = generateAESKey();
 
@@ -40,7 +40,7 @@ public class KeyManager {
         PrivateKey rsaPrivateKey = rsaKeyPair.getPrivate();
 
         // Create CryptoKey object
-        CryptoKey cryptoKey = new CryptoKey(userId, aesKey, rsaPublicKey, rsaPrivateKey);
+        CryptoKey cryptoKey = new CryptoKey(orderId, aesKey, rsaPublicKey, rsaPrivateKey);
 
         // Save the single key to file
         saveSingleKeyToFile(cryptoKey);
@@ -70,12 +70,12 @@ public class KeyManager {
         }
     }
 
-    // Get All Keys for a specific user
-    public List<CryptoKey> getAllKeysForUser(int userId) throws IOException, ClassNotFoundException {
+    public CryptoKey getKeyForOrder(int orderId) throws IOException, ClassNotFoundException {
         List<CryptoKey> keys = loadKeysFromFile();
         return keys.stream()
-                .filter(key -> key.getUserId() == userId)
-                .collect(Collectors.toList());
+                .filter(key -> key.getOrderId() == orderId)
+                .findFirst()  // Get the first matching key
+                .orElse(null); // Return null if no matching key is found
     }
 
     // AES Encryption

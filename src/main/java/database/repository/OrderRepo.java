@@ -112,7 +112,7 @@ public class OrderRepo {
 
     public static List<Product> getProductsByOrderId(int orderId) throws SQLException, IOException {
         List<Product> products = new ArrayList<>();
-        String query = "SELECT p.ID, p.TITLE, p.DESCRIPTION, p.BRAND, p.PRICE, oi.QUANTITY " +
+        String query = "SELECT p.TITLE, p.PRICE, oi.QUANTITY " +
                 "FROM PRODUCT p " +
                 "JOIN ORDER_ITEM oi ON p.ID = oi.PRODUCT_ID " +
                 "WHERE oi.ORDER_ID = ?";
@@ -130,5 +130,28 @@ public class OrderRepo {
             }
         }
         return products;
+    }
+
+    public static Order getOrderById(int orderId) throws SQLException, IOException {
+        String query = "SELECT * FROM \"ORDER\" WHERE ID = ?";
+        try (Connection connection = Database.getConnect();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, orderId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                Order order = new Order();
+                order.setId(resultSet.getInt("ID"));
+                order.setDate(resultSet.getTimestamp("TIMESTAMP"));
+                order.setCardNumber(resultSet.getString("CARD_NUMBER"));
+                order.setEmail(resultSet.getString("EMAIL"));
+                order.setPhoneNumber(resultSet.getString("PHONE_NUMBER"));
+                order.setAddress(resultSet.getString("ADDRESS"));
+                order.setStatus(OrderStatus.valueOf(resultSet.getString("STATUS")));
+                order.setUserId(resultSet.getInt("USER_ID"));
+                return order;
+            } else {
+                return null; // Order not found
+            }
+        }
     }
 }
