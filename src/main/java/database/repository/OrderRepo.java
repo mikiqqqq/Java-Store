@@ -1,6 +1,7 @@
 package database.repository;
 
 import database.Database;
+import org.store.enumeration.OrderStatus;
 import org.store.model.OrderItem;
 import org.store.model.Order;
 
@@ -32,19 +33,56 @@ public class OrderRepo {
 
     public static void updateOrder(Order order) throws SQLException, IOException {
         Connection connection = Database.getConnect();
-        String query = "UPDATE \"ORDER\" SET PAYMENT_TYPE_ID = ?, CARD_NUMBER = ?, EMAIL = ?, PHONE_NUMBER = ?, ADDRESS = ?, MESSAGE = ?, STATUS = ? WHERE ID = ?";
+        String query = "UPDATE \"ORDER\" SET CARD_NUMBER = ?, EMAIL = ?, PHONE_NUMBER = ?, ADDRESS = ?, MESSAGE = ?, STATUS = ? WHERE ID = ?";
         PreparedStatement statement = connection.prepareStatement(query);
 
-        statement.setInt(1, order.getPaymentTypeId());
-        statement.setString(2, order.getCardNumber());
-        statement.setString(3, order.getEmail());
-        statement.setString(4, order.getPhoneNumber());
-        statement.setString(5, order.getAddress());
-        statement.setString(6, order.getMessage());
-        statement.setString(7, order.getStatus().name());
-        statement.setInt(8, order.getId());
+        statement.setString(1, order.getCardNumber());
+        statement.setString(2, order.getEmail());
+        statement.setString(3, order.getPhoneNumber());
+        statement.setString(4, order.getAddress());
+        statement.setString(5, order.getMessage());
+        statement.setString(6, order.getStatus().name());
+        statement.setInt(7, order.getId());
 
         statement.executeUpdate();
+        connection.close();
+    }
+
+    public static Order getOrderInProgressByEmail(String email) throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+        Order order = null;
+
+        String query = "SELECT * FROM \"ORDER\" WHERE STATUS = ? AND EMAIL = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, OrderStatus.IN_PROGRESS.name());
+        statement.setString(2, email);
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            order = new Order();
+            order.setId(resultSet.getInt("ID"));
+            order.setDate(resultSet.getTimestamp("DATE").toLocalDateTime());
+            order.setCardNumber(resultSet.getString("CARD_NUMBER"));
+            order.setEmail(resultSet.getString("EMAIL"));
+            order.setPhoneNumber(resultSet.getString("PHONE_NUMBER"));
+            order.setAddress(resultSet.getString("ADDRESS"));
+            order.setMessage(resultSet.getString("MESSAGE"));
+            order.setStatus(OrderStatus.valueOf(resultSet.getString("STATUS")));
+        }
+
+        connection.close();
+        return order;
+    }
+
+    public static void deleteOrderById(int orderId) throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+
+        String query = "DELETE FROM \"ORDER\" WHERE ID = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, orderId);
+
+        statement.executeUpdate();
+
         connection.close();
     }
 }

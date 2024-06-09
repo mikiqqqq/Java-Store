@@ -18,6 +18,7 @@ import org.store.model.OrderItem;
 import org.store.model.Product;
 import org.store.utils.ApiService;
 import org.store.utils.ImageConverter;
+import org.store.utils.UserSession;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -258,10 +259,13 @@ public class MainController {
         executorService.submit(() -> {
             try {
                 if (currentOrder == null) {
-                    // Create a new order with status IN_PROGRESS
-                    currentOrder = new Order();
-                    currentOrder.setStatus(OrderStatus.IN_PROGRESS);
-                    OrderRepo.createOrder(currentOrder);
+                    String userEmail = UserSession.getInstance().getUser().getEmail();
+                    currentOrder = OrderRepo.getOrderInProgressByEmail(userEmail);
+                    if(currentOrder == null) {
+                        currentOrder = new Order();
+                        currentOrder.setStatus(OrderStatus.IN_PROGRESS);
+                        OrderRepo.createOrder(currentOrder);
+                    }
                 }
                 OrderItem orderItem = new OrderItem(quantity, currentOrder.getId(), selectedProduct.getId());
                 // Add order item to the current order

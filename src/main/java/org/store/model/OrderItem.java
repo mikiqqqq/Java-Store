@@ -15,6 +15,13 @@ public class OrderItem {
         this.itemId = itemId;
     }
 
+    public OrderItem(int id, int quantity, int orderId, int itemId) {
+        this.id = id;
+        this.quantity = quantity;
+        this.orderId = orderId;
+        this.itemId = itemId;
+    }
+
     // Getters and Setters
     public int getId() {
         return id;

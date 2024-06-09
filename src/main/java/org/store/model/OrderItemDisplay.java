@@ -1,15 +1,17 @@
 package org.store.model;
 
+import java.math.BigDecimal;
+
 public class OrderItemDisplay {
     private final int id;
     private final int orderId;
     private final int productId;
     private final int quantity;
     private final String productName;
-    private final double totalPrice;
+    private final BigDecimal totalPrice;
 
     // Constructor
-    public OrderItemDisplay(OrderItem orderItem, String productName, double totalPrice) {
+    public OrderItemDisplay(OrderItem orderItem, String productName, BigDecimal totalPrice) {
         this.id = orderItem.getId();
         this.orderId = orderItem.getOrderId();
         this.productId = orderItem.getItemId();
@@ -40,7 +42,7 @@ public class OrderItemDisplay {
         return productName;
     }
 
-    public double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 }

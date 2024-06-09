@@ -1,37 +1,32 @@
 package org.store.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import org.store.enumeration.OrderStatus;
 
 public class Order {
     private int id;
     private LocalDateTime date;
-    private int paymentTypeId;
     private String cardNumber;
     private String email;
     private String phoneNumber;
     private String address;
     private String message;
     private OrderStatus status;
-    private List<OrderItem> orderItems;
 
     // Constructors
     public Order() {
         this.status = OrderStatus.IN_PROGRESS;
     }
 
-    public Order(int id, LocalDateTime date, int paymentTypeId, String cardNumber, String email, String phoneNumber, String address, String message, OrderStatus status, List<OrderItem> orderItems) {
+    public Order(int id, LocalDateTime date, String cardNumber, String email, String phoneNumber, String address, String message, OrderStatus status) {
         this.id = id;
         this.date = date;
-        this.paymentTypeId = paymentTypeId;
         this.cardNumber = cardNumber;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.message = message;
         this.status = status;
-        this.orderItems = orderItems;
     }
 
     // Getters and Setters
@@ -49,14 +44,6 @@ public class Order {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
-    }
-
-    public int getPaymentTypeId() {
-        return paymentTypeId;
-    }
-
-    public void setPaymentTypeId(int paymentTypeId) {
-        this.paymentTypeId = paymentTypeId;
     }
 
     public String getCardNumber() {
@@ -105,13 +92,5 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
-    }
-
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
-    }
-
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
     }
 }

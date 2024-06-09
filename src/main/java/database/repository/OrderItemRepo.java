@@ -100,4 +100,45 @@ public class OrderItemRepo {
         connection.close();
         return orderItems;
     }
+
+    public static int getQuantityByOrderItemId(int orderItemId) throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+        int quantity = 0;
+
+        String query = "SELECT QUANTITY FROM ORDER_ITEM WHERE ID = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, orderItemId);
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            quantity = resultSet.getInt("QUANTITY");
+        }
+
+        connection.close();
+        return quantity;
+    }
+
+    public static List<OrderItem> getOrderItemsByOrderId(int orderId) throws SQLException, IOException {
+        Connection connection = Database.getConnect();
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        String query = "SELECT * FROM ORDER_ITEM WHERE ORDER_ID = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, orderId);
+
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setId(resultSet.getInt("ID"));
+            orderItem.setQuantity(resultSet.getInt("QUANTITY"));
+            orderItem.setOrderId(resultSet.getInt("ORDER_ID"));
+            orderItem.setItemId(resultSet.getInt("PRODUCT_ID"));
+
+            orderItems.add(orderItem);
+        }
+
+        connection.close();
+        return orderItems;
+    }
+
 }

@@ -1,17 +1,24 @@
+package org.store;
+
+import database.repository.OrderItemRepo;
+import database.repository.OrderRepo;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.store.model.Order;
+import org.store.model.OrderItem;
 import org.store.model.OrderItemDisplay;
 import org.store.model.Product;
 import org.store.utils.ApiService;
+import org.store.utils.ImageConverter;
+import org.store.utils.UserSession;
+import database.repository.ProductRepo;
+import java.math.BigDecimal;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -34,7 +41,7 @@ public class CartController {
     private Label productPriceLabel;
 
     @FXML
-    private TextField quantityTextField;
+    private Label quantityLabel;
 
     @FXML
     private TableView<OrderItemDisplay> cartTableView;
@@ -55,79 +62,136 @@ public class CartController {
 
     private int quantity = 1;
     private Order currentOrder;
+    private OrderItemDisplay selectedOrderItem;
 
     private Product selectedProduct;
 
-    private final ApiService productApiService;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(20); // Adjust the pool size as needed
+    private final ApiService orderItemApiService;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10); // Adjust the pool size as needed
 
+    public CartController() {
+        this.orderItemApiService = new ApiService("http://localhost:8080/api/order-item/");
+    }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException, IOException {
+        String userEmail = UserSession.getInstance().getUser().getEmail();
+        currentOrder = OrderRepo.getOrderInProgressByEmail(userEmail);
+
+        if (currentOrder == null) {
+            return;
+        }
+
         // Initialize the table columns
-        columnId.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getId())));
-        columnProductName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProductName()));
-        columnQuantity.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getQuantity())));
-        columnTotalPrice.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getTotalPrice())));
+        columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        columnProductName.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        columnQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        columnTotalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
 
-        // Fetch and populate order items from the database
-        fetchOrderItemsFromDatabase();
-
-        // Bind the order items to the table
-        cartTableView.setItems(orderItems);
+        updateTable();
 
         // Select the first item if available
         if (!orderItems.isEmpty()) {
             cartTableView.getSelectionModel().selectFirst();
-            displaySelectedProductDetails(orderItems.get(0));
+            selectedOrderItem = cartTableView.getSelectionModel().getSelectedItem();
+            displaySelectedProductDetails(orderItems.getFirst());
         }
 
         // Add listener to table row selection
         cartTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                selectedOrderItem = newSelection;
                 displaySelectedProductDetails(newSelection);
             }
         });
     }
 
-    private void fetchOrderItemsFromDatabase() {
-        try {
-            // Fetch order items from the database (replace with actual DB call)
-            List<OrderItem> items = OrderItemRepository.getAllOrderItems();
-            orderItems.setAll(items);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to fetch order items: " + e.getMessage());
-        }
+    private void updateTable() throws SQLException, IOException {
+        // Fetch and populate order items from the database
+        fetchOrderItemsFromDatabase();
+
+        // Bind the order items to the table
+        cartTableView.setItems(orderItems);
     }
 
-    private void displaySelectedProductDetails(OrderItem orderItem) {
+    private void displaySelectedProductDetails(OrderItemDisplay orderItemDisplay) {
         try {
             // Fetch product details from the database (replace with actual DB call)
-            Product product = ProductRepository.getProductById(orderItem.getProductId());
+            Product product = ProductRepo.getProductById(orderItemDisplay.getProductId());
 
             productTitleLabel.setText(product.getTitle());
             productDescriptionLabel.setText(product.getDescription());
             productPriceLabel.setText(String.valueOf(product.getPrice()));
-            quantityTextField.setText(String.valueOf(orderItem.getQuantity()));
+            quantityLabel.setText(String.valueOf(orderItemDisplay.getQuantity()));
 
             if (product.getImage() != null) {
-                productImageView.setImage(new Image(new ByteArrayInputStream(product.getImage())));
+                productImageView.setImage(ImageConverter.byteArrayToImage(product.getImage()));
             } else {
                 productImageView.setImage(null);
             }
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert("Error", "Failed to fetch product details: " + e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void handleResponse(CloseableHttpResponse response, String successMessage) throws IOException {
+    private void fetchOrderItemsFromDatabase() throws SQLException, IOException {
+        List<OrderItem> orderItemList = OrderItemRepo.getOrderItemsByOrderId(currentOrder.getId());
+
+        for (OrderItem orderItem : orderItemList) {
+            String productName = ProductRepo.getProductById(orderItem.getItemId()).getTitle();
+            BigDecimal price = ProductRepo.getProductById(orderItem.getItemId()).getPrice(); // Assuming this returns BigDecimal
+            BigDecimal quantity = BigDecimal.valueOf(orderItem.getQuantity());
+            BigDecimal totalPrice = quantity.multiply(price);
+            OrderItemDisplay orderItemDisplay = new OrderItemDisplay(orderItem, productName, totalPrice);
+            orderItems.add(orderItemDisplay);
+        }
+    }
+
+    @FXML
+    private void removeOrderItem() {
+        if(selectedOrderItem == null || currentOrder == null) {
+            return;
+        }
+
+        executorService.submit(() -> {
+            String endpoint = "delete/orderId=" + currentOrder.getId() + "&itemId=" + selectedOrderItem.getProductId();
+            try (CloseableHttpResponse response = orderItemApiService.sendRequest(endpoint, null, "DELETE")) {
+                handleResponse(response, "Removed order item.", false);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Error: Failed to remove order item: " + e.getMessage());
+            }
+        });
+    }
+
+    @FXML
+    private void removeAllOrderItems() {
+        if (currentOrder == null) {
+            return;
+        }
+
+        executorService.submit(() -> {
+            try (CloseableHttpResponse response = orderItemApiService.sendRequest("delete-all/" + currentOrder.getId(), null, "DELETE")) {
+                handleResponse(response, "Removed all order items.", true);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Error: Failed to add product: " + e.getMessage());
+            }
+        });
+    }
+
+    private void handleResponse(CloseableHttpResponse response, String successMessage, boolean wipe) throws IOException {
         Platform.runLater(() -> {
             try {
                 int statusCode = response.getCode();
                 if (statusCode == 200 || statusCode == 201) {
                     System.out.println("Success " + successMessage);
+                    if(wipe) {
+                        System.err.println("Order wiped successfully.");
+                    }
                 } else if (statusCode == 403) {
                     showAlert("Permission Denied", "You do not have permission to perform this action.");
                 } else {
@@ -149,15 +213,39 @@ public class CartController {
 
     @FXML
     void handleDecrement() {
+        if(selectedOrderItem == null) {
+            return;
+        }
+
         if (quantity > 1) {
-            quantity--;
-            quantityLabel.setText(String.valueOf(quantity));
+            executorService.submit(() -> {
+                OrderItem orderItem = new OrderItem(--quantity, selectedOrderItem.getOrderId(), selectedOrderItem.getProductId());
+                try (CloseableHttpResponse response = orderItemApiService.sendRequest("update", orderItem, "PUT")) {
+                    handleResponse(response, "Updated order item.", false);
+                    quantityLabel.setText(String.valueOf(OrderItemRepo.getQuantityByOrderItemId(orderItem.getId())));
+                } catch (IOException | SQLException e) {
+                    e.printStackTrace();
+                    System.out.println("Error: Failed to update order item: " + e.getMessage());
+                }
+            });
         }
     }
 
     @FXML
     void handleIncrement() {
-        quantity++;
-        quantityLabel.setText(String.valueOf(quantity));
+        if(selectedOrderItem == null) {
+            return;
+        }
+
+        executorService.submit(() -> {
+            OrderItem orderItem = new OrderItem(selectedOrderItem.getId(), ++quantity, selectedOrderItem.getOrderId(), selectedOrderItem.getProductId());
+            try (CloseableHttpResponse response = orderItemApiService.sendRequest("update", orderItem, "PUT")) {
+                handleResponse(response, "Updated order item.", false);
+                quantityLabel.setText(String.valueOf(OrderItemRepo.getQuantityByOrderItemId(orderItem.getId())));
+            } catch (IOException | SQLException e) {
+                e.printStackTrace();
+                System.out.println("Error: Failed to update order item: " + e.getMessage());
+            }
+        });
     }
 }
