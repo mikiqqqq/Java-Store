@@ -3,6 +3,7 @@ package org.store;
 import database.repository.OrderItemRepo;
 import database.repository.OrderRepo;
 import database.repository.ProductRepo;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,9 +11,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.store.enumeration.OrderStatus;
 import org.store.model.Order;
+import org.store.model.OrderItem;
 import org.store.model.Product;
+import org.store.utils.ApiService;
 import org.store.utils.ImageConverter;
 
 import java.io.ByteArrayInputStream;
@@ -21,6 +25,8 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainController {
 
@@ -98,8 +104,17 @@ public class MainController {
 
     private final ObservableList<Product> products = FXCollections.observableArrayList();
 
-    private int quantity = 0;
+    private int quantity = 1;
     private Order currentOrder;
+
+    private Product selectedProduct;
+
+    private final ApiService productApiService;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(20); // Adjust the pool size as needed
+
+    public MainController() {
+        this.productApiService = new ApiService("http://localhost:8080/api/order-item/");
+    }
 
     public void initialize() {
         // Initialize the table columns
@@ -122,6 +137,8 @@ public class MainController {
         mainTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 displayProductDetails(newSelection.getId());
+                selectedProduct = newSelection;
+                System.out.println(selectedProduct.getId());
             }
         });
 
@@ -232,26 +249,54 @@ public class MainController {
 
     @FXML
     void addToCart() {
-        try {
-            Product selectedProduct = mainTableView.getSelectionModel().getSelectedItem();
-            if (selectedProduct == null) {
-                System.out.println("No product selected.");
-                return;
-            }
-
-            if (currentOrder == null) {
-                // Create a new order with status IN_PROGRESS
-                currentOrder = new Order();
-                currentOrder.setStatus(OrderStatus.IN_PROGRESS);
-                OrderRepo.createOrder(currentOrder);
-            }
-
-            // Add order item to the current order
-            OrderItemRepo.addOrderItem(currentOrder, selectedProduct, quantity);
-            System.out.println("Product added to cart.");
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
+        if (selectedProduct == null) {
+            showAlert("Error", "Please select a product to add to cart");
+            System.out.println("No product selected.");
+            return;
         }
+
+        executorService.submit(() -> {
+            try {
+                if (currentOrder == null) {
+                    // Create a new order with status IN_PROGRESS
+                    currentOrder = new Order();
+                    currentOrder.setStatus(OrderStatus.IN_PROGRESS);
+                    OrderRepo.createOrder(currentOrder);
+                }
+                OrderItem orderItem = new OrderItem(quantity, currentOrder.getId(), selectedProduct.getId());
+                // Add order item to the current order
+                CloseableHttpResponse response = productApiService.sendRequest("add", orderItem, "POST");
+                handleResponse(response, "Order item added successfully.");
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
+                System.out.println("Error: Failed to add order item: " + e.getMessage());
+            }
+        });
+    }
+
+    private void handleResponse(CloseableHttpResponse response, String successMessage) throws IOException {
+        Platform.runLater(() -> {
+            try {
+                int statusCode = response.getCode();
+                if (statusCode == 200 || statusCode == 201) {
+                    System.out.println("Success " + successMessage);
+                } else if (statusCode == 403) {
+                    showAlert("Permission Denied", "You do not have permission to perform this action.");
+                } else {
+                    System.err.println(response.getCode() + " Request failed.");
+                }
+                response.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML

@@ -315,8 +315,9 @@ public class AdminController {
 
     private void handleResponse(CloseableHttpResponse response, String successMessage) throws IOException {
         Platform.runLater(() -> {
-            int statusCode = response.getCode();
-            if (statusCode == 200) {
+            try {
+                int statusCode = response.getCode();
+            if (statusCode == 200 || statusCode == 201) {
                 updateTableData();
                 System.out.println("Success " + successMessage);
             } else if (statusCode == 403) {
@@ -324,8 +325,11 @@ public class AdminController {
             } else {
                 System.err.println(response.getCode() + " Request failed.");
             }
+            response.close();
+            } catch (IOException e) {
+                    throw new RuntimeException(e);
+            }
         });
-
     }
 
     private Product collectProductData(String decider) throws SQLException, IOException {

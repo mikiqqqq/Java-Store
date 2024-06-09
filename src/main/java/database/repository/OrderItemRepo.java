@@ -22,7 +22,7 @@ public class OrderItemRepo {
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setInt(1, orderItem.getQuantity());
         statement.setInt(2, orderItem.getOrderId());
-        statement.setInt(3, orderItem.getProductId());
+        statement.setInt(3, orderItem.getItemId());
 
         statement.executeUpdate();
         connection.close();
@@ -72,7 +72,7 @@ public class OrderItemRepo {
             orderItem.setId(resultSet.getInt("ID"));
             orderItem.setQuantity(resultSet.getInt("QUANTITY"));
             orderItem.setOrderId(resultSet.getInt("ORDER_ID"));
-            orderItem.setProductId(resultSet.getInt("PRODUCT_ID"));
+            orderItem.setItemId(resultSet.getInt("PRODUCT_ID"));
         }
 
         connection.close();
@@ -92,7 +92,7 @@ public class OrderItemRepo {
             orderItem.setId(resultSet.getInt("ID"));
             orderItem.setQuantity(resultSet.getInt("QUANTITY"));
             orderItem.setOrderId(resultSet.getInt("ORDER_ID"));
-            orderItem.setProductId(resultSet.getInt("PRODUCT_ID"));
+            orderItem.setItemId(resultSet.getInt("PRODUCT_ID"));
 
             orderItems.add(orderItem);
         }

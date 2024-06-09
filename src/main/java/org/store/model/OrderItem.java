@@ -4,16 +4,15 @@ public class OrderItem {
     private int id;
     private int quantity;
     private int orderId;
-    private int productId;
+    private int itemId;
 
     // Constructors
     public OrderItem() {}
 
-    public OrderItem(int id, int quantity, int orderId, int productId) {
-        this.id = id;
+    public OrderItem(int quantity, int orderId, int itemId) {
         this.quantity = quantity;
         this.orderId = orderId;
-        this.productId = productId;
+        this.itemId = itemId;
     }
 
     // Getters and Setters
@@ -41,11 +40,11 @@ public class OrderItem {
         this.orderId = orderId;
     }
 
-    public int getProductId() {
-        return productId;
+    public int getItemId() {
+        return itemId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
     }
 }
