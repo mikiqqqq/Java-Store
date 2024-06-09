@@ -45,6 +45,10 @@ public class Main extends Application {
         stageManager.showDialog("/org/store/register.fxml", "Register");
     }
 
+    public void showCheckoutView() throws IOException {
+        stageManager.switchScene("/org/store/checkout.fxml", "Checkout");
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

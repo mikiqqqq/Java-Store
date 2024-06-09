@@ -48,7 +48,19 @@
                   </Label>
                </children>
             </GridPane>
-            <Button layoutX="24.0" layoutY="139.0" mnemonicParsing="false" onAction="#removeAllOrderItems" text="Empty Cart" />
+            <HBox layoutY="151.0" prefHeight="4.0" prefWidth="393.0">
+               <children>
+                  <Button fx:id="checkoutButton" mnemonicParsing="false" onAction="#handleCheckout" text="Checkout">
+                     <HBox.margin>
+                        <Insets right="24.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#removeAllOrderItems" text="Empty Cart" />
+               </children>
+               <padding>
+                  <Insets left="24.0" />
+               </padding>
+            </HBox>
          </children>
       </Pane>
    </center>
@@ -85,7 +97,7 @@
             <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
          </padding>
          <children>
-            <VBox fx:id="VBox" layoutX="26.0" layoutY="24.0" prefHeight="622.0" prefWidth="348.0">
+            <VBox fx:id="vBox" layoutX="26.0" layoutY="24.0" prefHeight="622.0" prefWidth="348.0">
                <children>
                   <ImageView fx:id="productImageView" fitHeight="180.0" fitWidth="348.0" pickOnBounds="true">
                      <image>

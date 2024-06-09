@@ -57,7 +57,6 @@ CREATE TABLE "ORDER"
     EMAIL               VARCHAR(255),
     PHONE_NUMBER        VARCHAR(255),
     ADDRESS             VARCHAR(255),
-    MESSAGE             VARCHAR(255),
     STATUS              VARCHAR(255)
 );
 

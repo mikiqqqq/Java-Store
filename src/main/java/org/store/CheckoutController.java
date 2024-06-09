@@ -6,24 +6,21 @@ import database.repository.ProductRepo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.oorsprong.websamples.CountryInfoService;
-import org.oorsprong.websamples.CountryInfoServiceSoapType;
 import org.oorsprong.websamples.TCountryCodeAndName;
 import org.store.model.Order;
 import org.store.model.OrderItem;
 import org.store.model.OrderItemDisplay;
 import org.store.utils.UserSession;
+import org.oorsprong.websamples.CountryInfoService;
+import org.oorsprong.websamples.CountryInfoServiceSoapType;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CheckoutController {
@@ -69,6 +66,33 @@ public class CheckoutController {
 
     @FXML
     private ChoiceBox<String> countryChoiceBox;
+
+    @FXML
+    private Label addressErrorLabel;
+
+    @FXML
+    private Label postalCodeErrorLabel;
+
+    @FXML
+    private Label phoneNumberErrorLabel;
+
+    @FXML
+    private Label cardholderNameErrorLabel;
+
+    @FXML
+    private Label cardNumberErrorLabel;
+
+    @FXML
+    private Label expDayErrorLabel;
+
+    @FXML
+    private Label expMonthErrorLabel;
+
+    @FXML
+    private Label cvcErrorLabel;
+
+    @FXML
+    private Label countryErrorLabel;
 
     @FXML
     private Button updateOrderButton;
@@ -124,21 +148,79 @@ public class CheckoutController {
 
     @FXML
     private void handleUpdateOrder() {
-        // Collect data from fields and update the order
-        // Example:
-        String address = addressField.getText();
-        String postalCode = postalCodeField.getText();
-        String phoneNumber = phoneNumberField.getText();
-        String cardholderName = cardholderNameField.getText();
-        String cardNumber = cardNumberField.getText();
-        String expDay = expDayField.getText();
-        String expMonth = expMonthField.getText();
-        String cvc = cvcField.getText();
-        String country = countryChoiceBox.getValue();
+        boolean isValid = validateFields();
 
-        // Create or update the order object with collected data
-        // ...
+        if (isValid) {
 
-        System.out.println("Order updated with address: " + address + ", country: " + country);
+        }
+    }
+
+    private boolean validateFields() {
+        boolean isValid = true;
+
+        if (addressField.getText().isEmpty()) {
+            addressErrorLabel.setText("Address is required.");
+            isValid = false;
+        } else {
+            addressErrorLabel.setText("");
+        }
+
+        if (postalCodeField.getText().isEmpty()) {
+            postalCodeErrorLabel.setText("Postal code is required.");
+            isValid = false;
+        } else {
+            postalCodeErrorLabel.setText("");
+        }
+
+        if (phoneNumberField.getText().isEmpty() || !Pattern.matches("\\d{10}", phoneNumberField.getText())) {
+            phoneNumberErrorLabel.setText("Invalid phone number.");
+            isValid = false;
+        } else {
+            phoneNumberErrorLabel.setText("");
+        }
+
+        if (cardholderNameField.getText().isEmpty()) {
+            cardholderNameErrorLabel.setText("Cardholder name is required.");
+            isValid = false;
+        } else {
+            cardholderNameErrorLabel.setText("");
+        }
+
+        if (cardNumberField.getText().isEmpty() || !Pattern.matches("\\d{16}", cardNumberField.getText())) {
+            cardNumberErrorLabel.setText("Valid card number is required.");
+            isValid = false;
+        } else {
+            cardNumberErrorLabel.setText("");
+        }
+
+        if (expDayField.getText().isEmpty() || !Pattern.matches("\\d{2}", expDayField.getText())) {
+            expDayErrorLabel.setText("Invalid entry.");
+            isValid = false;
+        } else {
+            expDayErrorLabel.setText("");
+        }
+
+        if (expMonthField.getText().isEmpty() || !Pattern.matches("\\d{2}", expMonthField.getText())) {
+            expMonthErrorLabel.setText("Invalid entry.");
+            isValid = false;
+        } else {
+            expMonthErrorLabel.setText("");
+        }
+
+        if (cvcField.getText().isEmpty() || !Pattern.matches("\\d{3}", cvcField.getText())) {
+            cvcErrorLabel.setText("Invalid entry.");
+            isValid = false;
+        } else {
+            cvcErrorLabel.setText("");
+        }
+
+        if (countryChoiceBox.getValue() == null || countryChoiceBox.getValue().isEmpty()) {
+            countryErrorLabel.setText("Country required.");
+            isValid = false;
+        } else {
+            countryErrorLabel.setText("");
+        }
+
+        return isValid;
     }
 }

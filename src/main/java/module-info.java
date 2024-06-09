@@ -14,7 +14,10 @@ module org.store {
     requires javafx.swing;
     requires com.mailjet.api;
     requires org.json;
+    requires jakarta.xml.bind;
+    requires jakarta.xml.ws;
 
+    opens org.oorsprong.websamples to com.sun.xml.ws, com.sun.xml.bind;
     exports org.store.enumeration;
     opens org.store to javafx.fxml;
     exports org.store.model;

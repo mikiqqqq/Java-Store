@@ -112,6 +112,7 @@
         <version>4.0.2</version>
         <executions>
           <execution>
+            <id>wsimport-from-jdk</id>
             <goals>
               <goal>wsimport</goal>
             </goals>
@@ -121,8 +122,9 @@
           <wsdlUrls>
             <wsdlUrl>http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL</wsdlUrl>
           </wsdlUrls>
+          <keep>true</keep>
           <packageName>org.oorsprong.websamples</packageName>
-          <sourceDestDir>${project.build.directory}/generated-sources/</sourceDestDir>
+          <sourceDestDir>target/generated-sources/</sourceDestDir>
         </configuration>
       </plugin>
 

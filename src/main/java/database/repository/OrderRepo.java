@@ -35,16 +35,15 @@ public class OrderRepo {
 
     public static void updateOrder(Order order) throws SQLException, IOException {
         Connection connection = Database.getConnect();
-        String query = "UPDATE \"ORDER\" SET CARD_NUMBER = ?, EMAIL = ?, PHONE_NUMBER = ?, ADDRESS = ?, MESSAGE = ?, STATUS = ? WHERE ID = ?";
+        String query = "UPDATE \"ORDER\" SET CARD_NUMBER = ?, EMAIL = ?, PHONE_NUMBER = ?, ADDRESS = ?, STATUS = ? WHERE ID = ?";
         PreparedStatement statement = connection.prepareStatement(query);
 
         statement.setString(1, order.getCardNumber());
         statement.setString(2, order.getEmail());
         statement.setString(3, order.getPhoneNumber());
         statement.setString(4, order.getAddress());
-        statement.setString(5, order.getMessage());
-        statement.setString(6, order.getStatus().name());
-        statement.setInt(7, order.getId());
+        statement.setString(5, order.getStatus().name());
+        statement.setInt(6, order.getId());
 
         statement.executeUpdate();
         connection.close();

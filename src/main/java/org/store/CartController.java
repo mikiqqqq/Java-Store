@@ -112,6 +112,11 @@ public class CartController {
         });
     }
 
+    @FXML
+    private void handleCheckout() throws IOException {
+        Main.getMainApp().showCheckoutView();
+    }
+
     private void updateTable() throws SQLException, IOException {
         orderItems.clear();
 
