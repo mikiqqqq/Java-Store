@@ -15,6 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.oorsprong.websamples.CountryInfoService;
 import org.oorsprong.websamples.CountryInfoServiceSoapType;
 import org.oorsprong.websamples.TCountryCodeAndName;
+import org.store.model.Order;
 import org.store.model.OrderItem;
 import org.store.model.OrderItemDisplay;
 import org.store.utils.UserSession;
@@ -28,19 +29,19 @@ import java.util.stream.Collectors;
 public class CheckoutController {
 
     @FXML
-    private TableView<OrderItem> cartTableView;
+    private TableView<OrderItemDisplay> cartTableView;
 
     @FXML
-    private TableColumn<OrderItem, String> columnId;
+    private TableColumn<OrderItemDisplay, Integer> columnId;
 
     @FXML
-    private TableColumn<OrderItem, String> columnProductName;
+    private TableColumn<OrderItemDisplay, String> columnProductName;
 
     @FXML
-    private TableColumn<OrderItem, String> columnQuantity;
+    private TableColumn<OrderItemDisplay, Integer> columnQuantity;
 
     @FXML
-    private TableColumn<OrderItem, String> columnTotalPrice;
+    private TableColumn<OrderItemDisplay, Double> columnTotalPrice;
 
     @FXML
     private TextField addressField;
@@ -72,7 +73,8 @@ public class CheckoutController {
     @FXML
     private Button updateOrderButton;
 
-    private ObservableList<OrderItem> orderItems = FXCollections.observableArrayList();
+    private final ObservableList<OrderItemDisplay> orderItems = FXCollections.observableArrayList();
+    private Order currentOrder;
     private int currentOrderId; // Set this to the current order ID
 
     @FXML
@@ -80,7 +82,7 @@ public class CheckoutController {
         String userEmail = UserSession.getInstance().getUser().getEmail();
         currentOrder = OrderRepo.getOrderInProgressByEmail(userEmail);
         if (currentOrder == null) {
-            VBox.setVisible(false);
+            Main.getMainApp().showMainView();
             return;
         }
 
@@ -90,24 +92,9 @@ public class CheckoutController {
         columnQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         columnTotalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
 
+        fetchOrderItemsFromDatabase();
         populateCountryChoiceBox();
-
-        // Select the first item if available
-        if (!orderItems.isEmpty()) {
-            cartTableView.getSelectionModel().selectFirst();
-            selectedOrderItem = cartTableView.getSelectionModel().getSelectedItem();
-            quantity = selectedOrderItem.getQuantity();
-            displaySelectedProductDetails(orderItems.getFirst());
-        }
-
-        // Add listener to table row selection
-        cartTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                selectedOrderItem = newSelection;
-                quantity = selectedOrderItem.getQuantity();
-                displaySelectedProductDetails(newSelection);
-            }
-        });
+        cartTableView.setItems(orderItems);
     }
 
     private void fetchOrderItemsFromDatabase() throws SQLException, IOException {
@@ -154,11 +141,4 @@ public class CheckoutController {
 
         System.out.println("Order updated with address: " + address + ", country: " + country);
     }
-
-    private void updateTable() throws SQLException, IOException {
-        orderItems.clear();
-        fetchOrderItemsFromDatabase();
-        cartTableView.setItems(orderItems);
-    }
-
 }
