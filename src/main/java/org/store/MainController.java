@@ -138,8 +138,9 @@ public class MainController {
         mainTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 displayProductDetails(newSelection.getId());
+                quantity = 1;
+                quantityLabel.setText("1");
                 selectedProduct = newSelection;
-                System.out.println(selectedProduct.getId());
             }
         });
 
@@ -264,6 +265,7 @@ public class MainController {
                     if(currentOrder == null) {
                         currentOrder = new Order();
                         currentOrder.setStatus(OrderStatus.IN_PROGRESS);
+                        currentOrder.setEmail(userEmail);
                         OrderRepo.createOrder(currentOrder);
                     }
                 }

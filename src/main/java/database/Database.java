@@ -23,7 +23,6 @@ public class Database {
         }
 
         Database.activeConnectionWithDatabase = true;
-        System.out.printf("\n[%s] is communicating with the Database", Thread.currentThread().getName());
 
         String databaseURL;
         String databaseUsername;
@@ -34,7 +33,6 @@ public class Database {
             databaseURL = WindowsRegistryController.readStringValue(keyPath, "databaseURL");
             databaseUsername = WindowsRegistryController.readStringValue(keyPath, "databaseUsername");
             databasePassword = WindowsRegistryController.readStringValue(keyPath, "databasePassword");
-            System.out.println("Reading from windows");
         } else {
             Properties config = new Properties();
             InputStream inputStream = WindowsRegistryController.class.getResourceAsStream("/dat/database.properties");
@@ -43,10 +41,7 @@ public class Database {
             databaseURL = config.getProperty("databaseURL");
             databaseUsername = config.getProperty("databaseUsername");
             databasePassword = config.getProperty("databasePassword");
-            System.out.println("Reading from general");
         }
-
-        System.out.println(databaseURL);
 
         connect = DriverManager.getConnection(databaseURL, databaseUsername, databasePassword);
 

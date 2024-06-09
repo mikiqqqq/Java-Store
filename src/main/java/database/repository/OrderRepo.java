@@ -16,9 +16,11 @@ public class OrderRepo {
     public static void createOrder(Order order) throws SQLException, IOException {
         Connection connection = Database.getConnect();
 
-        String query = "INSERT INTO \"ORDER\" (STATUS) VALUES (?)";
+        // Adjust the SQL query to insert both STATUS and EMAIL
+        String query = "INSERT INTO \"ORDER\" (STATUS, EMAIL) VALUES (?, ?)";
         PreparedStatement statement = connection.prepareStatement(query, new String[]{"ID"});
         statement.setString(1, order.getStatus().name());
+        statement.setString(2, order.getEmail());
 
         int affectedRows = statement.executeUpdate();
         if (affectedRows > 0) {
@@ -54,6 +56,8 @@ public class OrderRepo {
 
         String query = "SELECT * FROM \"ORDER\" WHERE STATUS = ? AND EMAIL = ?";
         PreparedStatement statement = connection.prepareStatement(query);
+        System.out.println(OrderStatus.IN_PROGRESS.name());
+        System.out.println(email);
         statement.setString(1, OrderStatus.IN_PROGRESS.name());
         statement.setString(2, email);
 
@@ -61,12 +65,7 @@ public class OrderRepo {
         if (resultSet.next()) {
             order = new Order();
             order.setId(resultSet.getInt("ID"));
-            order.setDate(resultSet.getTimestamp("DATE").toLocalDateTime());
-            order.setCardNumber(resultSet.getString("CARD_NUMBER"));
             order.setEmail(resultSet.getString("EMAIL"));
-            order.setPhoneNumber(resultSet.getString("PHONE_NUMBER"));
-            order.setAddress(resultSet.getString("ADDRESS"));
-            order.setMessage(resultSet.getString("MESSAGE"));
             order.setStatus(OrderStatus.valueOf(resultSet.getString("STATUS")));
         }
 

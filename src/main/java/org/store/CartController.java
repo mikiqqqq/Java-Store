@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.store.model.Order;
 import org.store.model.OrderItem;
@@ -58,6 +59,9 @@ public class CartController {
     @FXML
     private TableColumn<OrderItemDisplay, Double> columnTotalPrice;
 
+    @FXML
+    private VBox VBox;
+
     private final ObservableList<OrderItemDisplay> orderItems = FXCollections.observableArrayList();
 
     private int quantity = 1;
@@ -77,8 +81,8 @@ public class CartController {
     public void initialize() throws SQLException, IOException {
         String userEmail = UserSession.getInstance().getUser().getEmail();
         currentOrder = OrderRepo.getOrderInProgressByEmail(userEmail);
-
         if (currentOrder == null) {
+            VBox.setVisible(false);
             return;
         }
 
@@ -94,6 +98,7 @@ public class CartController {
         if (!orderItems.isEmpty()) {
             cartTableView.getSelectionModel().selectFirst();
             selectedOrderItem = cartTableView.getSelectionModel().getSelectedItem();
+            quantity = selectedOrderItem.getQuantity();
             displaySelectedProductDetails(orderItems.getFirst());
         }
 
@@ -101,12 +106,15 @@ public class CartController {
         cartTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 selectedOrderItem = newSelection;
+                quantity = selectedOrderItem.getQuantity();
                 displaySelectedProductDetails(newSelection);
             }
         });
     }
 
     private void updateTable() throws SQLException, IOException {
+        orderItems.clear();
+
         // Fetch and populate order items from the database
         fetchOrderItemsFromDatabase();
 
@@ -160,6 +168,7 @@ public class CartController {
             String endpoint = "delete/orderId=" + currentOrder.getId() + "&itemId=" + selectedOrderItem.getProductId();
             try (CloseableHttpResponse response = orderItemApiService.sendRequest(endpoint, null, "DELETE")) {
                 handleResponse(response, "Removed order item.", false);
+                cartTableView.getSelectionModel().selectFirst();
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Error: Failed to remove order item: " + e.getMessage());
@@ -190,15 +199,18 @@ public class CartController {
                 if (statusCode == 200 || statusCode == 201) {
                     System.out.println("Success " + successMessage);
                     if(wipe) {
-                        System.err.println("Order wiped successfully.");
+                        OrderRepo.deleteOrderById(currentOrder.getId());
+                        VBox.setVisible(false);
+                        System.out.println("Order wiped successfully.");
                     }
                 } else if (statusCode == 403) {
                     showAlert("Permission Denied", "You do not have permission to perform this action.");
                 } else {
                     System.err.println(response.getCode() + " Request failed.");
                 }
+                updateTable();
                 response.close();
-            } catch (IOException e) {
+            } catch (IOException | SQLException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -219,11 +231,17 @@ public class CartController {
 
         if (quantity > 1) {
             executorService.submit(() -> {
-                OrderItem orderItem = new OrderItem(--quantity, selectedOrderItem.getOrderId(), selectedOrderItem.getProductId());
+                OrderItem orderItem = new OrderItem(selectedOrderItem.getId(), --quantity, selectedOrderItem.getOrderId(), selectedOrderItem.getProductId());
                 try (CloseableHttpResponse response = orderItemApiService.sendRequest("update", orderItem, "PUT")) {
                     handleResponse(response, "Updated order item.", false);
-                    quantityLabel.setText(String.valueOf(OrderItemRepo.getQuantityByOrderItemId(orderItem.getId())));
-                } catch (IOException | SQLException e) {
+                    Platform.runLater(() -> {
+                        try {
+                            quantityLabel.setText(String.valueOf(OrderItemRepo.getQuantityByOrderItemId(orderItem.getId())));
+                        } catch (SQLException | IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                } catch (IOException e) {
                     e.printStackTrace();
                     System.out.println("Error: Failed to update order item: " + e.getMessage());
                 }
@@ -241,8 +259,14 @@ public class CartController {
             OrderItem orderItem = new OrderItem(selectedOrderItem.getId(), ++quantity, selectedOrderItem.getOrderId(), selectedOrderItem.getProductId());
             try (CloseableHttpResponse response = orderItemApiService.sendRequest("update", orderItem, "PUT")) {
                 handleResponse(response, "Updated order item.", false);
-                quantityLabel.setText(String.valueOf(OrderItemRepo.getQuantityByOrderItemId(orderItem.getId())));
-            } catch (IOException | SQLException e) {
+                Platform.runLater(() -> {
+                    try {
+                        quantityLabel.setText(String.valueOf(OrderItemRepo.getQuantityByOrderItemId(orderItem.getId())));
+                    } catch (SQLException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Error: Failed to update order item: " + e.getMessage());
             }

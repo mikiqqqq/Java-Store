@@ -19,7 +19,6 @@ public class WindowsRegistryController {
         try {
             Advapi32Util.registryCreateKey(WinReg.HKEY_CURRENT_USER, keyPath);
             Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, keyPath, valueName, value);
-            System.out.println("Value written to registry successfully.");
             logger.info("Value written to registry successfully.");
         } catch (Exception e) {
             System.err.println("Error writing to registry: " + e.getMessage());
