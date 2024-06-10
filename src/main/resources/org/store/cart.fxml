@@ -25,9 +25,9 @@
             <TableView fx:id="cartTableView" layoutY="230.0" prefHeight="440.0" prefWidth="600.0">
                <columns>
                   <TableColumn fx:id="columnId" prefWidth="75.0" text="ID" />
-                  <TableColumn fx:id="columnProductName" prefWidth="248.0" text="Name" />
-                  <TableColumn fx:id="columnQuantity" minWidth="0.0" prefWidth="141.0" text="Amount" />
-                  <TableColumn fx:id="columnTotalPrice" prefWidth="135.0" text="Price" />
+                  <TableColumn fx:id="columnProductName" prefWidth="248.0" text="%table.name" />
+                  <TableColumn fx:id="columnQuantity" minWidth="0.0" prefWidth="141.0" text="%table.amount" />
+                  <TableColumn fx:id="columnTotalPrice" prefWidth="135.0" text="table.price" />
                </columns>
             </TableView>
             <GridPane prefHeight="80.0" prefWidth="600.0">
@@ -38,7 +38,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label styleClass="text-on-light" text="Your cart">
+                  <Label styleClass="text-on-light" text="%your_cart">
                      <font>
                         <Font size="36.0" />
                      </font>
@@ -50,12 +50,12 @@
             </GridPane>
             <HBox layoutY="151.0" prefHeight="4.0" prefWidth="393.0">
                <children>
-                  <Button fx:id="checkoutButton" mnemonicParsing="false" onAction="#handleCheckout" styleClass="button-accented-dark" text="Checkout">
+                  <Button fx:id="checkoutButton" mnemonicParsing="false" onAction="#handleCheckout" styleClass="button-accented-dark" text="%checkout">
                      <HBox.margin>
                         <Insets right="24.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#removeAllOrderItems" styleClass="button-accented-dark" text="Empty Cart" />
+                  <Button mnemonicParsing="false" onAction="#removeAllOrderItems" styleClass="button-accented-dark" text="%empty" />
                </children>
                <padding>
                   <Insets left="24.0" />
@@ -97,22 +97,22 @@
                         <Image url="@../../icons/placeholder.jpg" />
                      </image>
                   </ImageView>
-                  <Label fx:id="productTitleLabel" text="Title">
+                  <Label fx:id="productTitleLabel" text="%title">
                      <VBox.margin>
                         <Insets top="12.0" />
                      </VBox.margin>
                   </Label>
-                  <Label fx:id="productDescriptionLabel" alignment="TOP_LEFT" prefHeight="67.0" prefWidth="394.0" text="Description">
+                  <Label fx:id="productDescriptionLabel" alignment="TOP_LEFT" prefHeight="67.0" prefWidth="394.0" text="%desc">
                      <VBox.margin>
                         <Insets top="12.0" />
                      </VBox.margin>
                   </Label>
-                  <Label fx:id="productPriceLabel" text="Price">
+                  <Label fx:id="productPriceLabel" text="%price">
                      <VBox.margin>
                         <Insets bottom="24.0" top="24.0" />
                      </VBox.margin>
                   </Label>
-                  <Label fx:id="priceLabel1" layoutX="10.0" layoutY="345.0" text="Quantity">
+                  <Label fx:id="priceLabel1" layoutX="10.0" layoutY="345.0" text="%quantity">
                      <VBox.margin>
                         <Insets bottom="12.0" />
                      </VBox.margin>
@@ -124,7 +124,7 @@
                         <Button fx:id="incrementButton" mnemonicParsing="false" onAction="#handleIncrement" prefHeight="31.0" prefWidth="31.0" styleClass="quantity-button" text="+" />
                      </children>
                   </HBox>
-                  <Button fx:id="addToCartButton" mnemonicParsing="false" onAction="#removeOrderItem" prefHeight="42.0" text="Remove item">
+                  <Button fx:id="addToCartButton" mnemonicParsing="false" onAction="#removeOrderItem" prefHeight="42.0" text="%remove_item">
                      <padding>
                         <Insets left="24.0" right="24.0" />
                      </padding>

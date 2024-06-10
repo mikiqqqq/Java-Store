@@ -62,7 +62,7 @@
                   </Label>
                </children>
             </GridPane>
-            <TableView fx:id="ordersTableView" layoutX="-7.0" layoutY="249.0" prefHeight="421.0" prefWidth="600.0">
+            <TableView fx:id="ordersTableView" layoutY="249.0" prefHeight="421.0" prefWidth="600.0">
                <columns>
                   <TableColumn fx:id="dateColumn" prefWidth="99.0" text="%table.date" />
                   <TableColumn fx:id="statusColumn" prefWidth="109.0" text="%table.status" />
@@ -95,7 +95,7 @@
             <String fx:value="background-light" />
          </styleClass>
          <children>
-            <VBox layoutX="-29.0" layoutY="-4.0" prefHeight="650.0" prefWidth="400.0" translateX="29.0" translateY="24.0">
+            <VBox fx:id="VBox" layoutX="-29.0" layoutY="-4.0" prefHeight="650.0" prefWidth="400.0" translateX="29.0" translateY="24.0">
                <children>
                   <GridPane prefHeight="282.0" prefWidth="348.0">
                     <columnConstraints>
@@ -129,12 +129,15 @@
                         <Insets bottom="24.0" left="24.0" right="24.0" />
                      </padding>
                   </GridPane>
-                  <TableView fx:id="orderItemsTableView" layoutX="10.0" layoutY="236.0" minHeight="421.0" prefHeight="421.0" prefWidth="348.0">
+                  <TableView fx:id="orderItemsTableView" layoutX="10.0" layoutY="236.0" minHeight="420.0" prefHeight="420.0" prefWidth="348.0">
                      <columns>
-                        <TableColumn fx:id="itemNameColumn" prefWidth="119.0" text="Name" />
-                        <TableColumn fx:id="itemAmountColumn" prefWidth="112.0" text="Amount" />
-                        <TableColumn fx:id="itemPriceColumn" prefWidth="116.0" text="Price" />
+                        <TableColumn fx:id="itemNameColumn" prefWidth="185.0" text="Name" />
+                        <TableColumn fx:id="itemAmountColumn" prefWidth="103.0" text="Amount" />
+                        <TableColumn fx:id="itemPriceColumn" prefWidth="109.0" text="Price" />
                      </columns>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
                   </TableView>
                </children></VBox>
          </children>

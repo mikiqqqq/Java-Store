@@ -122,6 +122,12 @@ public class AdminController {
 
     }
 
+    private void selectFirst() {
+        brandChoiceBox.setValue(brandChoiceBox.getItems().getFirst());
+        yearChoiceBox.setValue(yearChoiceBox.getItems().getFirst());
+        categoryChoiceBox.setValue(categoryChoiceBox.getItems().getFirst());
+    }
+
     private void populateChoiceBoxes() throws SQLException, IOException {
         // Apply language
         Locale locale = new Locale(Settings.getLanguage());
@@ -129,12 +135,8 @@ public class AdminController {
 
         brandChoiceBox.setItems(FXCollections.observableArrayList(ProductRepo.getAllBrands()));
         yearChoiceBox.setItems(FXCollections.observableArrayList(ProductRepo.getAllYears()));
-
-        ObservableList<String> categoryItems = FXCollections.observableArrayList();
-        for (String category : ProductRepo.getAllCategories()) {
-            categoryItems.add(bundle.getString("menu." + category.toLowerCase()));
-        }
-        categoryChoiceBox.setItems(categoryItems);
+        categoryChoiceBox.setItems(FXCollections.observableArrayList(ProductRepo.getAllCategories()));
+        selectFirst();
     }
 
     private void updateTableData() {
@@ -176,6 +178,7 @@ public class AdminController {
     private void handleAddNew() {
         setFormState("new");
         clearProductForm();
+        selectFirst();
     }
 
     @FXML

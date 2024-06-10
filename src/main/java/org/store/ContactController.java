@@ -60,7 +60,10 @@ public class ContactController {
 
         try {
             sendEmail(recipientEmail, message);
-            showAlert("Success", "Email sent successfully.");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Success");
+            alert.setContentText("Email sent successfully.");
+            alert.showAndWait();
         } catch (Exception e) {
             showAlert("Error", "Failed to send email: " + e.getMessage());
             e.printStackTrace();

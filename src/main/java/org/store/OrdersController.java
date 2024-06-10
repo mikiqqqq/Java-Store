@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import org.store.model.*;
 import org.store.utils.CryptoKey;
 import org.store.utils.KeyManager;
@@ -74,6 +75,9 @@ public class OrdersController {
     @FXML
     private TableColumn<Product, Double> itemPriceColumn;
 
+    @FXML
+    private VBox VBox;
+
     private OrderDisplay selectedOrderDisplay;
     private final ObservableList<OrderDisplay> orderDisplays = FXCollections.observableArrayList();
     private final ObservableList<Product> products = FXCollections.observableArrayList();
@@ -81,7 +85,7 @@ public class OrdersController {
     private final KeyManager keyManager = new KeyManager();
 
     @FXML
-    public void initialize() throws SQLException, IOException {
+    public void initialize() throws Exception {
         // Initialize columns
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -92,11 +96,9 @@ public class OrdersController {
         itemAmountColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         itemPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        // Populate download speed choices
-        downloadSpeedChoiceBox.getItems().addAll("Slow", "Medium", "Fast");
-        downloadSpeedChoiceBox.setValue("Fast");
-
         loadOrders();
+        ordersTableView.getSelectionModel().selectFirst();
+        displayOrderDetails(ordersTableView.getSelectionModel().getSelectedItem());
 
         // Add listener for order selection
         ordersTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newSelection) -> {
@@ -109,19 +111,16 @@ public class OrdersController {
                 }
             }
         });
-
-
-        // Add listener for download PDF button
-        downloadPdfButton.setOnAction(_ -> downloadOrderAsPdf());
     }
 
     private void loadOrders() throws SQLException, IOException {
         int userId = UserSession.getInstance().getUser().getId();
         List<Order> orders = OrderJsonUtils.getOrdersByUserId(userId);
-        System.out.println(orders);
+        if(orders.isEmpty()) {
+            VBox.setVisible(false);
+            return;
+        }
         for (Order order : orders) {
-            System.out.println("here");
-            System.out.println(order);
             BigDecimal totalPrice = OrderRepo.getTotalPrice(order.getId()).setScale(2, RoundingMode.HALF_UP);
             String products = OrderRepo.getProductsByOrderId(order.getId()).stream()
                     .map(product -> product.getTitle() + " x" + product.getQuantity())
@@ -151,19 +150,33 @@ public class OrdersController {
         String email = keyManager.decryptWithAES(cryptoKey.getAesKey(), order.getEmail());
         String address = keyManager.decryptWithAES(cryptoKey.getAesKey(), order.getAddress());
         String cardInformation = keyManager.decryptWithRSA(cryptoKey.getRsaPrivateKey(), order.getCardNumber());
+        String[] parts = cardInformation.split("-");
+        String result = maskString(parts[1]);
 
         emailLabel.setText(email);
         addressLabel.setText(address);
-        cardNumberLabel.setText(cardInformation);
+        cardNumberLabel.setText(result);
         dateLabel.setText(order.getDate().toLocalDateTime().format(formatter));
-        totalPriceLabel.setText(String.valueOf(OrderRepo.getTotalPrice(order.getId())));
+        totalPriceLabel.setText(String.valueOf(OrderRepo.getTotalPrice(order.getId()).setScale(2, RoundingMode.HALF_UP)));
 
         List<Product> productList = OrderRepo.getProductsByOrderId(order.getId());
         products.setAll(productList);
         orderItemsTableView.setItems(products);
     }
 
-    private void downloadOrderAsPdf() {
+    public static String maskString(String input) {
+        int length = input.length();
+        if (length <= 3) {
+            // If the string length is 3 or less, return the string as it is
+            return input;
+        }
 
+        // Mask all characters except the last 3
+        StringBuilder masked = new StringBuilder();
+        for (int i = 0; i < length - 3; i++) {
+            masked.append('*');
+        }
+        masked.append(input.substring(length - 3));
+        return masked.toString();
     }
 }
