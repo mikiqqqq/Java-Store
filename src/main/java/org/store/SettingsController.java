@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
-import org.store.model.Settings;
+import org.store.utils.Settings;
 
 
 public class SettingsController {

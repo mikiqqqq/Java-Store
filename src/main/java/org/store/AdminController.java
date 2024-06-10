@@ -12,7 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.store.model.Product;
-import org.store.model.Settings;
+import org.store.utils.Settings;
 import org.store.utils.ImageConverter;
 
 import java.io.File;

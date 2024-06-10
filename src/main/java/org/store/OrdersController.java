@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.store.model.*;
+import org.store.utils.CryptoKey;
 import org.store.utils.KeyManager;
 import org.store.utils.OrderJsonUtils;
 
@@ -119,6 +120,8 @@ public class OrdersController {
         List<Order> orders = OrderJsonUtils.getOrdersByUserId(userId);
         System.out.println(orders);
         for (Order order : orders) {
+            System.out.println("here");
+            System.out.println(order);
             BigDecimal totalPrice = OrderRepo.getTotalPrice(order.getId()).setScale(2, RoundingMode.HALF_UP);
             String products = OrderRepo.getProductsByOrderId(order.getId()).stream()
                     .map(product -> product.getTitle() + " x" + product.getQuantity())

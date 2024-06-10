@@ -29,7 +29,7 @@
             <RowConstraints maxHeight="80.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button fx:id="sendButton" mnemonicParsing="false" onAction="#handleSend" prefHeight="42.0" prefWidth="267.0" styleClass="button-accented" text="Send" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+            <Button fx:id="sendButton" mnemonicParsing="false" onAction="#handleSend" prefHeight="42.0" prefWidth="267.0" styleClass="button-accented" text="%button.send" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -40,7 +40,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleClose" prefHeight="35.0" prefWidth="398.0" styleClass="button-transparent" text="Close" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="TOP">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleClose" prefHeight="35.0" prefWidth="398.0" styleClass="button-transparent" text="%button.close" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -54,7 +54,7 @@
                   <Insets top="8.0" />
                </GridPane.margin>
             </Button>
-            <Label prefHeight="42.0" prefWidth="249.0" styleClass="header" text="Contact" GridPane.columnIndex="1" GridPane.valignment="TOP">
+            <Label prefHeight="42.0" prefWidth="249.0" styleClass="header" text="%contact" GridPane.columnIndex="1" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial Bold" size="36.0" />
                </font>
@@ -75,7 +75,7 @@
                   <Insets top="4.0" />
                </GridPane.margin>
             </Label>
-            <Label prefHeight="20.0" prefWidth="268.0" text="Subject" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Label prefHeight="20.0" prefWidth="268.0" text="%subject" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -101,7 +101,7 @@
                   <Font name="Arial" size="16.0" />
                </font>
             </TextArea>
-            <Label layoutX="60.0" layoutY="209.0" prefHeight="20.0" prefWidth="268.0" text="Message" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
+            <Label layoutX="60.0" layoutY="209.0" prefHeight="20.0" prefWidth="268.0" text="%msg" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>

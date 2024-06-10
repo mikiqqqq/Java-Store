@@ -30,7 +30,7 @@
             <RowConstraints maxHeight="105.0" minHeight="10.0" prefHeight="95.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" onAction="#handleRegister" prefHeight="42.0" prefWidth="260.0" styleClass="button-accented" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <Button mnemonicParsing="false" onAction="#handleRegister" prefHeight="42.0" prefWidth="260.0" styleClass="button-accented" text="%button.save" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -41,7 +41,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button alignment="CENTER" layoutX="254.0" layoutY="403.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="32.0" prefWidth="275.0" styleClass="button-transparent" text="Back to Log in" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="TOP">
+            <Button alignment="CENTER" layoutX="254.0" layoutY="403.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="32.0" prefWidth="275.0" styleClass="button-transparent" text="%login_back" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -52,7 +52,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label prefHeight="42.0" prefWidth="249.0" styleClass="header" text="Register" GridPane.columnIndex="1" GridPane.valignment="TOP">
+            <Label prefHeight="42.0" prefWidth="249.0" styleClass="header" text="%register" GridPane.columnIndex="1" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial Bold" size="36.0" />
                </font>
@@ -73,7 +73,7 @@
                   <Font name="Arial" size="16.0" />
                </font>
             </PasswordField>
-            <Label prefHeight="20.0" prefWidth="257.0" text="E-mail"  GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Label prefHeight="20.0" prefWidth="257.0" text="E-mail" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -81,7 +81,7 @@
                   <Insets top="4.0" />
                </GridPane.margin>
             </Label>
-            <Label prefHeight="20.0" prefWidth="268.0" text="Password"  GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
+            <Label prefHeight="20.0" prefWidth="268.0" text="%password" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -91,7 +91,7 @@
             </Label>
             <Label fx:id="emailErrorLabel" prefHeight="17.0" prefWidth="264.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
             <Label fx:id="passwordErrorLabel" prefHeight="17.0" prefWidth="309.0" styleClass="error" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
-            <Label layoutX="62.0" layoutY="186.0" prefHeight="20.0" prefWidth="257.0" text="Full name"  GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <Label layoutX="62.0" layoutY="186.0" prefHeight="20.0" prefWidth="257.0" text="%full_name" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -116,7 +116,7 @@
                   <Insets top="12.0" />
                </GridPane.margin>
             </PasswordField>
-            <Label layoutX="60.0" layoutY="294.0" prefHeight="20.0" prefWidth="268.0" text="Confirm password"  GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
+            <Label layoutX="60.0" layoutY="294.0" prefHeight="20.0" prefWidth="268.0" text="%confirm_password" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>

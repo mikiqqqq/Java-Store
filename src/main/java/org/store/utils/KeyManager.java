@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import org.store.model.CryptoKey;
-
 public class KeyManager {
     private final String FILE_PATH = "src/main/resources/dat/";
     private final String FILE_NAME = FILE_PATH + "keys.bin";

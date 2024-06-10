@@ -50,12 +50,12 @@
             </GridPane>
             <HBox layoutY="151.0" prefHeight="4.0" prefWidth="393.0">
                <children>
-                  <Button fx:id="checkoutButton" mnemonicParsing="false" onAction="#handleCheckout" text="Checkout">
+                  <Button fx:id="checkoutButton" mnemonicParsing="false" onAction="#handleCheckout" styleClass="button-accented-dark" text="Checkout">
                      <HBox.margin>
                         <Insets right="24.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#removeAllOrderItems" text="Empty Cart" />
+                  <Button mnemonicParsing="false" onAction="#removeAllOrderItems" styleClass="button-accented-dark" text="Empty Cart" />
                </children>
                <padding>
                   <Insets left="24.0" />
@@ -67,7 +67,7 @@
    <bottom>
       <Pane prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #504A4B;" BorderPane.alignment="CENTER">
          <children>
-            <GridPane layoutY="-1.0" prefHeight="30.0" prefWidth="1200.0">
+            <GridPane layoutY="-1.0" prefHeight="30.0" prefWidth="1200.0" styleClass="underline">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="395.0" minWidth="10.0" prefWidth="200.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="823.0" minWidth="10.0" prefWidth="750.0" />
@@ -76,13 +76,6 @@
                <rowConstraints>
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
-               <children>
-                  <Label prefWidth="81.0" styleClass="labeltext" text="Date &amp; Time" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
-                     <GridPane.margin>
-                        <Insets right="24.0" />
-                     </GridPane.margin>
-                  </Label>
-               </children>
             </GridPane>
          </children>
       </Pane>
@@ -104,18 +97,42 @@
                         <Image url="@../../icons/placeholder.jpg" />
                      </image>
                   </ImageView>
-                  <Label fx:id="productTitleLabel" text="Title" />
-                  <Label fx:id="productDescriptionLabel" text="Description" />
-                  <Label fx:id="productPriceLabel" text="Price" />
-                  <Label text="Quantity" />
-                  <HBox prefHeight="18.0" prefWidth="348.0">
+                  <Label fx:id="productTitleLabel" text="Title">
+                     <VBox.margin>
+                        <Insets top="12.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="productDescriptionLabel" alignment="TOP_LEFT" prefHeight="67.0" prefWidth="394.0" text="Description">
+                     <VBox.margin>
+                        <Insets top="12.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="productPriceLabel" text="Price">
+                     <VBox.margin>
+                        <Insets bottom="24.0" top="24.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="priceLabel1" layoutX="10.0" layoutY="345.0" text="Quantity">
+                     <VBox.margin>
+                        <Insets bottom="12.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox prefHeight="74.0" prefWidth="348.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#handleDecrement" text="-" />
-                        <Label fx:id="quantityLabel" prefHeight="20.0" prefWidth="50.0" text="1" />
-                        <Button mnemonicParsing="false" onAction="#handleIncrement" prefHeight="31.0" prefWidth="0.0" text="+" />
+                        <Button fx:id="decrementButton" mnemonicParsing="false" onAction="#handleDecrement" prefHeight="31.0" prefWidth="31.0" styleClass="quantity-button" text="-" />
+                        <Label fx:id="quantityLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="32.0" text="1" />
+                        <Button fx:id="incrementButton" mnemonicParsing="false" onAction="#handleIncrement" prefHeight="31.0" prefWidth="31.0" styleClass="quantity-button" text="+" />
                      </children>
                   </HBox>
-                  <Button mnemonicParsing="false" onAction="#removeOrderItem" text="Remove item" />
+                  <Button fx:id="addToCartButton" mnemonicParsing="false" onAction="#removeOrderItem" prefHeight="42.0" text="Remove item">
+                     <padding>
+                        <Insets left="24.0" right="24.0" />
+                     </padding>
+                     <styleClass>
+                        <String fx:value="button-accented-dark" />
+                        <String fx:value="button-hover" />
+                     </styleClass>
+                  </Button>
                </children>
             </VBox>
          </children>

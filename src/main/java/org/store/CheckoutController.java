@@ -12,7 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.oorsprong.websamples.TCountryCodeAndName;
 import org.store.enumeration.OrderStatus;
-import org.store.model.CryptoKey;
+import org.store.utils.CryptoKey;
 import org.store.model.Order;
 import org.store.model.OrderItem;
 import org.store.model.OrderItemDisplay;

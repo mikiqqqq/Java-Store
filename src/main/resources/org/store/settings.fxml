@@ -28,7 +28,7 @@
             <RowConstraints maxHeight="134.0" minHeight="10.0" prefHeight="122.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button fx:id="closeButton" mnemonicParsing="false" onAction="#closeSettingsDialog" prefHeight="42.0" prefWidth="267.0" styleClass="button-transparent" text="%close_btn" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Button fx:id="closeButton" mnemonicParsing="false" onAction="#closeSettingsDialog" prefHeight="42.0" prefWidth="267.0" styleClass="button-transparent" text="%button.close" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
@@ -39,12 +39,12 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label prefHeight="42.0" prefWidth="185.0" styleClass="header" text="SETTINGS" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+            <Label prefHeight="42.0" prefWidth="185.0" styleClass="header" text="%settings" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial Bold" size="36.0" />
                </font>
             </Label>
-            <ToggleButton fx:id="themeToggleButton" mnemonicParsing="false" prefHeight="35.0" styleClass="button-accented" text="%toggle_btn" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <ToggleButton fx:id="themeToggleButton" mnemonicParsing="false" prefHeight="35.0" styleClass="button-accented" text="%button.toggle" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <ChoiceBox fx:id="languageChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets top="12.0" />
@@ -54,12 +54,12 @@
                   <Insets top="12.0" />
                </GridPane.margin>
             </ChoiceBox>
-            <Label prefHeight="20.0" prefWidth="150.0" text="Language:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Label prefHeight="20.0" prefWidth="150.0" text="%language" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="152.0" layoutY="182.0" prefHeight="20.0" prefWidth="150.0" text="Font size:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+            <Label layoutX="152.0" layoutY="182.0" prefHeight="20.0" prefWidth="150.0" text="%font_size" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
          </children>
          <padding>
             <Insets top="32.0" />

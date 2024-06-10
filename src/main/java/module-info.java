@@ -23,4 +23,6 @@ module org.store {
     exports org.store.model;
     opens org.store.model to javafx.fxml;
     exports org.store;
+    exports org.store.utils;
+    opens org.store.utils to javafx.fxml;
 }

@@ -35,6 +35,10 @@
     -fx-border-color: transparent transparent transparent -fx-background;
 }
 
+.underline {
+    -fx-background-color: -fx-background;
+}
+
 .button-accented-dark,
 .button-accented {
     -fx-background-color: -fx-accent;
@@ -138,6 +142,7 @@
 
 .choice-box {
     -fx-background-radius: 0;
+    -fx-cursor: hand;
 }
 
 .choice-box--custom.choice-box {
@@ -204,6 +209,9 @@
 .light-theme.settings .choice-box #choice-box-menu-item:focused > .label { -fx-text-fill: -fx-background-light; }
 .light-theme.settings .choice-box #choice-box-menu-item > .label { -fx-text-fill: #504A4B; }
 
+.radio-button {
+    -fx-cursor: hand;
+}
 
 .radio-button .radio {
     -fx-border-color: -fx-accent-dark;

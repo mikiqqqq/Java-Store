@@ -25,9 +25,9 @@
             <TableView fx:id="cartTableView" layoutY="230.0" prefHeight="440.0" prefWidth="600.0">
                <columns>
                   <TableColumn fx:id="columnId" prefWidth="75.0" text="ID" />
-                  <TableColumn fx:id="columnProductName" prefWidth="248.0" text="Name" />
-                  <TableColumn fx:id="columnQuantity" minWidth="0.0" prefWidth="141.0" text="Amount" />
-                  <TableColumn fx:id="columnTotalPrice" prefWidth="135.0" text="Price" />
+                  <TableColumn fx:id="columnProductName" prefWidth="248.0" text="%table.name" />
+                  <TableColumn fx:id="columnQuantity" minWidth="0.0" prefWidth="141.0" text="%table.amount" />
+                  <TableColumn fx:id="columnTotalPrice" prefWidth="135.0" text="%table.price" />
                </columns>
             </TableView>
             <GridPane prefHeight="80.0" prefWidth="600.0">
@@ -38,7 +38,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label styleClass="text-on-light" text="Checkout">
+                  <Label styleClass="text-on-light" text="%checkout">
                      <font>
                         <Font size="36.0" />
                      </font>
@@ -52,27 +52,7 @@
       </Pane>
    </center>
    <bottom>
-      <Pane prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #504A4B;" BorderPane.alignment="CENTER">
-         <children>
-            <GridPane layoutY="-1.0" prefHeight="30.0" prefWidth="1200.0">
-               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="395.0" minWidth="10.0" prefWidth="200.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="823.0" minWidth="10.0" prefWidth="750.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="250.0" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-               </rowConstraints>
-               <children>
-                  <Label prefWidth="81.0" styleClass="labeltext" text="Date &amp; Time" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
-                     <GridPane.margin>
-                        <Insets right="24.0" />
-                     </GridPane.margin>
-                  </Label>
-               </children>
-            </GridPane>
-         </children>
-      </Pane>
+      <Pane prefHeight="30.0" prefWidth="200.0" styleClass="underline" BorderPane.alignment="CENTER" />
    </bottom>
    <right>
       <Pane prefHeight="200.0" prefWidth="400.0" BorderPane.alignment="CENTER">
@@ -86,11 +66,11 @@
          <children>
             <VBox fx:id="VBox" layoutX="26.0" layoutY="24.0" prefHeight="622.0" prefWidth="348.0">
                <children>
-                  <Label text="Address" />
-                  <TextField fx:id="addressField" />
+                  <Label text="%address" />
+                  <TextField fx:id="addressField" styleClass="input" />
                   <Label fx:id="addressErrorLabel" prefHeight="20.0" prefWidth="364.0" />
-                  <Label text="Postal code" />
-                  <TextField fx:id="postalCodeField" />
+                  <Label text="%postal_code" />
+                  <TextField fx:id="postalCodeField" styleClass="input" />
                   <Label fx:id="postalCodeErrorLabel" layoutX="10.0" layoutY="60.0" prefHeight="20.0" prefWidth="364.0" />
                   <GridPane>
                     <columnConstraints>
@@ -103,24 +83,26 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TextField fx:id="phoneNumberField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="Phone number" GridPane.columnIndex="1" />
-                        <ChoiceBox fx:id="countryChoiceBox" prefWidth="150.0" GridPane.rowIndex="1" />
-                        <Label layoutX="184.0" layoutY="15.0" text="Country" />
+                        <TextField fx:id="phoneNumberField" styleClass="input" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="%phone_number" GridPane.columnIndex="1" />
+                        <ChoiceBox fx:id="countryChoiceBox" prefWidth="150.0" styleClass="choice-box--custom" GridPane.rowIndex="1" />
+                        <Label layoutX="184.0" layoutY="15.0" text="%country" />
                         <Label fx:id="countryErrorLabel" prefHeight="20.0" prefWidth="364.0" GridPane.rowIndex="2" />
                         <Label fx:id="phoneNumberErrorLabel" layoutX="10.0" layoutY="75.0" prefHeight="20.0" prefWidth="364.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
-                  <Label text="Cardholder name" />
-                  <TextField fx:id="cardholderNameField" />
+                  <Label text="%cardholder_name" />
+                  <TextField fx:id="cardholderNameField" styleClass="input" />
                   <Label fx:id="cardholderNameErrorLabel" layoutX="10.0" layoutY="130.0" prefHeight="20.0" prefWidth="364.0" />
-                  <Label text="Card number" />
-                  <TextField fx:id="cardNumberField" />
+                  <Label text="%card_number" />
+                  <TextField fx:id="cardNumberField" styleClass="input" />
                   <Label fx:id="cardNumberErrorLabel" layoutX="10.0" layoutY="290.0" prefHeight="20.0" prefWidth="364.0" />
                   <GridPane>
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="24.0" prefWidth="24.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="24.0" prefWidth="24.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
@@ -129,24 +111,31 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TextField fx:id="expDayField" GridPane.rowIndex="1" />
-                        <TextField fx:id="expMonthField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField fx:id="cvcField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Label text="Exp. day" />
-                        <Label text="Exp. month" GridPane.columnIndex="1" />
-                        <Label text="CVC" GridPane.columnIndex="2" />
+                        <TextField id="input" fx:id="expDayField" styleClass="input" GridPane.rowIndex="1" />
+                        <TextField fx:id="expMonthField" styleClass="input" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <TextField fx:id="cvcField" styleClass="input" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <Label text="%exp_day" />
+                        <Label text="%exp_month" GridPane.columnIndex="2" />
+                        <Label text="CVC" GridPane.columnIndex="4" />
                         <Label fx:id="expDayErrorLabel" prefHeight="20.0" prefWidth="364.0" GridPane.rowIndex="2" />
-                        <Label fx:id="expMonthErrorLabel" layoutX="10.0" layoutY="75.0" prefHeight="20.0" prefWidth="364.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label fx:id="cvcErrorLabel" layoutX="10.0" layoutY="75.0" prefHeight="20.0" prefWidth="364.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label fx:id="expMonthErrorLabel" layoutX="10.0" layoutY="75.0" prefHeight="20.0" prefWidth="364.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label fx:id="cvcErrorLabel" layoutX="10.0" layoutY="75.0" prefHeight="20.0" prefWidth="364.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                   <HBox prefHeight="68.0" prefWidth="348.0">
                      <children>
-                        <Label prefHeight="20.0" prefWidth="135.0" text="Label" />
+                        <Label prefHeight="20.0" prefWidth="135.0" text="%total_price_dots" />
                         <Label alignment="CENTER_RIGHT" prefHeight="20.0" prefWidth="205.0" text="Label" textAlignment="RIGHT" />
                      </children>
                   </HBox>
-                  <Button fx:id="updateOrderButton" mnemonicParsing="false" onAction="#handleUpdateOrder" text="Purchase" />
+                  <Button fx:id="updateOrderButton" mnemonicParsing="false" onAction="#handleUpdateOrder" prefHeight="42.0" text="%purchase">
+                     <styleClass>
+                        <String fx:value="button-accented-dark" />
+                        <String fx:value="button-hover" />
+                     </styleClass>
+                     <padding>
+                        <Insets left="24.0" right="24.0" />
+                     </padding></Button>
                </children>
             </VBox>
          </children>

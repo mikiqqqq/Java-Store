@@ -40,18 +40,18 @@
                   <RowConstraints minHeight="10.0" prefHeight="42.0" vgrow="NEVER" />
               </rowConstraints>
                <children>
-                  <RadioButton fx:id="sortByPrice" mnemonicParsing="false" text="Price" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <RadioButton fx:id="sortByPrice" mnemonicParsing="false" text="%sort.price" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <toggleGroup>
                         <ToggleGroup fx:id="sortToggleGroup" />
                      </toggleGroup></RadioButton>
-                  <RadioButton fx:id="sortByAlphabetically" mnemonicParsing="false" text="Alphabetically" toggleGroup="$sortToggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField fx:id="searchTextField" prefHeight="42.0" promptText="Search" styleClass="input" GridPane.columnSpan="2" GridPane.valignment="TOP">
+                  <RadioButton fx:id="sortByAlphabetically" mnemonicParsing="false" text="%sort.abc" toggleGroup="$sortToggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="searchTextField" prefHeight="42.0" promptText="%search" styleClass="input" GridPane.columnSpan="2" GridPane.valignment="TOP">
                      <padding>
                         <Insets left="40.0" />
                      </padding>
                   </TextField>
-                  <Label text="Filter by:" GridPane.rowIndex="1" />
-                  <Label text="Sort by:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="%filter" GridPane.rowIndex="1" />
+                  <Label text="%sort" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" translateY="3.0" GridPane.valignment="TOP">
                      <image>
                         <Image url="@../../icons/search.png" />
@@ -69,11 +69,11 @@
             <TableView fx:id="mainTableView" layoutY="370.0" prefHeight="300.0" prefWidth="600.0">
               <columns>
                 <TableColumn fx:id="columnId" prefWidth="40.88478088378906" text="ID" />
-                <TableColumn fx:id="columnTitle" prefWidth="158.95835876464844" text="TItle" />
-                  <TableColumn fx:id="columnBrand" prefWidth="99.54159545898438" text="Brand" />
-                  <TableColumn fx:id="columnCategory" prefWidth="118.67691040039062" text="Category" />
-                  <TableColumn fx:id="columnYear" prefWidth="76.50839233398438" text="Year" />
-                  <TableColumn fx:id="columnPrice" prefWidth="106.64373779296875" text="Price" />
+                <TableColumn fx:id="columnTitle" prefWidth="158.95835876464844" text="%table.title" />
+                  <TableColumn fx:id="columnBrand" prefWidth="99.54159545898438" text="%table.brand" />
+                  <TableColumn fx:id="columnCategory" prefWidth="118.67691040039062" text="%table.category" />
+                  <TableColumn fx:id="columnYear" prefWidth="76.50839233398438" text="%table.year" />
+                  <TableColumn fx:id="columnPrice" prefWidth="106.64373779296875" text="%table.price" />
               </columns>
             </TableView>
             <GridPane prefHeight="80.0" prefWidth="600.0">
@@ -84,7 +84,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label styleClass="text-on-light" text="Tech Giant" GridPane.halignment="CENTER">
+                  <Label styleClass="text-on-light" text="%logo" GridPane.halignment="CENTER">
                      <graphic>
                         <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -102,14 +102,7 @@
       </Pane>
    </center>
    <bottom>
-      <Pane prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #504A4B;" BorderPane.alignment="CENTER">
-         <children>
-            <Label fx:id="dateTimeLabel" layoutX="1109.0" layoutY="7.0" styleClass="labeltext" text="Date &amp; Time">
-               <padding>
-                  <Insets right="24.0" />
-               </padding>
-            </Label>
-         </children></Pane>
+      <Pane prefHeight="30.0" prefWidth="200.0" styleClass="underline" BorderPane.alignment="CENTER" />
    </bottom>
    <right>
       <Pane prefHeight="200.0" prefWidth="400.0" BorderPane.alignment="CENTER">
@@ -127,23 +120,23 @@
                      <image>
                         <Image url="@../../icons/placeholder.jpg" />
                      </image></ImageView>
-                  <Label fx:id="titleLabel" text="Title">
+                  <Label fx:id="titleLabel" text="%title">
                      <VBox.margin>
                         <Insets top="12.0" />
                      </VBox.margin></Label>
-                  <Label fx:id="descriptionLabel" alignment="TOP_LEFT" prefHeight="67.0" prefWidth="394.0" text="Description">
+                  <Label fx:id="descriptionLabel" alignment="TOP_LEFT" prefHeight="67.0" prefWidth="394.0" text="%desc">
                      <VBox.margin>
                         <Insets top="12.0" />
                      </VBox.margin></Label>
-                  <Label fx:id="brandLabel" text="Brand">
+                  <Label fx:id="brandLabel" text="%brand">
                      <VBox.margin>
                         <Insets top="12.0" />
                      </VBox.margin></Label>
-                  <Label fx:id="priceLabel" text="Price">
+                  <Label fx:id="priceLabel" text="%price">
                      <VBox.margin>
                         <Insets bottom="24.0" top="24.0" />
                      </VBox.margin></Label>
-                  <Label fx:id="priceLabel1" layoutX="10.0" layoutY="345.0" text="Quantity">
+                  <Label fx:id="priceLabel1" layoutX="10.0" layoutY="345.0" text="%quantity">
                      <VBox.margin>
                         <Insets bottom="12.0" />
                      </VBox.margin>
@@ -155,7 +148,7 @@
                         <Button fx:id="incrementButton" mnemonicParsing="false" onAction="#handleIncrement" prefHeight="31.0" prefWidth="31.0" styleClass="quantity-button" text="+" />
                      </children>
                   </HBox>
-                  <Button fx:id="addToCartButton" mnemonicParsing="false" onAction="#addToCart" prefHeight="42.0" text="Add to cart">
+                  <Button fx:id="addToCartButton" mnemonicParsing="false" onAction="#addToCart" prefHeight="42.0" text="%button.atc">
                      <padding>
                         <Insets left="24.0" right="24.0" />
                      </padding>

@@ -2,7 +2,7 @@ package org.store;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import org.store.model.StageManager;
+import org.store.utils.StageManager;
 
 import java.io.IOException;
 

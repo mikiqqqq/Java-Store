@@ -2,7 +2,7 @@ package org.store;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.store.model.StageManager;
+import org.store.utils.StageManager;
 
 import java.io.IOException;
 
