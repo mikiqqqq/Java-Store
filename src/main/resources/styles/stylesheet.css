@@ -7,6 +7,7 @@
     -fx-font-family: "Arial";
     -fx-text-fill: -fx-color;
     -fx-text-inner-color: -fx-color;
+    -fx-color: #000000; /* Default color */
 }
 
 .dark-theme {
@@ -21,13 +22,17 @@
     -fx-color: #504A4B;
 }
 
+.label {
+    -fx-text-fill: -fx-color;
+}
+
 .background-light {
     -fx-background-color: -fx-background-light;
 }
 
 .higlight-pane {
     -fx-border-width: 5px;
-    -fx-border-color:  transparent transparent transparent -fx-background;
+    -fx-border-color: transparent transparent transparent -fx-background;
 }
 
 .button-accented-dark,
@@ -35,14 +40,51 @@
     -fx-background-color: -fx-accent;
     -fx-background-radius: 0;
     -fx-text-fill: -fx-color;
+    -fx-cursor: hand;
 }
 
 .button-accented-dark {
     -fx-background-color: -fx-accent-dark;
 }
 
-.button-transparent {
+.quantity-button {
+    -fx-cursor: hand;
+    -fx-background-color: -fx-accent-dark;
+    -fx-text-fill: white;
+    -fx-background-radius: 0;
+}
+
+.quantity-button:focused {
+    -fx-background-color: -fx-accent;
+}
+
+.button-hover:hover {
+    -fx-background-color: -fx-accent;
+}
+
+.user-info-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-accent;
+}
+
+.light-theme .button-accented-dark,
+.light-theme .button-accented {
+    -fx-text-fill: -fx-background-light;
+}
+
+.button-transparent.button {
     -fx-background-color: transparent;
+    -fx-text-fill: -fx-color;
+    -fx-cursor: hand;
+}
+
+.dark-theme .button-transparent.button:hover {
+    -fx-color: #ffffff;
+    -fx-text-fill: -fx-color;
+}
+
+.light-theme .button-transparent.button:hover {
+    -fx-color: #504A4B;
     -fx-text-fill: -fx-color;
 }
 
@@ -50,11 +92,12 @@
     -fx-background-color: transparent;
     -fx-text-fill: -fx-accent;
     -fx-font-weight: 700;
+    -fx-cursor: hand;
 }
 
 .input {
     -fx-background-color: transparent;
-    -fx-border-color:  transparent transparent -fx-color transparent;
+    -fx-border-color: transparent transparent -fx-color transparent;
 }
 
 .header {
@@ -86,7 +129,7 @@
 .table-view .filler,
 .table-view .column-header {
     -fx-background-color: -fx-background;
-    -fx-border-color:  -fx-background-light;
+    -fx-border-color: -fx-background-light;
 }
 
 .choice-box {
@@ -102,9 +145,61 @@
     -fx-text-fill: -fx-color;
 }
 
-.choice-box--custom.choice-box .context-menu { -fx-background-color: -fx-background; }
-.choice-box--custom.choice-box .menu-item:focused { -fx-background-color: -fx-accent; }
-.choice-box--custom.choice-box .menu-item > .label { -fx-text-fill: -fx-color; }
+.choice-box--custom.choice-box .context-menu {
+    -fx-background-color: -fx-background;
+}
+
+.choice-box--custom.choice-box .menu-item:focused {
+    -fx-background-color: -fx-accent;
+}
+
+.choice-box--custom.choice-box .menu-item > .label {
+    -fx-text-fill: -fx-color;
+}
+
+.light-theme .choice-box #choice-box-menu-item > .label { -fx-text-fill: white; }
+
+
+.settings .choice-box {
+    -fx-background-color: -fx-accent; /* Default background color for list items */
+    -fx-text-fill: -fx-background; /* Text color */
+    -fx-mark-color: -fx-color;
+}
+
+/* Set the text color and font size for the selected item in the control */
+.settings .choice-box .label { /* w   ww  .    d e m    o 2   s  .c  o   m */
+    -fx-text-fill: -fx-color;
+}
+
+.light-theme .choice-box .label { /* w   ww  .    d e m    o 2   s  .c  o   m */
+    -fx-text-fill: -fx-background-light;
+}
+
+/* Set the text color and text font size for choices in the popup list */
+.settings #choice-box-menu-item * {
+    -fx-text-fill: -fx-background;
+}
+
+/* Set the text color and text font size for choices in the popup list */
+.light-theme.settings #choice-box-menu-item * {
+    -fx-text-fill: -fx-color;
+}
+
+/* Set background color of the arrow */
+.settings .choice-box .arrow {
+    -fx-background-color: -fx-color;
+}
+
+.light-theme.settings .choice-box .arrow { /* w   ww  .    d e m    o 2   s  .c  o   m */
+    -fx-background-color: -fx-background-light;
+}
+
+.settings .choice-box #choice-box-menu-item:focused { -fx-background-color: -fx-accent; }
+.settings .choice-box #choice-box-menu-item:focused > .label { -fx-text-fill: -fx-color; }
+.settings .choice-box #choice-box-menu-item > .label { -fx-text-fill: -fx-background; }
+.light-theme.settings .choice-box #choice-box-menu-item:focused > .label { -fx-text-fill: -fx-background-light; }
+.light-theme.settings .choice-box #choice-box-menu-item > .label { -fx-text-fill: #504A4B; }
+
 
 .radio-button .radio {
     -fx-border-color: -fx-accent-dark;

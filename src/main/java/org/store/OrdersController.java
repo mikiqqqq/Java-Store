@@ -16,6 +16,7 @@ import org.store.utils.UserSession;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -63,16 +64,16 @@ public class OrdersController {
     private Label totalPriceLabel;
 
     @FXML
-    private TableView<OrderItem> orderItemsTableView;
+    private TableView<Product> orderItemsTableView;
 
     @FXML
-    private TableColumn<OrderItem, String> itemNameColumn;
+    private TableColumn<Product, String> itemNameColumn;
 
     @FXML
-    private TableColumn<OrderItem, Integer> itemAmountColumn;
+    private TableColumn<Product, Integer> itemAmountColumn;
 
     @FXML
-    private TableColumn<OrderItem, Double> itemPriceColumn;
+    private TableColumn<Product, Double> itemPriceColumn;
 
     private OrderDisplay selectedOrderDisplay;
     private final ObservableList<OrderDisplay> orderDisplays = FXCollections.observableArrayList();
@@ -110,6 +111,7 @@ public class OrdersController {
             }
         });
 
+
         // Add listener for download PDF button
         downloadPdfButton.setOnAction(event -> downloadOrderAsPdf());
     }
@@ -117,8 +119,9 @@ public class OrdersController {
     private void loadOrders() throws SQLException, IOException {
         int userId = UserSession.getInstance().getUser().getId();
         List<Order> orders = OrderJsonUtils.getOrdersByUserId(userId);
+        System.out.println(orders);
         for (Order order : orders) {
-            BigDecimal totalPrice = OrderRepo.getTotalPrice(order.getId());
+            BigDecimal totalPrice = OrderRepo.getTotalPrice(order.getId()).setScale(2, RoundingMode.HALF_UP);
             String products = OrderRepo.getProductsByOrderId(order.getId()).stream()
                     .map(product -> product.getTitle() + " x" + product.getQuantity())
                     .collect(Collectors.joining(", "));
@@ -135,6 +138,7 @@ public class OrdersController {
 
             orderDisplays.add(orderDisplay);
         }
+        ordersTableView.setItems(orderDisplays);
     }
 
     private void displayOrderDetails(OrderDisplay orderDisplay) throws Exception {
@@ -142,9 +146,10 @@ public class OrdersController {
         customerLabel.setText(UserSession.getInstance().getUser().getFullName());
 
         CryptoKey cryptoKey = keyManager.getKeyForOrder(order.getId());
-        String email = keyManager.decryptWithRSA(cryptoKey.getRsaPrivateKey(), order.getEmail());
-        String address = keyManager.decryptWithRSA(cryptoKey.getRsaPrivateKey(), order.getAddress());
-        String cardInformation = keyManager.decryptWithAES(cryptoKey.getAesKey(), order.getCardNumber());
+
+        String email = keyManager.decryptWithAES(cryptoKey.getAesKey(), order.getEmail());
+        String address = keyManager.decryptWithAES(cryptoKey.getAesKey(), order.getAddress());
+        String cardInformation = keyManager.decryptWithRSA(cryptoKey.getRsaPrivateKey(), order.getCardNumber());
 
         emailLabel.setText(email);
         addressLabel.setText(address);
@@ -154,6 +159,7 @@ public class OrdersController {
 
         List<Product> productList = OrderRepo.getProductsByOrderId(order.getId());
         products.setAll(productList);
+        orderItemsTableView.setItems(products);
     }
 
     private void downloadOrderAsPdf() {

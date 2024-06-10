@@ -41,6 +41,7 @@ public class LoginController {
                 String hashedPassword = hashPasswordWithSalt(password, generateSalt(email));
                 if (verifyUser(email, hashedPassword)) {
                     User user = UserRepo.getUserByEmail(email);
+                    System.out.println(user.getId());
                     UserSession.getInstance().setUser(user);
                     Main.getMainApp().showMainView();
                     Stage loginStage = (Stage) emailField.getScene().getWindow();

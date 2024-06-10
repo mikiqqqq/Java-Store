@@ -189,6 +189,7 @@ public class CheckoutController {
             currentOrder.setEmail(encryptedEmail);
             currentOrder.setCardNumber(encryptedCardInformation);
             currentOrder.setStatus(OrderStatus.COMPLETED);
+            currentOrder.setUserId(UserSession.getInstance().getUser().getId());
 
             OrderRepo.updateOrder(currentOrder);
             OrderJsonUtils.addOrderToFile(currentOrder);

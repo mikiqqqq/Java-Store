@@ -52,11 +52,11 @@ CREATE TABLE USERS
 CREATE TABLE "ORDER"
 (
     ID                  NUMBER(11) PRIMARY KEY AUTO_INCREMENT,
-    TIMESTAMP           DATETIME,
-    CARD_NUMBER         VARCHAR(255),
-    EMAIL               VARCHAR(255),
-    PHONE_NUMBER        VARCHAR(255),
-    ADDRESS             VARCHAR(255),
+    DATE                TIMESTAMP,
+    CARD_NUMBER         VARCHAR(512),
+    EMAIL               VARCHAR(512),
+    PHONE_NUMBER        VARCHAR(512),
+    ADDRESS             VARCHAR(512),
     STATUS              VARCHAR(255),
     USER_ID             NUMBER(11),
     FOREIGN KEY (USER_ID) REFERENCES USERS(ID)

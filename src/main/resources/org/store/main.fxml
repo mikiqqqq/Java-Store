@@ -127,18 +127,42 @@
                      <image>
                         <Image url="@../../icons/placeholder.jpg" />
                      </image></ImageView>
-                  <Label fx:id="titleLabel" text="Title" />
-                  <Label fx:id="descriptionLabel" text="Description" />
-                  <Label fx:id="brandLabel" text="Brand" />
-                  <Label fx:id="priceLabel" text="Price" />
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <Label fx:id="titleLabel" text="Title">
+                     <VBox.margin>
+                        <Insets top="12.0" />
+                     </VBox.margin></Label>
+                  <Label fx:id="descriptionLabel" alignment="TOP_LEFT" prefHeight="67.0" prefWidth="394.0" text="Description">
+                     <VBox.margin>
+                        <Insets top="12.0" />
+                     </VBox.margin></Label>
+                  <Label fx:id="brandLabel" text="Brand">
+                     <VBox.margin>
+                        <Insets top="12.0" />
+                     </VBox.margin></Label>
+                  <Label fx:id="priceLabel" text="Price">
+                     <VBox.margin>
+                        <Insets bottom="24.0" top="24.0" />
+                     </VBox.margin></Label>
+                  <Label fx:id="priceLabel1" layoutX="10.0" layoutY="345.0" text="Quantity">
+                     <VBox.margin>
+                        <Insets bottom="12.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox prefHeight="74.0" prefWidth="348.0">
                      <children>
-                        <Button fx:id="decrementButton" mnemonicParsing="false" onAction="#handleDecrement" text="-" />
-                        <Label fx:id="quantityLabel" text="1" />
-                        <Button fx:id="incrementButton" mnemonicParsing="false" onAction="#handleIncrement" text="+" />
+                        <Button fx:id="decrementButton" mnemonicParsing="false" onAction="#handleDecrement" prefHeight="31.0" prefWidth="31.0" styleClass="quantity-button" text="-" />
+                        <Label fx:id="quantityLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="32.0" text="1" />
+                        <Button fx:id="incrementButton" mnemonicParsing="false" onAction="#handleIncrement" prefHeight="31.0" prefWidth="31.0" styleClass="quantity-button" text="+" />
                      </children>
                   </HBox>
-                  <Button fx:id="addToCartButton" mnemonicParsing="false" onAction="#addToCart" text="Add to cart" />
+                  <Button fx:id="addToCartButton" mnemonicParsing="false" onAction="#addToCart" prefHeight="42.0" text="Add to cart">
+                     <padding>
+                        <Insets left="24.0" right="24.0" />
+                     </padding>
+                     <styleClass>
+                        <String fx:value="button-accented-dark" />
+                        <String fx:value="button-hover" />
+                     </styleClass></Button>
                </children>
             </VBox>
          </children>
