@@ -59,41 +59,6 @@ public class ProductRepo {
         return product;
     }
 
-    public static void addProduct(Product product) throws SQLException, IOException {
-        Connection connection = Database.getConnect();
-
-        String query = "INSERT INTO PRODUCT (TITLE, DESCRIPTION, PRICE, QUANTITY, IMAGE, BRAND_ID, CATEGORY_ID, PRODUCT_YEAR_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, product.getTitle());
-        statement.setString(2, product.getDescription());
-        statement.setBigDecimal(3, product.getPrice());
-        statement.setInt(4, product.getQuantity());
-        statement.setBytes(5, product.getImage());
-        statement.setInt(6, getBrandId(product.getBrand()));
-        statement.setInt(7, getCategoryId(product.getCategory()));
-        statement.setInt(8, getProductYearId(product.getProductYear()));
-
-        statement.executeUpdate();
-        connection.close();
-    }
-
-    public static List<Product> searchProductsByTitle(String target) throws SQLException, IOException {
-        Connection connection = Database.getConnect();
-        List<Product> products = new ArrayList<>();
-
-        String query = "SELECT P.ID, P.IMAGE, P.TITLE, P.DESCRIPTION, P.PRICE, P.QUANTITY, B.TITLE AS BRAND_TITLE, C.TITLE AS CATEGORY_TITLE, PY.PRODUCT_YEAR " +
-                "FROM PRODUCT P " +
-                "JOIN BRAND B ON P.BRAND_ID = B.ID " +
-                "JOIN CATEGORY C ON P.CATEGORY_ID = C.ID " +
-                "JOIN PRODUCT_YEAR PY ON P.PRODUCT_YEAR_ID = PY.ID " +
-                "WHERE LOWER(P.TITLE) LIKE LOWER(?)";
-
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, "%" + target + "%");
-
-        return mapResultSetToProduct(connection, products, statement);
-    }
-
     public static List<Product> fetchFilteredAndSortedProducts(String brand, String category, String year, String searchText, boolean sortByPrice) throws SQLException, IOException {
         Connection connection = Database.getConnect();
         List<Product> products = new ArrayList<>();
@@ -206,57 +171,6 @@ public class ProductRepo {
 
         connection.close();
         return id;
-    }
-
-    public static String getBrandById(int brandId) throws SQLException, IOException {
-        Connection connection = Database.getConnect();
-        String brand = "";
-
-        String query = "SELECT TITLE FROM BRAND WHERE ID = ?";
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setInt(1, brandId);
-        ResultSet resultSet = statement.executeQuery();
-
-        if (resultSet.next()) {
-            brand = resultSet.getString("TITLE");
-        }
-
-        connection.close();
-        return brand;
-    }
-
-    public static String getCategoryById(int categoryId) throws SQLException, IOException {
-        Connection connection = Database.getConnect();
-        String category = "";
-
-        String query = "SELECT TITLE FROM CATEGORY WHERE ID = ?";
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setInt(1, categoryId);
-        ResultSet resultSet = statement.executeQuery();
-
-        if (resultSet.next()) {
-            category = resultSet.getString("TITLE");
-        }
-
-        connection.close();
-        return category;
-    }
-
-    public static int getYearById(int yearId) throws SQLException, IOException {
-        Connection connection = Database.getConnect();
-        int year = 0;
-
-        String query = "SELECT PRODUCT_YEAR FROM PRODUCT_YEAR WHERE ID = ?";
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setInt(1, yearId);
-        ResultSet resultSet = statement.executeQuery();
-
-        if (resultSet.next()) {
-            year = resultSet.getInt("PRODUCT_YEAR");
-        }
-
-        connection.close();
-        return year;
     }
 
     public static List<String> getAllBrands() throws SQLException, IOException {

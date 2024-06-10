@@ -68,8 +68,6 @@ public class CartController {
     private Order currentOrder;
     private OrderItemDisplay selectedOrderItem;
 
-    private Product selectedProduct;
-
     private final ApiService orderItemApiService;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10); // Adjust the pool size as needed
 
@@ -103,7 +101,7 @@ public class CartController {
         }
 
         // Add listener to table row selection
-        cartTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        cartTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newSelection) -> {
             if (newSelection != null) {
                 selectedOrderItem = newSelection;
                 quantity = selectedOrderItem.getQuantity();

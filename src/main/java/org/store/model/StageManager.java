@@ -1,26 +1,22 @@
 package org.store.model;
 
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.store.Main;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.Objects;
 
 public class StageManager {
 
     private final Stage primaryStage;
+    private final Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/logo.png")));
     public StageManager(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
 
-    public void switchScene(String fxmlPath, String title) throws IOException {
+    public void switchScene(String fxmlPath, String title) {
         URL fxmlUrl = getClass().getResource(fxmlPath);
 
         Scene scene = Settings.applySettings(fxmlUrl, null);
@@ -28,16 +24,18 @@ public class StageManager {
 
         primaryStage.setTitle(title);
         primaryStage.setScene(scene);
+        primaryStage.getIcons().add(icon);
         primaryStage.show();
     }
 
-    public void showDialog(String fxmlPath, String title) throws IOException {
+    public void showDialog(String fxmlPath, String title) {
         URL fxmlUrl = getClass().getResource(fxmlPath);
 
         Scene scene = Settings.applySettings(fxmlUrl, null);
         scene.setUserData(fxmlUrl); // Store the FXML URL in user data
 
         Stage dialogStage = new Stage();
+        dialogStage.getIcons().add(icon);
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         dialogStage.initOwner(primaryStage);
         dialogStage.setTitle(title);

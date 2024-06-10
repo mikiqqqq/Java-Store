@@ -1,7 +1,5 @@
 package org.store;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.store.model.StageManager;
@@ -14,7 +12,6 @@ public class Main extends Application {
     private static Main mainApp;
     private static StageManager stageManager;
 
-    public static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().contains("win");
@@ -38,7 +35,7 @@ public class Main extends Application {
     }
 
     public void showMainView() throws IOException {
-        stageManager.switchScene("/org/store/main.fxml", "Java Application");
+        stageManager.switchScene("/org/store/main.fxml", "Tech Giant");
     }
 
     public void showRegisterDialog() throws IOException {

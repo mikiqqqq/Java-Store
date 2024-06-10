@@ -82,7 +82,7 @@ public class RegisterController {
             fullNameErrorLabel.setText("");
         }
 
-        if (email.isEmpty() || !email.contains("@")) {
+        if (!email.contains("@")) {
             emailErrorLabel.setText("Invalid email.");
             valid = false;
         } else {

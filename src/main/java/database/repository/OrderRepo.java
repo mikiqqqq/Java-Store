@@ -2,14 +2,12 @@ package database.repository;
 
 import database.Database;
 import org.store.enumeration.OrderStatus;
-import org.store.model.OrderItem;
 import org.store.model.Order;
 import org.store.model.Product;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

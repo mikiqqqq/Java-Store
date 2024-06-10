@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -73,12 +72,6 @@ public class AdminController {
     private TextField quantityTextField;
 
     @FXML
-    private Button addNewProductButton;
-
-    @FXML
-    private Button editProductButton;
-
-    @FXML
     private Button addProductButton;
 
     @FXML
@@ -87,12 +80,8 @@ public class AdminController {
     @FXML
     private Button removeProductButton;
 
-    @FXML
-    private Button selectImageButton;
-
     private final ObservableList<Product> products = FXCollections.observableArrayList();
     private int selectedProductId;
-    private ResourceBundle bundle;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10); // Adjust the pool size as needed
 
     private final ApiService productApiService;
@@ -119,7 +108,7 @@ public class AdminController {
         populateChoiceBoxes();
 
         // Add listener to table row selection
-        mainTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        mainTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newSelection) -> {
             if (newSelection != null) {
                 selectedProductId = newSelection.getId();
                 setFormState("edit");
@@ -184,13 +173,13 @@ public class AdminController {
     }
 
     @FXML
-    private void handleAddNew(ActionEvent event) {
+    private void handleAddNew() {
         setFormState("new");
         clearProductForm();
     }
 
     @FXML
-    private void handleEdit(ActionEvent event) throws IOException {
+    private void handleEdit() throws IOException {
         Product selectedProduct = mainTableView.getSelectionModel().getSelectedItem();
         if (selectedProduct != null) {
             setFormState("edit");
@@ -301,7 +290,7 @@ public class AdminController {
 
 
     @FXML
-    private void removeProduct() throws SQLException, IOException {
+    private void removeProduct() {
         executorService.submit(() -> {
             try (CloseableHttpResponse response = productApiService.sendRequest(String.valueOf(selectedProductId), null, "DELETE")) {
             handleResponse(response, "Product removed successfully.");

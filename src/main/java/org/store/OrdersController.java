@@ -6,14 +6,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.FileChooser;
 import org.store.model.*;
 import org.store.utils.KeyManager;
 import org.store.utils.OrderJsonUtils;
 
 import org.store.utils.UserSession;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -100,7 +98,7 @@ public class OrdersController {
         loadOrders();
 
         // Add listener for order selection
-        ordersTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        ordersTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newSelection) -> {
             if (newSelection != null) {
                 selectedOrderDisplay = newSelection;
                 try {
@@ -113,7 +111,7 @@ public class OrdersController {
 
 
         // Add listener for download PDF button
-        downloadPdfButton.setOnAction(event -> downloadOrderAsPdf());
+        downloadPdfButton.setOnAction(_ -> downloadOrderAsPdf());
     }
 
     private void loadOrders() throws SQLException, IOException {
@@ -164,26 +162,5 @@ public class OrdersController {
 
     private void downloadOrderAsPdf() {
 
-    }
-
-    private int getDownloadSpeed() {
-        String speed = downloadSpeedChoiceBox.getValue();
-        switch (speed) {
-            case "Slow":
-                return 512; // KB/s
-            case "Medium":
-                return 1024; // KB/s
-            case "Fast":
-            default:
-                return 2048; // KB/s
-        }
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

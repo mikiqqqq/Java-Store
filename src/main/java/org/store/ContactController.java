@@ -33,16 +33,15 @@ public class ContactController {
     @FXML
     private Button sendButton;
 
-    private final String API_KEY = "1ed21e8a716e73844873c65144f2330f";
-    private final String API_SECRET = "a41f27e14b9d226e6d55629a76e8f1a3";
-    private final String FROM_EMAIL = "suleivan@protonmail.com";
-    private final String FROM_NAME = "Filip M";
-
     @FXML
     private void handleSend() {
         String recipientEmail = emailField.getText();
         String subject = emailSubjectField.getText();
-        String message = messageField.getText();
+        String text = messageField.getText();
+
+        String message = "We received your message:" +
+                "\n\n" + subject + "\n\n" + text + "\n\n"
+                + "Expect a response from our team shortly!";
 
         if (recipientEmail.isEmpty() || !isValidEmail(recipientEmail)) {
             showAlert("Validation Error", "Please enter a valid recipient email.");
@@ -60,7 +59,7 @@ public class ContactController {
         }
 
         try {
-            sendEmail(recipientEmail, subject, message);
+            sendEmail(recipientEmail, message);
             showAlert("Success", "Email sent successfully.");
         } catch (Exception e) {
             showAlert("Error", "Failed to send email: " + e.getMessage());
@@ -74,8 +73,12 @@ public class ContactController {
         stage.close();
     }
 
-    private void sendEmail(String recipientEmail, String subject, String message) throws Exception {
+    private void sendEmail(String recipientEmail, String message) throws Exception {
+        String API_KEY = "1ed21e8a716e73844873c65144f2330f";
+        String API_SECRET = "a41f27e14b9d226e6d55629a76e8f1a3";
         MailjetClient client = new MailjetClient(API_KEY, API_SECRET);
+        String FROM_EMAIL = "suleivan@protonmail.com";
+        String FROM_NAME = "Filip M";
         MailjetRequest request = new MailjetRequest(Emailv31.resource)
                 .property(Emailv31.MESSAGES, new JSONArray()
                         .put(new JSONObject()
@@ -86,7 +89,7 @@ public class ContactController {
                                         .put(new JSONObject()
                                                 .put("Email", recipientEmail)
                                                 .put("Name", "Recipient Name")))
-                                .put(Emailv31.Message.SUBJECT, subject)
+                                .put(Emailv31.Message.SUBJECT, "Tech giant")
                                 .put(Emailv31.Message.TEXTPART, message)
                                 .put(Emailv31.Message.CUSTOMID, "AppGettingStartedTest")));
 

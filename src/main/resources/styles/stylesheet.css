@@ -64,7 +64,7 @@
 
 .user-info-label {
     -fx-font-size: 12px;
-    -fx-text-fill: -fx-accent;
+    -fx-text-fill: -fx-accent-dark;
 }
 
 .light-theme .button-accented-dark,
@@ -124,6 +124,10 @@
 .text-area .scroll-pane,
 .text-area {
     -fx-background-color: transparent;
+}
+
+.text-area {
+    -fx-border-color: transparent transparent -fx-color transparent;
 }
 
 .table-view .filler,

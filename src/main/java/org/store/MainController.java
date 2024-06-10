@@ -1,6 +1,5 @@
 package org.store;
 
-import database.repository.OrderItemRepo;
 import database.repository.OrderRepo;
 import database.repository.ProductRepo;
 import javafx.application.Platform;
@@ -9,7 +8,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.store.enumeration.OrderStatus;
@@ -21,9 +19,7 @@ import org.store.utils.ApiService;
 import org.store.utils.ImageConverter;
 import org.store.utils.UserSession;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,15 +27,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainController {
-
-    @FXML
-    private Button addToCartButton;
-
-    @FXML
-    private Button incrementButton;
-
-    @FXML
-    private Button decrementButton;
 
     @FXML
     private ChoiceBox<String> yearChoiceBox;
@@ -66,13 +53,7 @@ public class MainController {
     private Label quantityLabel;
 
     @FXML
-    private Label dateTimeLabel;
-
-    @FXML
     private ToggleGroup sortToggleGroup;
-
-    @FXML
-    private RadioButton sortByAlphabetically;
 
     @FXML
     private RadioButton sortByPrice;
@@ -136,7 +117,7 @@ public class MainController {
         mainTableView.setItems(products);
 
         // Add listener to table selection
-        mainTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        mainTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newSelection) -> {
             if (newSelection != null) {
                 displayProductDetails(newSelection.getId());
                 quantity = 1;
@@ -146,10 +127,10 @@ public class MainController {
         });
 
         // Add listener to search field
-        searchTextField.textProperty().addListener((obs, oldText, newText) -> filterAndSortProducts());
+        searchTextField.textProperty().addListener((_, _, _) -> filterAndSortProducts());
 
         // Add listener to sort toggle group for sorting
-        sortToggleGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> filterAndSortProducts());
+        sortToggleGroup.selectedToggleProperty().addListener((_, _, _) -> filterAndSortProducts());
 
         // Fetch and set items for choice boxes
         try {
@@ -165,9 +146,9 @@ public class MainController {
         }
 
         // Add listeners to choice boxes
-        brandChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterAndSortProducts());
-        categoryChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterAndSortProducts());
-        yearChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterAndSortProducts());
+        brandChoiceBox.getSelectionModel().selectedItemProperty().addListener((_, _, _) -> filterAndSortProducts());
+        categoryChoiceBox.getSelectionModel().selectedItemProperty().addListener((_, _, _) -> filterAndSortProducts());
+        yearChoiceBox.getSelectionModel().selectedItemProperty().addListener((_, _, _) -> filterAndSortProducts());
     }
 
     private void filterAndSortProducts() {

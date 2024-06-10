@@ -42,7 +42,8 @@ public class OrderJsonUtils {
         if (file.exists()) {
             try {
                 if (file.length() > 0) {
-                    return objectMapper.readValue(file, new TypeReference<List<Order>>() {});
+                    return objectMapper.readValue(file, new TypeReference<>() {
+                    });
                 } else {
                     System.out.println("The file is empty. Returning an empty list.");
                     return new ArrayList<>(); // Return an empty list if the file is empty
@@ -58,14 +59,14 @@ public class OrderJsonUtils {
     }
 
     // Get orders by email
-    public static List<Order> getOrdersByUserId(int userId) throws IOException {
+    public static List<Order> getOrdersByUserId(int userId) {
         List<Order> orders = readOrdersFromFile();
         return orders.stream()
                 .filter(order -> userId == order.getUserId())
                 .collect(Collectors.toList());
     }
 
-    public static Order getOrderById(int id) throws IOException {
+    public static Order getOrderById(int id) {
         List<Order> orders = readOrdersFromFile();
         Optional<Order> orderOptional = orders.stream()
                 .filter(order -> id == order.getId())

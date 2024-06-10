@@ -1,7 +1,6 @@
 package org.store.model;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import org.store.enumeration.OrderStatus;
 

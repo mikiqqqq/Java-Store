@@ -3,7 +3,6 @@ package org.store;
 import database.repository.OrderItemRepo;
 import database.repository.OrderRepo;
 import database.repository.ProductRepo;
-import database.repository.UserRepo;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,15 +22,16 @@ import org.store.utils.UserSession;
 import org.oorsprong.websamples.CountryInfoService;
 import org.oorsprong.websamples.CountryInfoServiceSoapType;
 
-import javax.crypto.SecretKey;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
+
 import java.time.LocalDateTime;
-import java.util.Date;
+
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -172,12 +172,10 @@ public class CheckoutController {
         if (isValid) {
             CryptoKey cryptoKey = keyManager.generateAndSaveKeys(currentOrder.getId());
 
-            // AES Encryption
             String cardInformation = cardholderNameField.getText() + "-" + cardNumberField.getText() + "-" +
                                      expDayField.getText() + "-" + expMonthField.getText() + "-" + cvcField.getText();
             String encryptedCardInformation = keyManager.encryptWithRSA(cryptoKey.getRsaPublicKey(), cardInformation);
 
-            // RSA Encryption
             String userAddress = addressField.getText() + ", " + postalCodeField.getText() + ", " + countryChoiceBox.getValue();
             String encryptedUserAddress = keyManager.encryptWithAES(cryptoKey.getAesKey(), userAddress);
             String encryptedPhoneNumber = keyManager.encryptWithAES(cryptoKey.getAesKey(), phoneNumberField.getText());
@@ -193,24 +191,22 @@ public class CheckoutController {
 
             OrderRepo.updateOrder(currentOrder);
             OrderJsonUtils.addOrderToFile(currentOrder);
-            showAutoCloseDialog("Thank You!", "Your order will be arriving soon.", ((Stage) updateOrderButton.getScene().getWindow()));
+            showAutoCloseDialog(((Stage) updateOrderButton.getScene().getWindow()));
         }
     }
 
-    private void showAutoCloseDialog(String title, String message, Stage owner) {
+    private void showAutoCloseDialog(Stage owner) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+        alert.setTitle("Thank You!");
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText("Your order will be arriving soon.");
 
-        // Load the custom CSS file
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("/styles/alert.css").toExternalForm());
+        alert.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/alert.css")).toExternalForm());
         alert.getDialogPane().getStyleClass().add("custom-alert");
 
-        // Set the dialog to close after 3 seconds
         new Thread(() -> {
             try {
-                Thread.sleep(5); // 3000 milliseconds = 3 seconds
+                Thread.sleep(3500);
                 if (alert.isShowing()) {
                     Platform.runLater(() -> {
                         alert.close();

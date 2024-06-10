@@ -69,7 +69,7 @@ public class LoginController {
 
     private boolean validateInput(String email, String password) {
         boolean valid = true;
-        if (email.isEmpty() || !email.contains("@")) {
+        if (!email.contains("@")) {
             emailErrorLabel.setText("Invalid email.");
             valid = false;
         } else {

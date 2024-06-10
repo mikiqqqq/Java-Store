@@ -5,10 +5,8 @@ import org.apache.hc.client5.http.classic.methods.*;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.store.model.User;
-import org.store.utils.UserSession;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -31,23 +29,12 @@ public class ApiService {
     }
 
     private HttpUriRequestBase createRequest(String url, Object requestBody, String requestType) throws IOException {
-        HttpUriRequestBase request;
-
-        switch (requestType.toUpperCase()) {
-            case "POST":
-                request = new HttpPost(url);
-                break;
-            case "PUT":
-                request = new HttpPut(url);
-                break;
-            case "DELETE":
-                request = new HttpDelete(url);
-                break;
-            case "GET":
-            default:
-                request = new HttpGet(url);
-                break;
-        }
+        HttpUriRequestBase request = switch (requestType.toUpperCase()) {
+            case "POST" -> new HttpPost(url);
+            case "PUT" -> new HttpPut(url);
+            case "DELETE" -> new HttpDelete(url);
+            default -> new HttpGet(url);
+        };
 
         if (requestBody != null) {
             String json = mapper.writeValueAsString(requestBody);

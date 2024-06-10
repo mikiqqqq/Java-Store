@@ -4,7 +4,6 @@ module org.store {
     requires java.sql;
     requires com.sun.jna;
     requires com.sun.jna.platform;
-    requires org.slf4j;
     requires ini4j;
     requires java.sql.rowset;
     requires org.apache.httpcomponents.client5.httpclient5;

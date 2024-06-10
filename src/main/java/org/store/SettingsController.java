@@ -7,7 +7,6 @@ import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
 import org.store.model.Settings;
 
-import java.util.ResourceBundle;
 
 public class SettingsController {
 
@@ -36,9 +35,9 @@ public class SettingsController {
         fontSizeChoiceBox.getItems().addAll("12px", "14px", "16px");
         fontSizeChoiceBox.setValue(Settings.getFontSize());
 
-        themeToggleButton.setOnAction(event -> updateSettings());
-        languageChoiceBox.setOnAction(event -> updateSettings());
-        fontSizeChoiceBox.setOnAction(event -> updateSettings());
+        themeToggleButton.setOnAction(_ -> updateSettings());
+        languageChoiceBox.setOnAction(_ -> updateSettings());
+        fontSizeChoiceBox.setOnAction(_ -> updateSettings());
     }
 
     private void updateSettings() {
